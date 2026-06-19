@@ -42,6 +42,20 @@
   </div>
 </div></section>
 
+<!-- LEVELS -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">The path</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Five levels, basics to advanced</h2>
+  <p class="lead" style="max-width:70ch">You don't need all of SQL at once. Climb these five levels in order — the lessons below follow the same path, and everything is runnable in the in-browser engine.</p>
+  <div class="deflist">
+    <div class="d"><b>Level 1 · Read data</b> — <code>SELECT</code>, <code>FROM</code>, <code>WHERE</code>, <code>ORDER BY</code>, <code>LIMIT</code>. Pull columns, filter rows, sort, and cap the output.</div>
+    <div class="d"><b>Level 2 · Summarise</b> — aggregates (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code>), <code>GROUP BY</code>, column aliases with <code>AS</code>, and <code>DISTINCT</code>. Turn many rows into one number per category.</div>
+    <div class="d"><b>Level 3 · Filter &amp; shape</b> — <code>HAVING</code>, pattern matching with <code>LIKE</code>, <code>IN</code>/<code>BETWEEN</code>, <code>NULL</code> handling, and <code>CASE</code> for if-then logic.</div>
+    <div class="d"><b>Level 4 · Combine tables</b> — <code>JOIN</code> (inner and <code>LEFT JOIN</code>) to bring two tables together on a shared key.</div>
+    <div class="d"><b>Level 5 · Advanced</b> — subqueries, common table expressions (<code>WITH</code>), and window functions (<code>RANK() OVER (...)</code>) for ranking and running totals without collapsing rows.</div>
+  </div>
+</div></section>
+
 <!-- THE DATA -->
 <section style="background:var(--surface-2)"><div class="wrap">
   <span class="eyebrow">Your tables</span>
@@ -118,6 +132,49 @@ ORDER BY actual DESC;</span></div>
   <div class="note"><span class="ic">i</span><div><b>Order of execution:</b> <code>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code>. That's why you can't use a <code>SELECT</code> alias inside <code>WHERE</code> — the alias doesn't exist yet at that point.</div></div>
 </div></section>
 
+<!-- ADVANCED -->
+<section><div class="wrap">
+  <span class="eyebrow">Levels 3 &amp; 5 · go deeper</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Shaping logic and advanced queries</h2>
+  <p class="lead" style="max-width:70ch">Once the core clauses feel natural, these four take you most of the rest of the way. All of them run in the engine below.</p>
+
+  <h3 style="margin:22px 0 4px">CASE — if-then logic in a column</h3>
+  <p>Bucket rows into categories on the fly, then group by the result.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT CASE WHEN revenue >= 30000 THEN 'large'
+            WHEN revenue >= 15000 THEN 'mid'
+            ELSE 'small' END AS band,
+       COUNT(*) AS orders
+FROM orders
+GROUP BY band
+ORDER BY orders DESC;</span></div>
+
+  <h3 style="margin:22px 0 4px">Subqueries — a query inside a query</h3>
+  <p>Use the result of one query inside another. Here: orders above the overall average revenue.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
+FROM orders
+WHERE revenue > (SELECT AVG(revenue) FROM orders)
+ORDER BY revenue DESC;</span></div>
+
+  <h3 style="margin:22px 0 4px">CTE (WITH) — name a step for readability</h3>
+  <p>A common table expression is a named temporary result you can build on — cleaner than nesting subqueries.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">WITH region_rev AS (
+  SELECT region, SUM(revenue) AS total
+  FROM orders
+  GROUP BY region
+)
+SELECT region, total
+FROM region_rev
+ORDER BY total DESC;</span></div>
+
+  <h3 style="margin:22px 0 4px">Window functions — rank without collapsing rows</h3>
+  <p>Aggregate <em>across</em> rows while keeping every row. <code>RANK() OVER (...)</code> ranks each order by revenue within its region.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region, customer, revenue,
+       RANK() OVER (PARTITION BY region ORDER BY revenue DESC) AS rev_rank
+FROM orders
+ORDER BY region, rev_rank
+LIMIT 15;</span></div>
+</div></section>
+
 <!-- PLAYGROUND -->
 <section style="background:var(--surface-2)"><div class="wrap">
   <span class="eyebrow">Try it for real</span>
@@ -142,6 +199,9 @@ ORDER BY total_rev DESC;</textarea>
       <button class="chip-btn" data-f="SELECT dpm, COUNT(*) AS orders, ROUND(SUM(revenue)) AS rev FROM orders GROUP BY dpm HAVING COUNT(*)>=10 ORDER BY rev DESC;">busy DPMs (HAVING)</button>
       <button class="chip-btn" data-f="SELECT o.region, ROUND(SUM(o.revenue)) AS actual, t.revenue_target FROM orders o JOIN targets t ON o.region=t.region GROUP BY o.region;">join targets</button>
       <button class="chip-btn" data-f="SELECT DISTINCT country FROM orders ORDER BY country;">distinct countries</button>
+      <button class="chip-btn" data-f="SELECT CASE WHEN revenue>=30000 THEN 'large' WHEN revenue>=15000 THEN 'mid' ELSE 'small' END AS band, COUNT(*) AS n FROM orders GROUP BY band ORDER BY n DESC;">CASE bands</button>
+      <button class="chip-btn" data-f="WITH region_rev AS (SELECT region, SUM(revenue) total FROM orders GROUP BY region) SELECT * FROM region_rev ORDER BY total DESC;">CTE (WITH)</button>
+      <button class="chip-btn" data-f="SELECT region, customer, revenue, RANK() OVER (PARTITION BY region ORDER BY revenue DESC) rnk FROM orders ORDER BY region, rnk LIMIT 15;">window RANK()</button>
     </div>
     <div class="out" id="sql-out" style="margin-top:12px">Loading…</div>
   </div>
@@ -166,12 +226,22 @@ ORDER BY total_rev DESC;</textarea>
 <section style="background:var(--surface-2)"><div class="wrap">
   <span class="eyebrow">Test yourself</span>
   <h2 style="font-size:2rem;margin:.2em 0 .35em">SQL final exam</h2>
-  <p class="lead" style="max-width:70ch">A fresh, randomised mix every time — covering filtering, sorting, aggregation, grouping and joins. Treat it as a checkpoint, then go run more queries above.</p>
-  <div class="exam" data-bank="sqlBank" data-count="8"></div>
+  <p class="lead" style="max-width:70ch">A fresh, randomised mix every time — including questions where you <b>write the query yourself</b> and we run it against the live tables and grade the result. Treat it as a checkpoint, then go run more queries above.</p>
+  <div class="exam" data-bank="sqlBank" data-count="9" data-typed="3"></div>
 </div></section>
 
 <script type="application/json" id="sqlBank">
 [
+ {"type":"sql","q":"Write a query that returns the <b>number of Delivered orders</b>.","expect":41,"answer":"SELECT COUNT(*) FROM orders WHERE status = 'Delivered';","hint":"COUNT(*) with a WHERE on status.","why":"COUNT(*) counts the rows that survive the WHERE filter on status."},
+ {"type":"sql","q":"Return the <b>total revenue</b> across all orders.","expect":1533987,"answer":"SELECT SUM(revenue) FROM orders;","hint":"SUM over the revenue column.","why":"SUM(revenue) adds the revenue of every row."},
+ {"type":"sql","q":"Return the <b>total revenue for the EMEA region</b> only.","expect":1322838,"answer":"SELECT SUM(revenue) FROM orders WHERE region = 'EMEA';","hint":"SUM with a WHERE on region (text in single quotes).","why":"Filter to EMEA rows first, then SUM their revenue."},
+ {"type":"sql","q":"How many orders are in the <b>EMEA region</b>?","expect":60,"answer":"SELECT COUNT(*) FROM orders WHERE region = 'EMEA';","hint":"COUNT(*) with WHERE region = 'EMEA'.","why":"COUNT(*) counts rows matching the region filter."},
+ {"type":"sql","q":"How many <b>distinct customers</b> appear in the table?","expect":8,"answer":"SELECT COUNT(DISTINCT customer) FROM orders;","hint":"COUNT(DISTINCT column).","why":"COUNT(DISTINCT customer) counts each unique customer once."},
+ {"type":"sql","q":"Return the <b>highest single order revenue</b>.","expect":40684,"answer":"SELECT MAX(revenue) FROM orders;","hint":"MAX over revenue.","why":"MAX(revenue) returns the largest value in the column."},
+ {"type":"sql","q":"How many orders are marked <b>High priority</b>?","expect":21,"answer":"SELECT COUNT(*) FROM orders WHERE priority = 'High';","hint":"COUNT(*) with WHERE on priority.","why":"Filter to High priority, then count the rows."},
+ {"type":"sql","q":"Count the orders that are <b>both EMEA and Delivered</b>.","expect":33,"answer":"SELECT COUNT(*) FROM orders WHERE region = 'EMEA' AND status = 'Delivered';","hint":"Two conditions joined with AND.","why":"AND requires both conditions to be true for a row to count."},
+ {"type":"sql","q":"Which <b>region has the most orders</b>? (return the region name)","expect":"EMEA","answer":"SELECT region FROM orders GROUP BY region ORDER BY COUNT(*) DESC LIMIT 1;","hint":"GROUP BY region, ORDER BY COUNT(*) DESC, LIMIT 1.","why":"Group by region, sort by the per-group count descending, and take the top one."},
+ {"type":"sql","q":"Which <b>customer has the highest total revenue</b>? (return the customer name)","expect":"Carlsberg Group","answer":"SELECT customer FROM orders GROUP BY customer ORDER BY SUM(revenue) DESC LIMIT 1;","hint":"GROUP BY customer, ORDER BY SUM(revenue) DESC, LIMIT 1.","why":"Aggregate revenue per customer, sort descending, and return the top name."},
  {"q":"Which clause filters <em>rows</em> before any grouping happens?","opts":["WHERE","HAVING","GROUP BY","ORDER BY"],"correct":0,"why":"WHERE filters individual rows before aggregation; HAVING filters groups afterwards."},
  {"q":"How do you keep only the 5 highest-revenue orders?","opts":["ORDER BY revenue DESC LIMIT 5","WHERE revenue = TOP 5","GROUP BY revenue LIMIT 5","HAVING revenue > 5"],"correct":0,"why":"Sort descending by revenue, then LIMIT 5 caps the output to the top rows."},
  {"q":"What does <code>COUNT(*)</code> return?","opts":["The number of rows","The sum of a column","The number of distinct values","The number of columns"],"correct":0,"why":"COUNT(*) counts rows. COUNT(col) counts non-NULL values in that column."},

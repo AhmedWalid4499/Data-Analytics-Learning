@@ -5,6 +5,9 @@
      #dax-play → DAX validator (DaxValidator)
      #sql-play → SQLite via vendored sql.js
    All run fully client-side. Data = window.DPM_DATA.
+   The SQL section also exposes window.DPM_SQL_READY (a promise that
+   resolves to the loaded database) so the exam engine can grade
+   typed queries against the very same tables.
    ============================================================ */
 (function () {
   'use strict';
@@ -12,7 +15,18 @@
   function $(id) { return document.getElementById(id); }
   function escHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-  function colLetter(n) { var s = ''; n++; while (n > 0) { var m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = (n - m - 1) / 26; } return s; }
+  // Shared builder: create the orders + targets tables in a fresh DB.
+  window.DPM_buildSqlDb = function (SQL) {
+    var db = new SQL.Database();
+    var cols = D.sqlColumns, types = D.sqlTypes;
+    db.run('CREATE TABLE orders (' + cols.map(function (c, i) { return c + ' ' + (types[i] || 'TEXT'); }).join(', ') + ');');
+    var stmt = db.prepare('INSERT INTO orders VALUES (' + cols.map(function () { return '?'; }).join(',') + ')');
+    D.rows.forEach(function (row) { stmt.run(row.map(function (v) { return v === null ? null : v; })); });
+    stmt.free();
+    db.run('CREATE TABLE targets (region TEXT, revenue_target INTEGER);');
+    db.run("INSERT INTO targets VALUES ('EMEA',1200000),('APAC',150000),('Americas',120000);");
+    return db;
+  };
 
   // ---------------- EXCEL ----------------
   (function () {
@@ -50,27 +64,23 @@
   })();
 
   // ---------------- SQL ----------------
+  // Start the DB whenever sql.js is on the page (the exam may need it
+  // even if the visible #sql-play runner is absent).
+  if (typeof window.initSqlJs === 'function' && !window.DPM_SQL_READY) {
+    window.DPM_SQL_READY = window.initSqlJs({ locateFile: function (f) { return 'assets/vendor/' + f; } })
+      .then(function (SQL) { return window.DPM_buildSqlDb(SQL); });
+  }
   (function () {
-    var host = $('sql-play'); if (!host || typeof window.initSqlJs !== 'function') {
-      if (host && typeof window.initSqlJs !== 'function') { var o = $('sql-out'); if (o) { o.className = 'out err'; o.textContent = 'SQL engine failed to load.'; } }
-      return;
-    }
+    var host = $('sql-play'); if (!host) return;
     var input = $('sql-in'), out = $('sql-out'), status = $('sql-status'), runBtn = $('sql-run');
     var db = null;
+    if (typeof window.initSqlJs !== 'function' || !window.DPM_SQL_READY) {
+      runBtn.disabled = true; if (out) { out.className = 'out err'; out.textContent = 'SQL engine failed to load.'; }
+      return;
+    }
     runBtn.disabled = true; if (status) status.textContent = 'Loading SQL engine…';
-
-    window.initSqlJs({ locateFile: function (f) { return 'assets/vendor/' + f; } }).then(function (SQL) {
-      db = new SQL.Database();
-      var cols = D.sqlColumns, types = D.sqlTypes;
-      var ddl = 'CREATE TABLE orders (' + cols.map(function (c, i) { return c + ' ' + (types[i] || 'TEXT'); }).join(', ') + ');';
-      db.run(ddl);
-      var ph = cols.map(function () { return '?'; }).join(',');
-      var stmt = db.prepare('INSERT INTO orders VALUES (' + ph + ')');
-      D.rows.forEach(function (row) { stmt.run(row.map(function (v) { return v === null ? null : v; })); });
-      stmt.free();
-      // small dimension table so learners can practise JOINs
-      db.run('CREATE TABLE targets (region TEXT, revenue_target INTEGER);');
-      db.run("INSERT INTO targets VALUES ('EMEA',1200000),('APAC',150000),('Americas',120000);");
+    window.DPM_SQL_READY.then(function (database) {
+      db = database;
       runBtn.disabled = false;
       if (status) status.textContent = 'Ready · "orders" (' + D.rows.length + ' rows) and "targets" (3 rows) loaded.';
     }).catch(function (e) {
