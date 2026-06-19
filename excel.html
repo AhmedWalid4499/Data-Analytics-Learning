@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="excel">
+<div class="scrollbar"></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html" aria-current="page">Excel</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">X</span> Microsoft Excel</span>
+  <h1>Excel, from first<br>formula to dynamic arrays.</h1>
+  <p class="lead">Excel is where most delivery analysis starts. This track builds in three tiers — start at the basics, level up to lookups and PivotTables, then reach for the modern array functions. Every example uses the sample workbook, so download it and follow along in a real sheet.</p>
+  <div class="pills" style="margin-top:22px">
+    <a class="dl" href="assets/data/dpm_projects.xlsx" download>⬇ Training workbook (.xlsx)</a>
+    <a class="dl ghost" href="assets/data/dpm_messy_data.xlsx" download>⬇ Messy workbook — for Power Query (.xlsx)</a>
+    <a class="dl ghost" href="assets/data/dpm_projects.csv" download>⬇ CSV</a>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:14px">The data lives on the <strong>Projects</strong> sheet, columns A–Q, rows 2–73. There's a <strong>TASKS</strong> tab in the training workbook with drills to try — keys are further down this page. Make a Table out of the data (<kbd>Ctrl</kbd>+<kbd>T</kbd>) before you start.</p>
+</div></header>
+
+<section><div class="wrap">
+  <span class="eyebrow">Functions by level</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .2em">Build your formula vocabulary</h2>
+  <p class="lead">This track is split into <strong>three levels</strong> — tap any card to switch. Start at Level 1 and climb. Each function has a worked example on the sample data and a task to try yourself before revealing the answer.</p>
+
+  <div class="tiers" data-tiers="x" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab">
+      <span class="lvl">1</span>
+      <span class="tier-txt"><b>Basic</b><small>Totals, IF, joining text, references</small></span>
+    </button>
+    <button class="tier-btn" data-tier="inter" aria-selected="false" role="tab">
+      <span class="lvl">2</span>
+      <span class="tier-txt"><b>Intermediate</b><small>COUNTIFS, XLOOKUP, PivotTables</small></span>
+    </button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab">
+      <span class="lvl">3</span>
+      <span class="tier-txt"><b>Advanced</b><small>FILTER, LET, LAMBDA, dynamic arrays</small></span>
+    </button>
+  </div>
+
+  <!-- ===================== BASIC ===================== -->
+  <div data-tier-panel="x" data-tier="basic" class="tier-panel active">
+
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">SUM / AVERAGE / COUNT</span> The starter pack <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p><strong>SUM</strong> adds numbers, <strong>AVERAGE</strong> means them, <strong>COUNT</strong> counts cells that contain numbers, and <strong>COUNTA</strong> counts cells that aren't empty (text included).</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(O2:O73)        // total revenue
+=AVERAGE(N2:N73)    // average FTE days
+=COUNTA(A2:A73)     // how many orders (counts text Order IDs)</span></div>
+      <p>Use <strong>COUNT</strong> when you're counting a number column, <strong>COUNTA</strong> when you're counting rows by a text key like Order ID.</p>
+      <div class="try"><p class="q">Try it</p>
+        <p>How much total Revenue (EUR) is in the dataset, and how many orders are there in total?</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(O2:O73)
+=COUNTA(A2:A73)</span></div>
+          <p>Revenue lives in column O, Order IDs in column A. <code>COUNTA</code> beats <code>COUNT</code> here because Order IDs are text (<span class="mono">10-1735&hellip;</span>).</p>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">MIN / MAX</span> Find the extremes <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Return the smallest and largest number in a range. Handy for "biggest order" or "earliest date".</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=MAX(O2:O73)   // largest order value
+=MIN(K2:K73)   // earliest Order Date</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>What is the largest single order value, and the highest number of APs migrated in any one order?</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=MAX(O2:O73)   // Revenue column
+=MAX(P2:P73)   // APs Migrated column</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">IF</span> Make a decision <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>The logic workhorse: <span class="mono">=IF(test, value_if_true, value_if_false)</span>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=IF(H2="Delivered","Closed","Open")
+=IF(O2>20000,"High value","Standard")</span></div>
+      <div class="note"><span class="ic">i</span><div>Comparison operators: <span class="mono">=</span> equals, <span class="mono">&lt;&gt;</span> not equal, <span class="mono">&gt;= &lt;=</span> at least / at most.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Add a column that flags an order as <em>"Late"</em> if Actual Go-Live (M) is after Target Go-Live (L), otherwise <em>"On time"</em>. Watch out for blank Actual dates.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=IF(M2="","Not delivered yet",IF(M2>L2,"Late","On time"))</span></div>
+          <p>A blank Actual Go-Live means the order isn't delivered, so we test for <code>""</code> first to avoid mislabelling it.</p>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">&amp; / TEXTJOIN</span> Stick text together <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>The <span class="mono">&amp;</span> operator glues text. <strong>TEXTJOIN</strong> does the same with a delimiter and can ignore blanks.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=B2&" — "&D2                         // "SKF Industrial — Gothenburg"
+=TEXTJOIN(" / ",TRUE,C2,E2,G2)       // "SEGOT / Sweden / LAN Refresh"</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Build a one-line label for each order: <em>Customer (Site Code) – Service Type</em>.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=B2&" ("&C2&") – "&G2</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">$ absolute references</span> Lock a cell <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>When you copy a formula down, references shift. A dollar sign locks a row or column so it doesn't move. <span class="mono">$O$2</span> locks both; <span class="mono">O$2</span> locks the row only; <span class="mono">$O2</span> locks the column only.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=O2/$O$74     // each order's share of the grand total in O74</span></div>
+      <div class="note"><span class="ic">⌨</span><div>Press <kbd>F4</kbd> while editing a reference to cycle through the lock options.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Put the grand total revenue in O74, then add a column showing each order's percentage of that total, formatted as a %.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">O74:  =SUM(O2:O73)
+R2 :  =O2/$O$74      // then format column R as Percentage, fill down</span></div>
+          <p>The <code>$O$74</code> stays put as you fill down, while <code>O2</code> walks to O3, O4&hellip;</p>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">ROUND</span> Tidy the decimals <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p><span class="mono">=ROUND(number, digits)</span> — positive digits round after the decimal, <span class="mono">0</span> rounds to a whole number.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=ROUND(N2,0)              // FTE days to a whole number
+=ROUND(AVERAGE(N2:N73),1) // average FTE, one decimal</span></div>
+      <div class="note warn"><span class="ic">!</span><div>Rounding for <em>display</em> is better done with cell formatting — <code>ROUND</code> actually changes the value, which matters if you sum the results.</div></div>
+    </div></details>
+
+  </div>
+
+  <!-- ===================== INTERMEDIATE ===================== -->
+  <div data-tier-panel="x" data-tier="inter" class="tier-panel">
+
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">COUNTIF / SUMIF</span> Count &amp; total with a condition <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>Add one criterion to a count or a sum.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(H2:H73,"Delivered")          // how many delivered orders
+=SUMIF(G2:G73,"LAN Refresh",O2:O73)   // total revenue from LAN Refresh</span></div>
+      <p>Pattern for SUMIF: <span class="mono">=SUMIF(range_to_test, criteria, range_to_add)</span>.</p>
+      <div class="try"><p class="q">Try it</p>
+        <p>How many orders are <em>On Hold</em>, and what is the total revenue for the <em>EMEA</em> region?</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(H2:H73,"On Hold")
+=SUMIF(F2:F73,"EMEA",O2:O73)</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">COUNTIFS / SUMIFS / AVERAGEIFS</span> Many conditions <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>The <em>-IFS</em> versions take multiple criteria pairs. Note the argument order flips: in <strong>SUMIFS</strong> the sum range comes <em>first</em>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIFS(O2:O73, G2:G73,"SD-WAN Migration", F2:F73,"APAC")
+=COUNTIFS(H2:H73,"Delivered", I2:I73,"Ahmed El Bourgy")
+=AVERAGEIFS(N2:N73, G2:G73,"LAN Refresh")</span></div>
+      <div class="note"><span class="ic">i</span><div>Criteria can use wildcards and operators in quotes: <span class="mono">"&gt;20000"</span>, <span class="mono">"&lt;&gt;Cancelled"</span>, <span class="mono">"SE*"</span> (starts with SE).</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>What is the total revenue of <em>High</em> priority orders that are <em>not</em> Cancelled?</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIFS(O2:O73, Q2:Q73,"High", H2:H73,"<>Cancelled")</span></div>
+          <p>Priority is column Q, Status is column H. <code>"&lt;&gt;Cancelled"</code> means "not equal to Cancelled".</p>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">XLOOKUP</span> The modern lookup <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p><strong>XLOOKUP</strong> replaces VLOOKUP. It looks up a value and returns a matching value from another column — in any direction, with a clean "if not found" option.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=XLOOKUP(lookup_value, lookup_array, return_array, [if_not_found])
+
+=XLOOKUP("10-1735122", A2:A73, B2:B73, "Not found")
+   // returns the Customer for that Order ID</span></div>
+      <p>It works right-to-left too, unlike VLOOKUP, because you point at the lookup and return columns separately.</p>
+      <div class="try"><p class="q">Try it</p>
+        <p>Given an Order ID typed in cell <span class="mono">T1</span>, return its Status and its DPM.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=XLOOKUP(T1, A2:A73, H2:H73, "No such order")   // Status
+=XLOOKUP(T1, A2:A73, I2:I73, "No such order")   // DPM</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">VLOOKUP &amp; INDEX/MATCH</span> The classics <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>You'll still meet these in older files. <strong>VLOOKUP</strong> searches the first column of a block and returns a column to its <em>right</em>:</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=VLOOKUP("10-1735122", A2:Q73, 8, FALSE)
+   // 8 = the 8th column of the block (Status). FALSE = exact match.</span></div>
+      <p><strong>INDEX/MATCH</strong> is more flexible — it can look in any direction and survives inserted columns:</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=INDEX(H2:H73, MATCH("10-1735122", A2:A73, 0))
+   // MATCH finds the row, INDEX returns the Status from it. 0 = exact.</span></div>
+      <div class="note warn"><span class="ic">!</span><div>VLOOKUP's column number breaks if someone inserts a column. Prefer <code>XLOOKUP</code> or <code>INDEX/MATCH</code> in anything you'll maintain.</div></div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">IFERROR</span> Catch the #N/A <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>Wrap any formula to replace errors with something friendly.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=IFERROR(XLOOKUP(T1,A2:A73,B2:B73), "Check the Order ID")</span></div>
+      <p>With XLOOKUP you'd usually use its built-in 4th argument instead; <code>IFERROR</code> shines around division and older lookups.</p>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">TEXT &amp; date functions</span> Format and slice dates <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>Dates are just numbers under the hood. Pull pieces out, or do date maths.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=YEAR(K2)   =MONTH(K2)   =DAY(K2)
+=M2-L2                      // days late/early (Actual minus Target)
+=TEXT(K2,"mmm yyyy")        // "Mar 2025"  — for grouping/labels
+=NETWORKDAYS(K2,L2)         // working days between order and target</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>For each delivered order, how many days early or late was it? Then label the month of each Order Date as e.g. "Jan 2025".</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=IF(M2="","",M2-L2)        // negative = early, positive = late
+=TEXT(K2,"mmm yyyy")</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">PivotTables</span> Summarise without formulas <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>A PivotTable groups and totals data by drag-and-drop — no formulas needed. With the data selected: <strong>Insert ▸ PivotTable</strong>.</p>
+      <table class="tbl">
+        <thead><tr><th>Drop zone</th><th>What to put there</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Rows</td><td>Region, then Service Type</td><td>One block per region, broken down by service</td></tr>
+          <tr><td>Values</td><td>Revenue (EUR) → Sum</td><td>Totals in the grid</td></tr>
+          <tr><td>Values</td><td>Order ID → Count</td><td>Number of orders</td></tr>
+          <tr><td>Filters / Slicers</td><td>Status</td><td>Toggle Delivered vs all</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><span class="ic">i</span><div>Right-click a value ▸ <em>Show Values As ▸ % of Grand Total</em> turns raw totals into shares. Add a <strong>Slicer</strong> (PivotTable Analyze ▸ Insert Slicer) for clickable filters.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Build a PivotTable showing <em>total revenue</em> and <em>order count</em> by <em>Customer</em>, sorted highest revenue first, filtered to Delivered orders only.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <p>Rows = <strong>Customer</strong>. Values = <strong>Revenue (Sum)</strong> and <strong>Order ID (Count)</strong>. Add <strong>Status</strong> as a slicer or filter and pick <em>Delivered</em>. Click the revenue total's dropdown ▸ <em>Sort Largest to Smallest</em>.</p>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Conditional formatting</span> Let the sheet flag things <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p><strong>Home ▸ Conditional Formatting</strong>. Colour cells by rule, add data bars or icon sets, or write a formula rule.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">// Highlight late deliveries — "Use a formula" rule, applied to the row:
+=AND($M2<>"", $M2>$L2)</span></div>
+      <p>Lock the column with <span class="mono">$</span> (so the whole row highlights), but leave the row number free so the rule walks down.</p>
+    </div></details>
+
+  </div>
+
+  <!-- ===================== ADVANCED ===================== -->
+  <div data-tier-panel="x" data-tier="adv" class="tier-panel">
+
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">FILTER</span> Return whole rows by condition <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>A dynamic array function: returns every row that matches, spilling automatically. No dragging.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=FILTER(A2:Q73, (F2:F73="EMEA")*(H2:H73="Delivered"),
+        "No matches")
+   // multiply conditions for AND, add (+) them for OR</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Spill a list of every High-priority order that is still <em>In Progress</em> or <em>Staging</em>.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=FILTER(A2:Q73, (Q2:Q73="High")*((H2:H73="In Progress")+(H2:H73="Staging")), "None")</span></div>
+          <p><code>*</code> is AND, <code>+</code> is OR. Wrap the OR group in its own parentheses.</p>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">UNIQUE / SORT / SORTBY</span> Lists that maintain themselves <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SORT(UNIQUE(B2:B73))                 // distinct customers, A–Z
+=SORTBY(A2:A73, O2:O73, -1)           // Order IDs sorted by revenue, high→low</span></div>
+      <p>Combine them: a clean dropdown source, a top-N list, a deduped lookup table — all live.</p>
+      <div class="try"><p class="q">Try it</p>
+        <p>Produce a sorted, duplicate-free list of every Country in the data.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=SORT(UNIQUE(E2:E73))</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">LET</span> Name your steps <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p><strong>LET</strong> assigns names to intermediate results — formulas become readable and faster (each value is computed once).</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=LET(
+   rev,   O2:O73,
+   status,H2:H73,
+   live,  FILTER(rev, status="Delivered"),
+   AVERAGE(live)
+)
+   // average revenue of delivered orders, written legibly</span></div>
+      <div class="note"><span class="ic">i</span><div>Pattern: pairs of <em>name, value</em>, then a final expression that uses them.</div></div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">LAMBDA</span> Build your own function <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p><strong>LAMBDA</strong> turns a formula into a reusable function. Define it once in <em>Name Manager</em> (Formulas ▸ Define Name), then call it like any built-in.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">// Name: DaysLate   Refers to:
+=LAMBDA(target, actual, IF(actual="","",actual-target))
+
+// then in the sheet:
+=DaysLate(L2, M2)</span></div>
+      <p>Pair with <strong>MAP</strong>, <strong>BYROW</strong> or <strong>REDUCE</strong> to apply a LAMBDA across a whole array at once.</p>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">SUMPRODUCT</span> Weighted &amp; multi-condition maths <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Multiplies arrays element-by-element then sums — great for weighted averages and conditions in older Excel.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMPRODUCT((F2:F73="EMEA")*(H2:H73="Delivered")*O2:O73)
+   // total delivered EMEA revenue, no SUMIFS needed
+=SUMPRODUCT(N2:N73, O2:O73)/SUM(N2:N73)
+   // revenue weighted by FTE days</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Use SUMPRODUCT to count how many orders are both <em>Wireless Migration</em> and have more than 50 APs migrated.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMPRODUCT((G2:G73="Wireless Migration")*(P2:P73>50))</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Tables &amp; structured references</span> Stop hard-coding ranges <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Convert your range to a Table (<kbd>Ctrl</kbd>+<kbd>T</kbd>), name it <em>Projects</em>, and formulas read like English — and auto-expand when rows are added.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(Projects[Revenue (EUR)])
+=SUMIFS(Projects[Revenue (EUR)], Projects[Region],"EMEA")
+=COUNTIFS(Projects[Status],"Delivered")</span></div>
+      <div class="note"><span class="ic">✓</span><div>This is the single biggest upgrade to a messy workbook: no more <span class="mono">O2:O73</span> that silently misses new rows.</div></div>
+    </div></details>
+
+  </div>
+</div></section>
+
+<!-- ===================== TIPS ===================== -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Tips &amp; tricks</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Small moves, big time savings</h2>
+  <div class="grid cols-2">
+    <div class="card"><h3>Flash Fill <kbd>Ctrl</kbd>+<kbd>E</kbd></h3><p>Type the result you want in one cell (e.g. an initials code), start the next, and Excel detects the pattern and fills the rest. Perfect for splitting or reformatting text without formulas.</p></div>
+    <div class="card"><h3>Tables <kbd>Ctrl</kbd>+<kbd>T</kbd></h3><p>Turns a range into a self-expanding, filterable, named object. Formulas referencing it auto-grow with new rows.</p></div>
+    <div class="card"><h3>Freeze panes</h3><p>View ▸ Freeze Panes ▸ Freeze Top Row so headers stay visible while you scroll 72 rows of orders.</p></div>
+    <div class="card"><h3>Paste Special <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>V</kbd></h3><p>Paste <em>Values</em> to drop formulas, or <em>Transpose</em> to flip rows and columns.</p></div>
+    <div class="card"><h3>Quick fill down <kbd>Ctrl</kbd>+<kbd>D</kbd></h3><p>Select a cell plus the range below it and fill the formula down instantly. <kbd>Ctrl</kbd>+<kbd>R</kbd> fills right.</p></div>
+    <div class="card"><h3>Jump &amp; select</h3><p><kbd>Ctrl</kbd>+<kbd>↓</kbd> jumps to the bottom of a column; add <kbd>Shift</kbd> to select on the way. <kbd>Ctrl</kbd>+<kbd>;</kbd> stamps today's date.</p></div>
+  </div>
+</div></section>
+
+<!-- ===================== WEB DATA ===================== -->
+<section><div class="wrap">
+  <span class="eyebrow">Data from the web</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Pull live data into a sheet</h2>
+  <p class="lead">Excel can read tables straight off a web page or an online file and refresh them on demand — no copy-paste.</p>
+  <div class="grid cols-2">
+    <div class="card"><h3>From a web page</h3>
+      <p><strong>Data ▸ Get Data ▸ From Other Sources ▸ From Web</strong>. Paste the URL, and the Navigator shows any tables Excel finds. Pick one, <em>Transform</em> to clean it, then <em>Load</em>.</p>
+      <p>It lands as a query you can refresh with <strong>Data ▸ Refresh All</strong> (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>F5</kbd>).</p>
+    </div>
+    <div class="card"><h3>From a file or folder</h3>
+      <p><strong>Data ▸ Get Data ▸ From File</strong> reads a CSV, another workbook, or an entire <em>folder</em> of files — combining them into one table automatically. Great for "every weekly export in this folder".</p>
+    </div>
+  </div>
+  <div class="note"><span class="ic">i</span><div>Anything you import this way becomes a <strong>Power Query</strong> — which is exactly the next section.</div></div>
+</div></section>
+
+<!-- ===================== POWER QUERY ===================== -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Power Query</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Clean once, refresh forever</h2>
+  <p class="lead">Power Query (Data ▸ Get &amp; Transform) records every cleaning step you take. Next month, point it at the new file and click Refresh — all your steps replay automatically. This is the antidote to repetitive manual cleanup.</p>
+
+  <div class="card" style="margin:18px 0">
+    <h3>The mental model</h3>
+    <p>You're not editing data — you're recording a <strong>recipe</strong>. Each action becomes a step in the <em>Applied Steps</em> list on the right. The steps run top to bottom every refresh, so the source can change but your cleaning stays.</p>
+  </div>
+
+  <h3 style="margin-top:30px">Common steps you'll use constantly</h3>
+  <table class="tbl">
+    <thead><tr><th>Goal</th><th>Where</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>Promote headers</td><td>Home / Transform</td><td>Use the first row as column names</td></tr>
+      <tr><td>Change type</td><td>Transform ▸ Data Type</td><td>Set Date, Whole Number, Text — fixes text-dates and EU decimals</td></tr>
+      <tr><td>Trim / Clean / Lowercase</td><td>Transform ▸ Format</td><td>Strip stray spaces and unify casing ("EMEA" vs " emea ")</td></tr>
+      <tr><td>Remove duplicates</td><td>Home ▸ Remove Rows</td><td>Drop repeated rows by selected columns</td></tr>
+      <tr><td>Replace / Fill down</td><td>Transform</td><td>Patch blanks; carry a value down into empty cells</td></tr>
+      <tr><td>Split / Merge columns</td><td>Transform</td><td>Break "City, Country" apart or join codes together</td></tr>
+      <tr><td>Unpivot</td><td>Transform ▸ Unpivot</td><td>Turn wide month-columns into tidy rows — essential for charts</td></tr>
+      <tr><td>Group By</td><td>Transform ▸ Group By</td><td>Summarise (sum revenue per region) right inside the query</td></tr>
+      <tr><td>Merge / Append queries</td><td>Home</td><td>Merge = join on a key (like a lookup); Append = stack tables on top of each other</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><span class="ic">i</span><div>Behind the steps is the <strong>M</strong> language (View ▸ Advanced Editor). You rarely write it by hand at first, but it's worth peeking to see what each click generated.</div></div>
+
+  <div class="try"><p class="q">Try it — clean the messy workbook</p>
+    <p>Download the <strong>Messy workbook</strong> at the top of this page and open a blank file ▸ <strong>Data ▸ Get Data ▸ From File ▸ From Excel Workbook</strong> ▸ pick it ▸ select the <span class="mono">DATA</span> sheet ▸ <em>Transform Data</em>. (Or use <strong>Data ▸ From Text/CSV</strong> with the messy CSV.) The <span class="mono">START HERE</span> sheet lists what's wrong. Fix every issue in the query, then Close &amp; Load.</p>
+    <details class="reveal"><summary>Show the answer key (step order)</summary><div class="ans">
+      <ol style="margin:.4em 0 .6em 1.1em">
+        <li><strong>Use First Row as Headers</strong> (Transform) — turn the top row into column names.</li>
+        <li><em>Order Date</em> ▸ Data Type ▸ <strong>Date</strong> (use <em>Using Locale → English (UK)</em> so dd/mm/yyyy parses correctly).</li>
+        <li><em>FTE Days</em> ▸ <strong>Replace Values</strong> "," → "." first, then Data Type ▸ <strong>Decimal Number</strong>.</li>
+        <li><em>Customer</em> ▸ Transform ▸ Format ▸ <strong>Trim</strong>, then <strong>Capitalize Each Word</strong> (kills " harman international " → "Harman International").</li>
+        <li><em>Status</em> ▸ Format ▸ <strong>lowercase</strong> then <strong>Capitalize Each Word</strong> (unifies "DELIVERED", "in-progress", "On Hold").</li>
+        <li><strong>Remove Duplicates</strong> — select all columns ▸ Home ▸ Remove Rows ▸ <strong>Remove Duplicates</strong>. The messy file has exact-duplicate rows; this is the step that drops them. <em>(Tip: to dedupe by a key like Order ID instead, select just that column first.)</em></li>
+        <li><em>Country</em> ▸ Transform ▸ <strong>Fill ▸ Down</strong> (or Replace blanks) to patch empty cells.</li>
+        <li>Home ▸ <strong>Close &amp; Load</strong>.</li>
+      </ol>
+      <p><strong>Why this matters:</strong> next month, drop in the new export and click <em>Refresh</em> — all eight steps replay, including the de-duplication. Zero manual cleanup.</p>
+    </div></details>
+  </div>
+</div></section>
+
+<!-- ===================== GUIDED PRACTICE ===================== -->
+<section><div class="wrap">
+  <span class="eyebrow">Guided practice</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Two workbooks, two kinds of drill</h2>
+  <p class="lead">Do these on your own first, then open the key. The key tells you <em>which</em> function or step solves it and why — that's the part worth remembering.</p>
+
+  <div class="grid cols-2" style="margin:14px 0 26px">
+    <div class="card"><h3>📊 Analysis drills</h3>
+      <p>Use the clean <strong>Training workbook</strong> (the prompts are on its <span class="mono">TASKS</span> tab, data on <span class="mono">Projects</span>).</p>
+      <p><a class="dl" href="assets/data/dpm_projects.xlsx" download>⬇ Training workbook (.xlsx)</a></p>
+    </div>
+    <div class="card"><h3>🧹 Cleaning drill</h3>
+      <p>Use the <strong>Messy workbook</strong> with Power Query — full step key is in the Power Query section above.</p>
+      <p><a class="dl ghost" href="assets/data/dpm_messy_data.xlsx" download>⬇ Messy workbook (.xlsx)</a></p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:10px">Analysis drills — work them, then reveal the key</h3>
+
+  <div class="try"><p class="q">Drill 1 · How many orders are <strong>On Hold</strong> right now?</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p>Reach for <strong>COUNTIF</strong> — count cells in one column that match one condition.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(H2:H73,"On Hold")</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 2 · Total <strong>Revenue (EUR)</strong> of all Delivered orders.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p><strong>SUMIF</strong> — sum one column where another column matches a condition. (Criteria range first, then criteria, then the range to sum.)</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(H2:H73,"Delivered",O2:O73)</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 3 · Total revenue of <strong>High-priority</strong> orders that are <strong>not Cancelled</strong>.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p>Two conditions → <strong>SUMIFS</strong>. Note the <span class="mono">"&lt;&gt;Cancelled"</span> operator for "not equal to".</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIFS(O2:O73, Q2:Q73,"High", H2:H73,"<>Cancelled")</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 4 · Return the <strong>Status</strong> of order <span class="mono">10-1735122</span> — and don't let it break if someone inserts a column.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p>Use <strong>XLOOKUP</strong> (or INDEX/MATCH). Both point at columns directly, so an inserted column won't shift the result. Avoid VLOOKUP with a hard-coded column number here — that's exactly what breaks.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=XLOOKUP("10-1735122", A2:A73, H2:H73)</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 5 · Look up an order's <strong>Customer</strong> by Order ID, with a friendly message if the ID doesn't exist.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p>XLOOKUP has a built-in "if not found" argument — no need to wrap it in IFERROR (which would also hide real errors).</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=XLOOKUP(T1, A2:A73, B2:B73, "No order with that ID")</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 6 · Flag every row as <strong>Late / On time / Not delivered yet</strong> (Actual vs Target Go-Live).</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p>A <strong>nested IF</strong>: first test whether it's delivered at all, then compare the two dates.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=IF(M2="","Not delivered yet", IF(M2>L2,"Late","On time"))</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 7 · A self-updating, <strong>duplicate-free, A–Z</strong> list of every Customer.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p><strong>UNIQUE</strong> strips duplicates, <strong>SORT</strong> orders them — and because they spill, the list rebuilds itself when the data changes. No "Remove Duplicates" button to re-run.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SORT(UNIQUE(B2:B73))</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 8 · Spill a table of <strong>only EMEA + Delivered</strong> orders — Order ID, Customer, Revenue.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p><strong>FILTER</strong> with two conditions multiplied together (<span class="mono">*</span> = AND). Use <strong>HSTACK</strong> to choose just the three columns you want.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=FILTER(HSTACK(A2:A73,B2:B73,O2:O73), (F2:F73="EMEA")*(H2:H73="Delivered"), "None")</span></div>
+      <p class="hint" style="color:var(--muted);font-size:.85rem">No HSTACK? Use <span class="mono">CHOOSE({1,2,3},A2:A73,B2:B73,O2:O73)</span> in its place.</p>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 9 · Total revenue of <strong>Delivered EMEA</strong> orders — in <strong>one formula</strong>, no helper column.</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p><strong>SUMIFS</strong> handles it directly. (SUMPRODUCT is the old-school alternative: <span class="mono">=SUMPRODUCT((H2:H73="Delivered")*(F2:F73="EMEA")*O2:O73)</span>.)</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIFS(O2:O73, H2:H73,"Delivered", F2:F73,"EMEA")</span></div>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Drill 10 · A <strong>PivotTable</strong>: Revenue by Region (rows) × Service Type (columns).</p>
+    <details class="reveal"><summary>Show the key</summary><div class="ans">
+      <p>Not a formula — a tool. Click any cell in the data ▸ <strong>Insert ▸ PivotTable</strong>. Then drag fields: <strong>Region → Rows</strong>, <strong>Service Type → Columns</strong>, <strong>Revenue (EUR) → Values</strong> (set it to <em>Sum</em>, not Count). Right-click a value ▸ Number Format for clean euros.</p>
+    </div></details>
+  </div>
+</div></section>
+
+<!-- ===================== FORMULA RUNNER ===================== -->
+<section><div class="wrap">
+  <span class="eyebrow">Try it for real</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Formula runner</h2>
+  <p class="lead">Type any Excel formula and run it against the live sample data — right here, no Excel needed. Great for testing a function before you trust it in a real sheet. Tip: <kbd>Ctrl/Cmd + Enter</kbd> runs.</p>
+
+  <div class="play" id="xl-play">
+    <textarea class="code-in" id="xl-in" spellcheck="false" rows="2">=SUMIFS(O2:O73, F2:F73,"EMEA", H2:H73,"Delivered")</textarea>
+    <div class="play-actions">
+      <button class="btn" id="xl-run">▶ Evaluate</button>
+    </div>
+    <div class="chips">
+      <button class="chip-btn" data-f='=SUM(O2:O73)'>SUM revenue</button>
+      <button class="chip-btn" data-f='=ROUND(AVERAGE(N2:N73),1)'>AVG fte days</button>
+      <button class="chip-btn" data-f='=COUNTIF(H2:H73,"Delivered")'>COUNTIF delivered</button>
+      <button class="chip-btn" data-f='=SUMIF(F2:F73,"EMEA",O2:O73)'>SUMIF EMEA</button>
+      <button class="chip-btn" data-f='=SUMIFS(O2:O73, F2:F73,"EMEA", G2:G73,"LAN Refresh")'>SUMIFS</button>
+      <button class="chip-btn" data-f='=XLOOKUP("10-10174194",A2:A73,B2:B73,"Not found")'>XLOOKUP</button>
+      <button class="chip-btn" data-f='=ROUND(SUMIF(F2:F73,"EMEA",O2:O73)/SUM(O2:O73)*100,1)&"%"'>EMEA share %</button>
+      <button class="chip-btn" data-f='=MAX(O2:O73)'>MAX</button>
+    </div>
+    <div class="out" id="xl-out" style="margin-top:12px"></div>
+    <p class="legend">Columns: <b>A</b> Order ID · <b>B</b> Customer · <b>C</b> Site Code · <b>D</b> City · <b>E</b> Country · <b>F</b> Region · <b>G</b> Service Type · <b>H</b> Status · <b>I</b> DPM · <b>J</b> Field Engineer · <b>K</b> Order Date · <b>L</b> Target Go-Live · <b>M</b> Actual Go-Live · <b>N</b> FTE Days · <b>O</b> Revenue · <b>P</b> APs Migrated · <b>Q</b> Priority. Data rows are <b>2–73</b>.</p>
+  </div>
+  <div class="note"><span class="ic">i</span><div>Supports a wide range: SUM, AVERAGE, COUNT/COUNTA, MIN/MAX, ROUND, IF, IFERROR, AND/OR/NOT, SUMIF(S), COUNTIF(S), AVERAGEIF(S), VLOOKUP, XLOOKUP, LEN/LEFT/RIGHT/MID, UPPER/LOWER/TRIM, CONCAT, TEXTJOIN, SUMPRODUCT, YEAR/MONTH/DAY and arithmetic. Dynamic-array spills (FILTER, UNIQUE) aren't evaluated here — try those in Excel.</div></div>
+</div></section>
+
+<!-- ===================== EXAM ===================== -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Test yourself</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Excel final exam</h2>
+  <p class="lead">Scenario questions across the whole track — plus questions where you <b>type a real formula</b> and we evaluate it against the sample data and grade it. Randomised every attempt, so it's worth retaking.</p>
+  <div class="exam" data-bank="excelBank" data-count="9" data-formulas="3"></div>
+</div></section>
+
+<script type="application/json" id="excelBank">
+[
+ {"type":"formula","q":"Return the <b>total revenue</b> across every order (column <span class=\"mono\">O</span>, rows 2–73).","expect":1533987,"answer":"=SUM(O2:O73)","hint":"One SUM over the whole revenue column.","why":"SUM adds every value in the range. Revenue is column O, data rows 2–73."},
+ {"type":"formula","q":"Return the <b>total revenue for EMEA</b> orders only (Region is column <span class=\"mono\">F</span>).","expect":1322838,"answer":"=SUMIF(F2:F73,\"EMEA\",O2:O73)","hint":"SUMIF: criteria range, criteria, sum range.","why":"SUMIF(range, criteria, sum_range) totals O only where F equals EMEA."},
+ {"type":"formula","q":"<b>Count how many orders are Delivered</b> (Status is column <span class=\"mono\">H</span>).","expect":41,"answer":"=COUNTIF(H2:H73,\"Delivered\")","hint":"COUNTIF over the Status column.","why":"COUNTIF counts cells matching the criteria — here Status = Delivered."},
+ {"type":"formula","q":"Return total revenue for orders that are <b>both EMEA and Delivered</b>.","expect":728598,"answer":"=SUMIFS(O2:O73,F2:F73,\"EMEA\",H2:H73,\"Delivered\")","hint":"SUMIFS: sum range first, then range/criteria pairs.","why":"SUMIFS puts the sum range first, then each (range, criteria) pair — both conditions must hold."},
+ {"type":"formula","q":"Return the <b>average FTE Days</b> (column <span class=\"mono\">N</span>) <b>rounded to 1 decimal place</b>.","expect":15.9,"tol":0.1,"answer":"=ROUND(AVERAGE(N2:N73),1)","hint":"Wrap AVERAGE in ROUND(...,1).","why":"AVERAGE gives the mean; ROUND(value, 1) trims it to one decimal."},
+ {"type":"formula","q":"<b>Count the High-priority orders</b> (Priority is column <span class=\"mono\">Q</span>).","expect":21,"answer":"=COUNTIF(Q2:Q73,\"High\")","hint":"COUNTIF over the Priority column.","why":"COUNTIF(Q2:Q73, \"High\") counts rows where Priority is High."},
+ {"type":"formula","q":"Look up the <b>Customer</b> for Order ID <span class=\"mono\">10-10174653</span> (IDs in <span class=\"mono\">A</span>, customers in <span class=\"mono\">B</span>).","expect":"Network International","answer":"=XLOOKUP(\"10-10174653\",A2:A73,B2:B73)","hint":"XLOOKUP(lookup, lookup_array, return_array).","why":"XLOOKUP finds the ID in column A and returns the matching value from column B."},
+ {"type":"formula","q":"What <b>% of total revenue comes from EMEA</b>? Give it <b>rounded to 1 decimal</b>.","expect":86.2,"tol":0.1,"answer":"=ROUND(SUMIF(F2:F73,\"EMEA\",O2:O73)/SUM(O2:O73)*100,1)","hint":"EMEA revenue ÷ total revenue × 100, then ROUND.","why":"Divide the EMEA SUMIF by the overall SUM, ×100 for a percentage, then ROUND to 1 dp."},
+ {"type":"formula","q":"Return the <b>single largest order revenue</b> in column <span class=\"mono\">O</span>.","expect":40684,"answer":"=MAX(O2:O73)","hint":"MAX over the revenue column.","why":"MAX returns the highest value in the range."},
+ {"type":"formula","q":"Return the <b>total number of APs Migrated</b> across all orders (column <span class=\"mono\">P</span>).","expect":3003,"answer":"=SUM(P2:P73)","hint":"SUM the APs Migrated column.","why":"SUM(P2:P73) totals the APs Migrated column."},
+ {"q":"You need total revenue for <b>Delivered orders in EMEA</b>. Which formula is right?","opts":["=SUMIFS(O2:O73, H2:H73,\"Delivered\", F2:F73,\"EMEA\")","=SUMIF(O2:O73,\"Delivered\",F2:F73)","=SUM(O2:O73,\"Delivered\",\"EMEA\")","=SUMIF(O2:O73, H2:H73&F2:F73, \"DeliveredEMEA\")"],"correct":0,"why":"SUMIFS takes the sum range first, then criteria pairs (range, value). SUMIF allows only one condition."},
+ {"q":"A colleague inserts a column inside your lookup block and the result silently shows the <b>wrong</b> value. Which function was almost certainly used?","opts":["VLOOKUP with a hard-coded column number","XLOOKUP","INDEX/MATCH","FILTER"],"correct":0,"why":"VLOOKUP's fixed column index keeps pointing at the same position after a column shifts, returning a neighbouring value with no error. XLOOKUP and INDEX/MATCH reference columns directly."},
+ {"q":"You want a self-maintaining, duplicate-free, <b>sorted</b> customer list that updates as rows are added. Best choice?","opts":["=SORT(UNIQUE(B2:B73))","Data ▸ Remove Duplicates, then sort manually","=IF(COUNTIF($B$2:B2,B2)=1,B2,\"\")","A PivotTable with Customer in Rows"],"correct":0,"why":"SORT(UNIQUE()) spills a live list that recalculates automatically; the others are one-off or need a manual refresh."},
+ {"q":"In the messy file, <span class=\"mono\">FTE Days</span> shows <span class=\"mono\">7,7</span> and SUM ignores it. The real problem?","opts":["It's text — the comma decimal isn't read as a number","The numbers are too small to sum","SUM can't handle decimals","The column needs widening"],"correct":0,"why":"A comma-decimal under a non-matching locale stays as text and SUM skips text. Fix in Power Query: replace ',' with '.', then set type to Decimal Number."},
+ {"q":"<span class=\"mono\">=XLOOKUP(T1,A2:A73,B2:B73)</span> returns #N/A when the ID is missing. Cleanest fix?","opts":["Add XLOOKUP's 4th argument: =XLOOKUP(T1,A2:A73,B2:B73,\"Not found\")","Wrap it in IFERROR(...,\"Not found\")","Switch to VLOOKUP","Sort column A first"],"correct":0,"why":"XLOOKUP's built-in if_not_found argument is cleaner than IFERROR, which would also hide genuine errors like a broken reference."},
+ {"q":"You clean a weekly export in Power Query, then drop in next week's file. How do you get the cleaned result?","opts":["Data ▸ Refresh All — the recorded steps replay automatically","Re-do every cleaning step","Copy-paste the new rows under the old ones","Rebuild the query from scratch"],"correct":0,"why":"Power Query's Applied Steps are a recorded recipe; Refresh re-runs them against the new source automatically."},
+ {"q":"You drag a formula down and a range you want fixed keeps moving. What did you forget?","opts":["Absolute references with $ (e.g. $O$2:$O$73)","To press F5","A semicolon","To widen the column"],"correct":0,"why":"$ locks a reference so it doesn't shift when you copy/fill. $O$2 locks both column and row."},
+ {"q":"Which function safely returns a fallback instead of a #DIV/0! error?","opts":["=IFERROR(a/b,0)","=ISERROR(a/b)","=ROUND(a/b)","=CLEAN(a/b)"],"correct":0,"why":"IFERROR(value, fallback) returns the fallback when the expression errors — ideal for division that might hit zero."},
+ {"q":"To count how many orders each Region has, the quickest tool is…","opts":["A PivotTable with Region in Rows and Order ID in Values (Count)","Manual filtering and counting","A long nested IF","CONCAT of all regions"],"correct":0,"why":"PivotTables summarise by category instantly — drag Region to Rows and a field to Values set to Count."},
+ {"q":"What does <span class=\"mono\">=TEXTJOIN(\", \",TRUE,B2:B5)</span> do?","opts":["Joins the values with ', ', skipping blanks","Sums B2:B5","Counts non-blank cells","Splits text into columns"],"correct":0,"why":"TEXTJOIN(delimiter, ignore_empty, range) concatenates with a separator; TRUE skips empty cells."},
+ {"q":"<span class=\"mono\">=COUNTIFS(F2:F73,\"EMEA\",H2:H73,\"Delivered\")</span> returns…","opts":["The number of EMEA orders that are Delivered","Total EMEA revenue","All delivered orders anywhere","An error"],"correct":0,"why":"COUNTIFS counts rows meeting every condition — here Region = EMEA AND Status = Delivered."},
+ {"q":"Conditional formatting is best used to…","opts":["Highlight cells by rule (e.g. overdue dates) automatically","Permanently change the underlying values","Replace formulas","Sort the data"],"correct":0,"why":"Conditional formatting applies visual rules based on cell values without altering the data itself."}
+]
+</script>
+
+<footer class="foot"><div class="wrap">
+  <p>Excel track · DPM Learning Hub. Cell references assume the sample workbook (Projects sheet, rows 2–73). <a href="powerbi.html">Next up: Power BI →</a></p>
+</div></footer>
+
+<script src="assets/js/sample-data.js"></script>
+<script src="assets/js/excel-engine.js"></script>
+<script src="assets/js/playground.js"></script>
+<script src="assets/js/exam.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

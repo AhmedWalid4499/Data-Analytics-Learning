@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="sql">
+<div class="scrollbar"></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html" aria-current="page">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">⌘</span> SQL</span>
+  <h1>Ask your data<br>questions directly.</h1>
+  <p class="lead">SQL is how you pull, filter and summarise data straight from the source — the language behind almost every database, dashboard and report. This page teaches the core clauses, then lets you <b>run real queries in your browser</b> against the same DPM delivery dataset used across the hub. No setup, nothing to install.</p>
+</div></header>
+
+<!-- ORIENTATION -->
+<section><div class="wrap">
+  <span class="eyebrow">Orientation</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">What SQL is, and where it sits</h2>
+  <p class="lead" style="max-width:70ch">SQL (Structured Query Language) reads and writes data in <b>relational tables</b> — the rows-and-columns model from the <a href="data-foundations.html">Foundations</a> page. As an analyst you'll mostly write <b>SELECT</b> queries: pick columns, filter rows, group and aggregate. Master that and you can answer almost any "how much / how many / by what" question without waiting on anyone.</p>
+  <div class="pills" style="margin-top:8px">
+    <span class="term">SELECT</span><span class="term">WHERE</span><span class="term">ORDER BY</span><span class="term">GROUP BY</span><span class="term">HAVING</span><span class="term">JOIN</span><span class="term">aggregates</span>
+  </div>
+</div></section>
+
+<!-- THE DATA -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Your tables</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Two tables to play with</h2>
+  <p class="lead" style="max-width:70ch">The runner below loads a table called <code>orders</code> (72 delivery orders) and a small <code>targets</code> table (revenue target per region) so you can practise joins.</p>
+  <div class="grid cols-2">
+    <div class="card"><h3 style="margin-top:0"><code>orders</code></h3>
+      <p style="font-size:.92rem;color:var(--ink-soft)">72 rows. Columns:</p>
+      <p class="pills">
+        <span class="term">order_id</span><span class="term">customer</span><span class="term">site_code</span><span class="term">city</span><span class="term">country</span><span class="term">region</span><span class="term">service_type</span><span class="term">status</span><span class="term">dpm</span><span class="term">field_engineer</span><span class="term">order_date</span><span class="term">target_go_live</span><span class="term">actual_go_live</span><span class="term">fte_days</span><span class="term">revenue</span><span class="term">aps_migrated</span><span class="term">priority</span>
+      </p>
+    </div>
+    <div class="card"><h3 style="margin-top:0"><code>targets</code></h3>
+      <p style="font-size:.92rem;color:var(--ink-soft)">3 rows. Columns:</p>
+      <p class="pills"><span class="term">region</span><span class="term">revenue_target</span></p>
+      <p style="font-size:.9rem;color:var(--muted)">Join it to <code>orders</code> on <code>region</code> to compare actuals against target.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- CORE CLAUSES -->
+<section><div class="wrap">
+  <span class="eyebrow">The core clauses</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Build a query, one clause at a time</h2>
+  <p class="lead" style="max-width:70ch">SQL reads almost like English, and the clauses always run in a set order. Copy any example into the runner further down to see it work.</p>
+
+  <h3 style="margin:22px 0 4px">SELECT … FROM — choose columns</h3>
+  <p>Pick the columns you want from a table. <code>*</code> means "all columns".</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, region, revenue
+FROM orders;</span></div>
+
+  <h3 style="margin:22px 0 4px">WHERE — filter rows</h3>
+  <p>Keep only the rows that match a condition. Text goes in single quotes.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+WHERE region = 'EMEA' AND status = 'Delivered';</span></div>
+
+  <h3 style="margin:22px 0 4px">ORDER BY &amp; LIMIT — sort and cap</h3>
+  <p>Sort by a column (<code>DESC</code> for high-to-low) and keep just the top few.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
+FROM orders
+ORDER BY revenue DESC
+LIMIT 5;</span></div>
+
+  <h3 style="margin:22px 0 4px">Aggregates + GROUP BY — summarise</h3>
+  <p>Functions like <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code> collapse many rows into one. <code>GROUP BY</code> does it per category. <code>AS</code> renames a column.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region,
+       COUNT(*)        AS orders,
+       ROUND(SUM(revenue)) AS total_rev,
+       ROUND(AVG(fte_days),1) AS avg_fte
+FROM orders
+GROUP BY region
+ORDER BY total_rev DESC;</span></div>
+
+  <h3 style="margin:22px 0 4px">HAVING — filter groups</h3>
+  <p><code>WHERE</code> filters rows <em>before</em> grouping; <code>HAVING</code> filters the groups <em>after</em>.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT dpm, COUNT(*) AS orders
+FROM orders
+GROUP BY dpm
+HAVING COUNT(*) >= 10
+ORDER BY orders DESC;</span></div>
+
+  <h3 style="margin:22px 0 4px">JOIN — combine tables</h3>
+  <p>Match rows from two tables on a shared key. Here we compare each region's actual revenue to its target.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT o.region,
+       ROUND(SUM(o.revenue)) AS actual,
+       t.revenue_target,
+       ROUND(100.0 * SUM(o.revenue) / t.revenue_target) AS pct_of_target
+FROM orders o
+JOIN targets t ON o.region = t.region
+GROUP BY o.region
+ORDER BY actual DESC;</span></div>
+
+  <div class="note"><span class="ic">i</span><div><b>Order of execution:</b> <code>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code>. That's why you can't use a <code>SELECT</code> alias inside <code>WHERE</code> — the alias doesn't exist yet at that point.</div></div>
+</div></section>
+
+<!-- PLAYGROUND -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Try it for real</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">SQL runner</h2>
+  <p class="lead" style="max-width:70ch">A full SQLite engine, running entirely in your browser. Write a query and hit Run — or load an example to start. Tip: <kbd>Ctrl/Cmd + Enter</kbd> runs.</p>
+
+  <div class="play" id="sql-play">
+    <textarea class="code-in" id="sql-in" spellcheck="false" rows="6">SELECT region,
+       COUNT(*) AS orders,
+       ROUND(SUM(revenue)) AS total_rev
+FROM orders
+GROUP BY region
+ORDER BY total_rev DESC;</textarea>
+    <div class="play-actions">
+      <button class="btn" id="sql-run">▶ Run query</button>
+      <span class="legend" id="sql-status"></span>
+    </div>
+    <div class="chips">
+      <button class="chip-btn" data-f="SELECT * FROM orders LIMIT 10;">all columns</button>
+      <button class="chip-btn" data-f="SELECT customer, site_code, revenue FROM orders WHERE status='Delivered' ORDER BY revenue DESC LIMIT 5;">top 5 delivered</button>
+      <button class="chip-btn" data-f="SELECT service_type, COUNT(*) AS n, ROUND(AVG(fte_days),1) AS avg_fte FROM orders GROUP BY service_type ORDER BY n DESC;">by service type</button>
+      <button class="chip-btn" data-f="SELECT dpm, COUNT(*) AS orders, ROUND(SUM(revenue)) AS rev FROM orders GROUP BY dpm HAVING COUNT(*)>=10 ORDER BY rev DESC;">busy DPMs (HAVING)</button>
+      <button class="chip-btn" data-f="SELECT o.region, ROUND(SUM(o.revenue)) AS actual, t.revenue_target FROM orders o JOIN targets t ON o.region=t.region GROUP BY o.region;">join targets</button>
+      <button class="chip-btn" data-f="SELECT DISTINCT country FROM orders ORDER BY country;">distinct countries</button>
+    </div>
+    <div class="out" id="sql-out" style="margin-top:12px">Loading…</div>
+  </div>
+
+  <div class="note"><span class="ic">i</span><div>Everything runs locally on a copy of the data — you can't break anything. Try <code>UPDATE</code>, <code>INSERT</code> or <code>CREATE TABLE</code> too; refresh the page to reset.</div></div>
+</div></section>
+
+<!-- TIPS -->
+<section><div class="wrap">
+  <span class="eyebrow">Good habits</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">A few things that trip people up</h2>
+  <div class="deflist">
+    <div class="d"><b>Single vs double quotes</b> — text values use <code>'single quotes'</code>. Double quotes are for identifiers (column/table names), not strings.</div>
+    <div class="d"><b>= vs LIKE</b> — <code>=</code> is exact. For partial matches use <code>LIKE 'SD-WAN%'</code> (<code>%</code> = any characters, <code>_</code> = one character).</div>
+    <div class="d"><b>NULL is special</b> — use <code>IS NULL</code> / <code>IS NOT NULL</code>, never <code>= NULL</code>. Here, <code>actual_go_live</code> is NULL for orders not yet delivered.</div>
+    <div class="d"><b>Integer division</b> — <code>3/2</code> can return <code>1</code>. Multiply by <code>1.0</code> (e.g. <code>100.0 * a / b</code>) to force decimals.</div>
+    <div class="d"><b>COUNT(*) vs COUNT(col)</b> — <code>COUNT(*)</code> counts rows; <code>COUNT(col)</code> ignores NULLs in that column.</div>
+  </div>
+</div></section>
+
+<!-- EXAM -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Test yourself</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">SQL final exam</h2>
+  <p class="lead" style="max-width:70ch">A fresh, randomised mix every time — covering filtering, sorting, aggregation, grouping and joins. Treat it as a checkpoint, then go run more queries above.</p>
+  <div class="exam" data-bank="sqlBank" data-count="8"></div>
+</div></section>
+
+<script type="application/json" id="sqlBank">
+[
+ {"q":"Which clause filters <em>rows</em> before any grouping happens?","opts":["WHERE","HAVING","GROUP BY","ORDER BY"],"correct":0,"why":"WHERE filters individual rows before aggregation; HAVING filters groups afterwards."},
+ {"q":"How do you keep only the 5 highest-revenue orders?","opts":["ORDER BY revenue DESC LIMIT 5","WHERE revenue = TOP 5","GROUP BY revenue LIMIT 5","HAVING revenue > 5"],"correct":0,"why":"Sort descending by revenue, then LIMIT 5 caps the output to the top rows."},
+ {"q":"What does <code>COUNT(*)</code> return?","opts":["The number of rows","The sum of a column","The number of distinct values","The number of columns"],"correct":0,"why":"COUNT(*) counts rows. COUNT(col) counts non-NULL values in that column."},
+ {"q":"To total revenue per region, you need…","opts":["GROUP BY region with SUM(revenue)","ORDER BY region","SUM(region)","DISTINCT region"],"correct":0,"why":"GROUP BY region creates one group per region; SUM(revenue) aggregates within each."},
+ {"q":"Which correctly filters groups to DPMs with 10+ orders?","opts":["HAVING COUNT(*) >= 10","WHERE COUNT(*) >= 10","LIMIT 10","ORDER BY COUNT(*)"],"correct":0,"why":"Aggregate conditions go in HAVING; WHERE can't use aggregates because it runs before grouping."},
+ {"q":"How should you test whether <code>actual_go_live</code> has no value?","opts":["WHERE actual_go_live IS NULL","WHERE actual_go_live = NULL","WHERE actual_go_live = ''","WHERE actual_go_live = 0"],"correct":0,"why":"NULL comparisons need IS NULL / IS NOT NULL; = NULL never matches anything."},
+ {"q":"Which quote style is correct for a text value?","opts":["WHERE region = 'EMEA'","WHERE region = \"EMEA\"","WHERE region = EMEA","WHERE region = `EMEA`"],"correct":0,"why":"String literals use single quotes. Double quotes denote identifiers in standard SQL."},
+ {"q":"What does <code>SELECT DISTINCT service_type FROM orders</code> return?","opts":["Each unique service type once","Every row's service type","The count of service types","Service types over a threshold"],"correct":0,"why":"DISTINCT removes duplicates, returning each unique value a single time."},
+ {"q":"A JOIN between <code>orders</code> and <code>targets</code> matches rows on…","opts":["a shared key such as region","row position","alphabetical order","the primary key only"],"correct":0,"why":"A JOIN combines rows where the ON condition matches — here orders.region = targets.region."},
+ {"q":"For a partial text match like everything starting with 'SD-WAN', use…","opts":["LIKE 'SD-WAN%'","= 'SD-WAN%'","IN 'SD-WAN'","CONTAINS('SD-WAN')"],"correct":0,"why":"LIKE with the % wildcard matches any characters after 'SD-WAN'."},
+ {"q":"What does <code>AS</code> do in <code>SUM(revenue) AS total</code>?","opts":["Renames the output column to 'total'","Filters by total","Casts to text","Sorts by total"],"correct":0,"why":"AS gives a column (or table) an alias, making results readable and easy to reference."},
+ {"q":"Why might <code>100 * a / b</code> lose its decimals in SQL?","opts":["Integer division truncates — use 100.0","SQL rounds by default","AVG is needed","b is always zero"],"correct":0,"why":"Dividing two integers can truncate; using 100.0 forces floating-point math."}
+]
+</script>
+
+<footer class="foot"><div class="wrap">
+  <p>SQL track · DPM Learning Hub. The data here is fictional and runs entirely in your browser. <a href="data-foundations.html">← Foundations</a> · <a href="powerbi.html">On to Power BI →</a></p>
+</div></footer>
+
+<script src="assets/js/sample-data.js"></script>
+<script src="assets/vendor/sql-wasm.js"></script>
+<script src="assets/js/playground.js"></script>
+<script src="assets/js/exam.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

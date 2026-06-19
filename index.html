@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DPM Learning Hub — Excel · Power BI · Power Automate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="hub">
+<div class="scrollbar"></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">DPM</span> Built for the Delivery PM team</span>
+  <h1>Go from spreadsheets<br>to dashboards to<br>automations.</h1>
+  <p class="lead">A self-paced hub for new DPMs. Learn the tools we actually use — Excel, Power BI, and Power Automate — with worked examples on real delivery data, hands-on prompts, and answer keys you can check yourself. No prior experience assumed.</p>
+  <div class="pills" style="margin-top:22px">
+    <span class="pill">Worked examples</span>
+    <span class="pill">Practice prompts + answer keys</span>
+    <span class="pill">Downloadable sample data</span>
+    <span class="pill">Self-check quizzes</span>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <span class="eyebrow">Four tracks</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .1em">Pick where you want to start</h2>
+  <p class="lead" style="margin-bottom:26px">Each track follows its tool's own look and builds from basics to advanced. Work top to bottom, or jump to what you need.</p>
+
+  <div class="grid cols-2">
+    <a class="card tool-card" href="data-foundations.html">
+      <span class="chip" style="background:#6D28D9">01 · Foundations</span>
+      <h3>Understand the data first</h3>
+      <p>Tables, keys and relationships, how databases store rows in pages, ER &amp; EER diagrams, star vs snowflake schemas, and OLAP — the groundwork that makes everything else click.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card tool-card" href="excel.html">
+      <span class="chip" style="background:#217346">02 · Excel</span>
+      <h3>Excel foundations &amp; power moves</h3>
+      <p>Functions from <span class="mono">SUM</span> to <span class="mono">LAMBDA</span>, lookups, PivotTables, getting data from the web, and Power Query for repeatable cleaning.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card tool-card" href="powerbi.html">
+      <span class="chip" style="background:#1a1a1a;color:#F2C811">03 · Power BI</span>
+      <h3>From data to dashboards</h3>
+      <p>Load &amp; shape data, model relationships, write DAX measures, and choose the right chart — knowing when each one helps and when it misleads.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card tool-card" href="powerautomate.html">
+      <span class="chip" style="background:#0066FF">04 · Power Automate</span>
+      <h3>Automate the repetitive work</h3>
+      <p>Triggers, actions, conditions, loops and expressions explained — then design your own flows and check them against a worked answer key.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card tool-card" href="courses.html">
+      <span class="chip" style="background:#FF7900">05 · Courses</span>
+      <h3>Keep going further</h3>
+      <p>Free Microsoft Learn paths, the certifications worth having, and the best free video channels to deepen each skill.</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</div></section>
+
+<section style="background:var(--surface-2)"><div class="wrap">
+  <div class="grid cols-2" style="align-items:center;gap:40px">
+    <div>
+      <span class="eyebrow">One dataset, everywhere</span>
+      <h2 style="font-size:2rem;margin:.2em 0 .3em">Practice on delivery data that looks like ours</h2>
+      <p>Every track uses the same fictional dataset: 72 delivery orders across customers like SKF and Harman, with sites, regions, service types, statuses, dates, FTE days and revenue. Download it once and use it for every exercise.</p>
+      <p>There's also a deliberately <strong>messy</strong> copy — inconsistent text, missing values, European decimals and text dates — for the Power Query cleaning practice.</p>
+      <div class="pills" style="margin:18px 0">
+        <a class="dl" href="assets/data/dpm_projects.xlsx" download>⬇ Sample workbook (.xlsx)</a>
+        <a class="dl ghost" href="assets/data/dpm_projects.csv" download>⬇ CSV</a>
+        <a class="dl ghost" href="assets/data/dpm_messy_data.csv" download>⬇ Messy CSV</a>
+      </div>
+    </div>
+    <div class="card">
+      <table class="tbl" style="margin:0">
+        <thead><tr><th>Order ID</th><th>Customer</th><th>Service</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">10-1735&hellip;</td><td>SKF Industrial</td><td>LAN Refresh</td><td>Delivered</td></tr>
+          <tr><td class="mono">10-1736&hellip;</td><td>Harman Intl</td><td>Wireless Migration</td><td>In Progress</td></tr>
+          <tr><td class="mono">10-1737&hellip;</td><td>Network Intl</td><td>SD-WAN Migration</td><td>Staging</td></tr>
+          <tr><td class="mono">10-1738&hellip;</td><td>Volvo Group</td><td>MPLS Service Order</td><td>On Hold</td></tr>
+        </tbody>
+      </table>
+      <p class="hint" style="color:var(--muted);font-size:.85rem;margin:.6em 0 0">17 columns · 72 rows · fictional, for training only</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <span class="eyebrow">How to use this hub</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Learn by doing, then check yourself</h2>
+  <div class="grid cols-3">
+    <div class="card"><h3>1 · Read the worked example</h3><p>Each lesson explains the concept and shows it applied to the sample data, with the exact formula or step.</p></div>
+    <div class="card"><h3>2 · Try the prompt first</h3><p>Open the workbook and attempt the <em>Try it</em> task on your own before peeking. That struggle is where the learning sticks.</p></div>
+    <div class="card"><h3>3 · Reveal the answer key</h3><p>Click <em>Show answer</em> to compare your approach. If it differs but works — great, there's often more than one right way.</p></div>
+  </div>
+</div></section>
+
+<footer class="foot"><div class="wrap">
+  <p><strong>DPM Learning Hub</strong> · A training resource for the Delivery Project Management team.<br>
+  Sample data is fictional. Built to be hosted on GitHub Pages — drop the folder into your repo and it just works.</p>
+</div></footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

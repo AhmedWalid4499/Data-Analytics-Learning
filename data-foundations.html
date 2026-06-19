@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Foundations — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="data">
+<div class="scrollbar"></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html" aria-current="page">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">◧</span> Data foundations</span>
+  <h1>Understand the data<br>behind the dashboard.</h1>
+  <p class="lead">Before you build a chart, it helps to know how data is actually stored and related. This page covers the core ideas that make everything else click: tables and keys, how databases store rows in pages, ER and EER diagrams, star vs snowflake schemas, and OLAP. Every example uses the same DPM delivery dataset as the rest of the hub.</p>
+</div></header>
+
+<!-- WHY -->
+<section><div class="wrap">
+  <span class="eyebrow">Why this matters</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">A dashboard is only as good as its model</h2>
+  <p class="lead" style="max-width:70ch">Two analysts can pull the same numbers and get different answers — usually because one understood how the tables relate and the other didn't. Data modeling is the quiet skill that separates a report that's merely colourful from one that's correct. None of this is hard; it's mostly vocabulary and a few diagrams. Work top to bottom and it'll stick.</p>
+  <div class="pills" style="margin-top:10px">
+    <span class="term">Tables &amp; keys</span><span class="term">Storage &amp; pages</span><span class="term">ERD</span><span class="term">EERD</span><span class="term">Star vs Snowflake</span><span class="term">OLAP</span>
+  </div>
+</div></section>
+
+<!-- 1. RELATIONAL BASICS -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">1 · The relational model</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Tables, rows, columns &amp; keys</h2>
+  <p class="lead" style="max-width:70ch">A relational database stores data in <b>tables</b> (also called relations). Each <b>row</b> is one record (a tuple); each <b>column</b> is one attribute. The <b>schema</b> is the blueprint — which tables exist, their columns, data types and rules.</p>
+
+  <div class="deflist">
+    <div class="d"><b>Primary key (PK)</b> — a column (or set of columns) that uniquely identifies each row. <code>order_id</code> in an Orders table. No duplicates, never empty.</div>
+    <div class="d"><b>Foreign key (FK)</b> — a column that points to the primary key of another table. This is what <em>creates a relationship</em>. <code>customer_id</code> in Orders points to <code>customer_id</code> in Customers.</div>
+    <div class="d"><b>Composite key</b> — a primary key made of two or more columns together, used when no single column is unique on its own.</div>
+    <div class="d"><b>Surrogate key</b> — an artificial key (often an auto-number) used as the PK instead of "natural" data, so the key never has to change.</div>
+  </div>
+
+  <h3 style="margin:24px 0 6px">How tables relate</h3>
+  <p style="max-width:70ch">Relationships come in three shapes. The trick with many-to-many is that relational databases can't store it directly — you resolve it with a <b>junction</b> (bridge) table holding two foreign keys.</p>
+  <table class="tbl">
+    <tr><th>Relationship</th><th>Meaning</th><th>DPM example</th></tr>
+    <tr><td><b>One-to-one</b> (1:1)</td><td>A row here matches at most one row there</td><td>An Order has one delivery Sign-off record</td></tr>
+    <tr><td><b>One-to-many</b> (1:N)</td><td>One row here matches many rows there</td><td>One Customer has many Orders</td></tr>
+    <tr><td><b>Many-to-many</b> (M:N)</td><td>Many match many — needs a junction table</td><td>Engineers ↔ Sites (an engineer covers many sites; a site is covered by many engineers)</td></tr>
+  </table>
+
+  <h3 style="margin:24px 0 6px">Normalization, in one breath</h3>
+  <p style="max-width:70ch">Normalization means organising tables so each fact is stored <em>once</em>, to avoid update anomalies and redundancy.</p>
+  <div class="deflist">
+    <div class="d"><b>1NF</b> — every cell holds a single, atomic value; no repeating groups or comma-lists in a column.</div>
+    <div class="d"><b>2NF</b> — 1NF, plus every non-key column depends on the <em>whole</em> primary key (matters only for composite keys).</div>
+    <div class="d"><b>3NF</b> — 2NF, plus non-key columns depend on the key and nothing but the key (no column derived from another non-key column).</div>
+  </div>
+  <div class="note"><span class="ic">i</span><div>Transactional systems aim for 3NF to keep writes clean. Analytics systems often <b>denormalize</b> on purpose — trading some redundancy for fewer joins and faster reads. That tension is exactly what star vs snowflake is about (section 4).</div></div>
+</div></section>
+
+<!-- 2. STORAGE & PAGES -->
+<section><div class="wrap">
+  <span class="eyebrow">2 · Under the hood</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">How a database actually stores data: pages</h2>
+  <p class="lead" style="max-width:70ch">You query rows, but the database doesn't read rows one at a time. It reads and writes data in fixed-size blocks called <b>pages</b> (8&nbsp;KB in SQL Server and PostgreSQL; "blocks" in Oracle). The page is the smallest unit of I/O — grab one row and the engine actually loads the whole page it lives on.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+      <!-- disk file -->
+      <text x="120" y="28" text-anchor="middle" style="fill:var(--ink)" font-weight="700" font-size="15">Data file on disk</text>
+      <rect x="30" y="42" width="180" height="270" rx="10" style="fill:var(--surface-2);stroke:var(--line)" stroke-width="1.5"/>
+      <!-- pages -->
+      <g font-size="11">
+        <rect x="46" y="58" width="148" height="56" rx="6" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/>
+        <text x="56" y="74" style="fill:var(--accent)" font-family="JetBrains Mono" font-weight="700" font-size="10">Page 0 · 8 KB</text>
+        <line x1="56" y1="82" x2="184" y2="82" style="stroke:var(--line)"/><line x1="56" y1="94" x2="184" y2="94" style="stroke:var(--line)"/><line x1="56" y1="106" x2="184" y2="106" style="stroke:var(--line)"/>
+        <rect x="46" y="122" width="148" height="56" rx="6" style="fill:var(--surface);stroke:var(--accent)" stroke-width="2.4"/>
+        <text x="56" y="138" style="fill:var(--accent)" font-family="JetBrains Mono" font-weight="700" font-size="10">Page 1 · rows 4–7</text>
+        <line x1="56" y1="146" x2="184" y2="146" style="stroke:var(--line)"/><line x1="56" y1="158" x2="184" y2="158" style="stroke:var(--line)"/><line x1="56" y1="170" x2="184" y2="170" style="stroke:var(--line)"/>
+        <rect x="46" y="186" width="148" height="56" rx="6" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/>
+        <text x="56" y="202" style="fill:var(--accent)" font-family="JetBrains Mono" font-weight="700" font-size="10">Page 2 · 8 KB</text>
+        <line x1="56" y1="210" x2="184" y2="210" style="stroke:var(--line)"/><line x1="56" y1="222" x2="184" y2="222" style="stroke:var(--line)"/><line x1="56" y1="234" x2="184" y2="234" style="stroke:var(--line)"/>
+        <rect x="46" y="250" width="148" height="52" rx="6" style="fill:var(--surface);stroke:var(--line)" stroke-width="1.5"/>
+        <text x="56" y="266" style="fill:var(--muted)" font-family="JetBrains Mono" font-weight="700" font-size="10">Page 3 · …</text>
+      </g>
+      <!-- index -->
+      <text x="400" y="28" text-anchor="middle" style="fill:var(--ink)" font-weight="700" font-size="15">B-tree index</text>
+      <rect x="345" y="48" width="110" height="34" rx="7" style="fill:var(--accent);stroke:var(--accent)"/>
+      <text x="400" y="69" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">root</text>
+      <rect x="300" y="118" width="90" height="30" rx="7" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/>
+      <text x="345" y="138" text-anchor="middle" style="fill:var(--ink)" font-size="10">leaf: 1–3</text>
+      <rect x="410" y="118" width="90" height="30" rx="7" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/>
+      <text x="455" y="138" text-anchor="middle" style="fill:var(--ink)" font-size="10">leaf: 4–7</text>
+      <line x1="385" y1="82" x2="345" y2="118" style="stroke:var(--ink-soft)" stroke-width="1.4"/>
+      <line x1="415" y1="82" x2="455" y2="118" style="stroke:var(--ink-soft)" stroke-width="1.4"/>
+      <!-- pointer from leaf to page 1 -->
+      <path d="M410 140 C 300 175, 240 150, 196 150" style="fill:none;stroke:var(--accent-2)" stroke-width="2.2" stroke-dasharray="5 4"/>
+      <polygon points="196,150 206,145 206,155" style="fill:var(--accent-2)"/>
+      <text x="300" y="172" text-anchor="middle" style="fill:var(--muted)" font-size="10" font-family="JetBrains Mono">"row 5 is on page 1"</text>
+      <!-- buffer pool -->
+      <text x="630" y="28" text-anchor="middle" style="fill:var(--ink)" font-weight="700" font-size="15">Buffer pool (RAM)</text>
+      <rect x="540" y="42" width="190" height="150" rx="10" style="fill:var(--surface-2);stroke:var(--line)" stroke-width="1.5"/>
+      <rect x="558" y="92" width="154" height="56" rx="6" style="fill:var(--surface);stroke:var(--accent)" stroke-width="2.4"/>
+      <text x="568" y="108" style="fill:var(--accent)" font-family="JetBrains Mono" font-weight="700" font-size="10">Page 1 (cached)</text>
+      <line x1="568" y1="116" x2="700" y2="116" style="stroke:var(--line)"/><line x1="568" y1="128" x2="700" y2="128" style="stroke:var(--line)"/><line x1="568" y1="140" x2="700" y2="140" style="stroke:var(--line)"/>
+      <text x="635" y="74" text-anchor="middle" style="fill:var(--muted)" font-size="10">recently used pages kept here</text>
+      <!-- arrow disk->buffer -->
+      <path d="M196 150 C 360 250, 470 250, 558 130" style="fill:none;stroke:var(--ink-soft)" stroke-width="2"/>
+      <polygon points="558,130 548,131 553,140" style="fill:var(--ink-soft)"/>
+      <text x="380" y="268" text-anchor="middle" style="fill:var(--muted)" font-size="10">read whole page into memory once, reuse it</text>
+    </svg>
+    <p class="cap"><b>One row request pulls a whole page.</b> An index finds <em>which</em> page holds your row so the engine doesn't scan every page; the buffer pool keeps hot pages in RAM so repeat reads skip the disk entirely.</p>
+  </div>
+
+  <div class="deflist">
+    <div class="d"><b>Heap vs clustered</b> — a table with no clustered index is a "heap" (rows in no order). A clustered index physically sorts rows by the key, so range scans read fewer pages.</div>
+    <div class="d"><b>Index</b> — usually a B-tree. Like the index at the back of a book: it tells the engine the exact page, turning a full scan into a quick lookup. Great for reads, a small cost on writes.</div>
+    <div class="d"><b>Buffer pool / cache</b> — pages already read are held in memory. This is why the second run of a query is often much faster than the first.</div>
+    <div class="d"><b>ACID</b> — the guarantee transactional systems give: <em>Atomicity, Consistency, Isolation, Durability</em>. A transaction either fully happens or not at all, even if the power fails mid-write.</div>
+  </div>
+  <div class="note"><span class="ic">i</span><div>As an analyst you mostly <em>read</em> from these systems. Knowing about pages and indexes explains the practical stuff: why a missing index makes a query crawl, why <code>SELECT *</code> on a billion-row table is painful, and why analytics often copies data into a warehouse shaped for reading rather than writing.</div></div>
+</div></section>
+
+<!-- 3. ERD -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">3 · ER diagrams</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">ERD — mapping entities &amp; relationships</h2>
+  <p class="lead" style="max-width:70ch">An <b>Entity-Relationship Diagram</b> is the picture of your data model. <b>Entities</b> are the things you store (Customer, Order, Site). <b>Attributes</b> are their properties. <b>Relationships</b> are the lines between them, annotated with <b>cardinality</b> — how many of one relate to how many of another.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+      <!-- Customer -->
+      <rect x="30" y="55" width="180" height="150" rx="10" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.6"/>
+      <rect x="30" y="55" width="180" height="30" rx="10" style="fill:var(--accent)"/>
+      <rect x="30" y="72" width="180" height="13" style="fill:var(--accent)"/>
+      <text x="120" y="75" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">Customer</text>
+      <text x="46" y="108" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono"><tspan text-decoration="underline">customer_id</tspan> PK</text>
+      <text x="46" y="132" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">name</text>
+      <text x="46" y="156" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">region</text>
+      <text x="46" y="180" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">industry</text>
+      <!-- Order -->
+      <rect x="290" y="65" width="180" height="130" rx="10" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.6"/>
+      <rect x="290" y="65" width="180" height="30" rx="10" style="fill:var(--accent)"/>
+      <rect x="290" y="82" width="180" height="13" style="fill:var(--accent)"/>
+      <text x="380" y="85" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">Order</text>
+      <text x="306" y="118" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono"><tspan text-decoration="underline">order_id</tspan> PK</text>
+      <text x="306" y="142" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">customer_id FK</text>
+      <text x="306" y="166" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">site_id FK</text>
+      <!-- Site -->
+      <rect x="550" y="55" width="180" height="150" rx="10" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.6"/>
+      <rect x="550" y="55" width="180" height="30" rx="10" style="fill:var(--accent)"/>
+      <rect x="550" y="72" width="180" height="13" style="fill:var(--accent)"/>
+      <text x="640" y="75" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">Site</text>
+      <text x="566" y="108" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono"><tspan text-decoration="underline">site_id</tspan> PK</text>
+      <text x="566" y="132" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">site_code</text>
+      <text x="566" y="156" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">city</text>
+      <text x="566" y="180" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">country</text>
+      <!-- rel line Customer-Order -->
+      <line x1="210" y1="130" x2="290" y2="130" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <!-- one tick near customer -->
+      <line x1="232" y1="122" x2="232" y2="138" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <!-- crow's foot near order (many) -->
+      <line x1="268" y1="130" x2="290" y2="118" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="268" y1="130" x2="290" y2="130" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="268" y1="130" x2="290" y2="142" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <text x="250" y="116" text-anchor="middle" style="fill:var(--muted)" font-size="11">places</text>
+      <!-- rel line Order-Site -->
+      <line x1="470" y1="130" x2="550" y2="130" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="528" y1="122" x2="528" y2="138" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="492" y1="130" x2="470" y2="118" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="492" y1="130" x2="470" y2="130" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="492" y1="130" x2="470" y2="142" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <text x="510" y="116" text-anchor="middle" style="fill:var(--muted)" font-size="11">at</text>
+    </svg>
+    <p class="cap"><b>Read it as:</b> one Customer <em>places</em> many Orders; each Order is delivered <em>at</em> one Site. The single tick means "one", the fork (crow's foot) means "many". The FK columns in Order are what physically wire it together.</p>
+  </div>
+
+  <h3 style="margin:20px 0 6px">Crow's-foot cardinality, decoded</h3>
+  <table class="tbl">
+    <tr><th>Symbol at the end of a line</th><th>Means</th></tr>
+    <tr><td>│ (single bar)</td><td>Exactly one</td></tr>
+    <tr><td>○ (circle)</td><td>Zero (optional)</td></tr>
+    <tr><td>&lt; (fork / crow's foot)</td><td>Many</td></tr>
+    <tr><td>○&lt; </td><td>Zero or many</td></tr>
+    <tr><td>│&lt; </td><td>One or many</td></tr>
+    <tr><td>││ </td><td>One and only one</td></tr>
+  </table>
+
+  <div class="try">
+    <p style="margin:.2em 0 .6em"><b>Try it.</b> The full DPM dataset also tracks a <b>DPM</b> (project manager) and a <b>Field Engineer</b> per order. How would you add them to the ERD above, and what cardinality fits "a DPM manages many orders"?</p>
+    <details class="ans"><summary>Reveal a model answer</summary>
+    <p>Add two more entities — <code>DPM</code> and <code>FieldEngineer</code> — each with its own PK. Give <code>Order</code> two more foreign keys: <code>dpm_id</code> and <code>fe_id</code>. The relationships are one-to-many in both cases: one DPM manages many orders (DPM&nbsp;│——&lt;&nbsp;Order), one field engineer works many orders. If, in reality, an engineer can cover many sites <em>and</em> a site needs many engineers, that Engineer↔Site link is many-to-many and would need a junction table (e.g. <code>SiteCoverage</code> holding <code>site_id</code> + <code>fe_id</code>).</p>
+    </details>
+  </div>
+</div></section>
+
+<!-- 4. EERD -->
+<section><div class="wrap">
+  <span class="eyebrow">4 · Enhanced ER diagrams</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">EERD — when plain ERD isn't enough</h2>
+  <p class="lead" style="max-width:70ch">An <b>Enhanced (or Extended) ERD</b> adds object-oriented ideas on top of the basic ERD so you can model richer real-world structure. The big one is <b>generalization / specialization</b> — a supertype that shares attributes with its subtypes.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+      <!-- supertype -->
+      <rect x="215" y="20" width="190" height="92" rx="10" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.6"/>
+      <rect x="215" y="20" width="190" height="30" rx="10" style="fill:var(--accent)"/>
+      <rect x="215" y="37" width="190" height="13" style="fill:var(--accent)"/>
+      <text x="310" y="40" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">Employee</text>
+      <text x="231" y="72" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono"><tspan text-decoration="underline">emp_id</tspan> PK</text>
+      <text x="231" y="94" style="fill:var(--ink)" font-size="12" font-family="JetBrains Mono">name · email</text>
+      <!-- ISA circle -->
+      <line x1="310" y1="112" x2="310" y2="150" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <circle cx="310" cy="166" r="18" style="fill:var(--surface-2);stroke:var(--accent)" stroke-width="1.6"/>
+      <text x="310" y="171" text-anchor="middle" style="fill:var(--accent)" font-size="14" font-weight="800">d</text>
+      <text x="360" y="170" style="fill:var(--muted)" font-size="11">disjoint: an employee is exactly one subtype</text>
+      <!-- branches -->
+      <line x1="296" y1="178" x2="150" y2="222" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <line x1="324" y1="178" x2="470" y2="222" style="stroke:var(--ink-soft)" stroke-width="1.8"/>
+      <!-- subtype DPM -->
+      <rect x="60" y="224" width="180" height="80" rx="10" style="fill:var(--surface);stroke:var(--accent-2)" stroke-width="1.6"/>
+      <rect x="60" y="224" width="180" height="28" rx="10" style="fill:var(--accent-2)"/>
+      <rect x="60" y="240" width="180" height="12" style="fill:var(--accent-2)"/>
+      <text x="150" y="243" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">DPM</text>
+      <text x="76" y="273" style="fill:var(--ink)" font-size="11" font-family="JetBrains Mono">portfolio_size</text>
+      <text x="76" y="291" style="fill:var(--ink)" font-size="11" font-family="JetBrains Mono">cert_level</text>
+      <!-- subtype FE -->
+      <rect x="380" y="224" width="180" height="80" rx="10" style="fill:var(--surface);stroke:var(--accent-2)" stroke-width="1.6"/>
+      <rect x="380" y="224" width="180" height="28" rx="10" style="fill:var(--accent-2)"/>
+      <rect x="380" y="240" width="180" height="12" style="fill:var(--accent-2)"/>
+      <text x="470" y="243" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">Field Engineer</text>
+      <text x="396" y="273" style="fill:var(--ink)" font-size="11" font-family="JetBrains Mono">skills</text>
+      <text x="396" y="291" style="fill:var(--ink)" font-size="11" font-family="JetBrains Mono">home_depot</text>
+    </svg>
+    <p class="cap"><b>Generalization in action.</b> DPM and Field Engineer are both Employees — they <em>inherit</em> <code>emp_id</code>, <code>name</code>, <code>email</code> — but each adds its own attributes. The circle marks the specialization; <b>d</b> = disjoint.</p>
+  </div>
+
+  <h3 style="margin:20px 0 6px">The EERD concepts worth knowing</h3>
+  <div class="deflist">
+    <div class="d"><b>Generalization / Specialization (ISA)</b> — a supertype and its subtypes. Subtypes inherit the supertype's attributes and relationships.</div>
+    <div class="d"><b>Disjoint (d) vs Overlapping (o)</b> — disjoint: an instance belongs to <em>one</em> subtype only. Overlapping: it can belong to several (e.g. someone who is both a DPM and an Engineer).</div>
+    <div class="d"><b>Total vs Partial participation</b> — total (shown as a double line): every supertype instance <em>must</em> be in some subtype. Partial: it may belong to none.</div>
+    <div class="d"><b>Aggregation</b> — treating a whole relationship as a single higher-level entity so another relationship can connect to it.</div>
+    <div class="d"><b>Union / Category</b> — a subtype whose members come from a union of several different supertypes.</div>
+  </div>
+</div></section>
+
+<!-- 5. STAR VS SNOWFLAKE -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">5 · Data-warehouse modeling</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Star vs Snowflake schema</h2>
+  <p class="lead" style="max-width:70ch">For analytics you reshape data into <b>fact</b> and <b>dimension</b> tables. A <b>fact table</b> holds the events you measure — one row per order — with numeric <b>measures</b> and foreign keys. <b>Dimension tables</b> hold the descriptive context: who, what, where, when. How you arrange the dimensions gives you a star or a snowflake.</p>
+
+  <div class="grid cols-2" style="margin-top:8px">
+    <div class="card">
+      <span class="compare-tag" style="background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)">★ Star schema</span>
+      <div class="figure" style="margin:6px 0 0;border:none;box-shadow:none;padding:0;background:none">
+      <svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+        <!-- fact center -->
+        <rect x="120" y="120" width="120" height="64" rx="9" style="fill:var(--accent);stroke:var(--accent)"/>
+        <text x="180" y="148" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Fact_Orders</text>
+        <text x="180" y="166" text-anchor="middle" fill="#fff" font-size="9">revenue · fte · APs</text>
+        <!-- dims -->
+        <g font-size="10">
+          <rect x="120" y="20" width="120" height="40" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="180" y="44" text-anchor="middle" style="fill:var(--ink)">Dim_Date</text>
+          <rect x="20" y="60" width="110" height="40" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="75" y="84" text-anchor="middle" style="fill:var(--ink)">Dim_Customer</text>
+          <rect x="230" y="60" width="110" height="40" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="285" y="84" text-anchor="middle" style="fill:var(--ink)">Dim_Service</text>
+          <rect x="20" y="200" width="110" height="40" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="75" y="224" text-anchor="middle" style="fill:var(--ink)">Dim_Site</text>
+          <rect x="230" y="200" width="110" height="40" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="285" y="224" text-anchor="middle" style="fill:var(--ink)">Dim_DPM</text>
+        </g>
+        <g style="stroke:var(--ink-soft)" stroke-width="1.5">
+          <line x1="180" y1="120" x2="180" y2="60"/>
+          <line x1="120" y1="140" x2="130" y2="100"/>
+          <line x1="240" y1="140" x2="230" y2="100"/>
+          <line x1="120" y1="170" x2="130" y2="200"/>
+          <line x1="240" y1="170" x2="230" y2="200"/>
+        </g>
+      </svg>
+      </div>
+      <p style="font-size:.95rem;margin:6px 0 0">Each dimension is a <b>single table</b>, one join from the fact. Simple, fast, few joins.</p>
+    </div>
+    <div class="card">
+      <span class="compare-tag" style="background:color-mix(in srgb,var(--accent-2) 22%,transparent);color:var(--accent-2)">❄ Snowflake schema</span>
+      <div class="figure" style="margin:6px 0 0;border:none;box-shadow:none;padding:0;background:none">
+      <svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+        <rect x="120" y="120" width="120" height="64" rx="9" style="fill:var(--accent);stroke:var(--accent)"/>
+        <text x="180" y="148" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Fact_Orders</text>
+        <text x="180" y="166" text-anchor="middle" fill="#fff" font-size="9">revenue · fte · APs</text>
+        <g font-size="9.5">
+          <rect x="125" y="22" width="110" height="34" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="180" y="43" text-anchor="middle" style="fill:var(--ink)">Dim_Service</text>
+          <rect x="240" y="60" width="105" height="34" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.5"/><text x="292" y="81" text-anchor="middle" style="fill:var(--ink)">Dim_Date</text>
+          <!-- snowflaked site chain -->
+          <rect x="10" y="110" width="92" height="32" rx="7" style="fill:var(--surface);stroke:var(--accent-2)" stroke-width="1.5"/><text x="56" y="130" text-anchor="middle" style="fill:var(--ink)">Dim_Site</text>
+          <rect x="10" y="168" width="92" height="32" rx="7" style="fill:var(--surface);stroke:var(--accent-2)" stroke-width="1.5"/><text x="56" y="188" text-anchor="middle" style="fill:var(--ink)">Dim_City</text>
+          <rect x="10" y="226" width="92" height="32" rx="7" style="fill:var(--surface);stroke:var(--accent-2)" stroke-width="1.5"/><text x="56" y="246" text-anchor="middle" style="fill:var(--ink)">Dim_Country</text>
+          <rect x="125" y="226" width="100" height="32" rx="7" style="fill:var(--surface);stroke:var(--accent-2)" stroke-width="1.5"/><text x="175" y="246" text-anchor="middle" style="fill:var(--ink)">Dim_Region</text>
+        </g>
+        <g style="stroke:var(--ink-soft)" stroke-width="1.4">
+          <line x1="180" y1="120" x2="180" y2="56"/>
+          <line x1="240" y1="140" x2="240" y2="94"/>
+          <line x1="120" y1="150" x2="102" y2="126"/>
+          <line x1="56" y1="142" x2="56" y2="168"/>
+          <line x1="56" y1="200" x2="56" y2="226"/>
+          <line x1="102" y1="242" x2="125" y2="242"/>
+        </g>
+      </svg>
+      </div>
+      <p style="font-size:.95rem;margin:6px 0 0">Dimensions are <b>normalized</b> into sub-tables (Site → City → Country → Region). Less redundancy, more joins.</p>
+    </div>
+  </div>
+
+  <h3 style="margin:22px 0 6px">Which should you use?</h3>
+  <table class="tbl">
+    <tr><th></th><th>Star ★</th><th>Snowflake ❄</th></tr>
+    <tr><td>Dimensions</td><td>Denormalized (one table each)</td><td>Normalized into sub-tables</td></tr>
+    <tr><td>Joins to answer a query</td><td>Fewer (one hop)</td><td>More (multi-hop)</td></tr>
+    <tr><td>Query speed</td><td>Faster</td><td>Often slower</td></tr>
+    <tr><td>Storage</td><td>Slightly more (repeated text)</td><td>Less</td></tr>
+    <tr><td>Simplicity for report builders</td><td>High</td><td>Lower</td></tr>
+    <tr><td>Best for</td><td>Power BI &amp; most BI work</td><td>Very large dims or strict hierarchy control</td></tr>
+  </table>
+  <div class="note"><span class="ic">i</span><div><b>Rule of thumb:</b> in Power BI, prefer a <b>star schema</b>. The engine (VertiPaq) is built for it, DAX is simpler, and relationships stay easy to reason about. Snowflake only when a dimension is genuinely huge or a shared hierarchy must be enforced once. This connects straight to the <a href="powerbi.html">Power BI track</a>, where a clean star makes your measures behave.</div></div>
+</div></section>
+
+<!-- 6. OLAP -->
+<section><div class="wrap">
+  <span class="eyebrow">6 · OLAP</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">OLAP — analysing data by dimensions</h2>
+  <p class="lead" style="max-width:70ch">The systems that <em>run</em> the business (writing one order at a time) are <b>OLTP</b>. The systems you <em>analyse</em> with — slicing totals by region, by quarter, by service — are <b>OLAP</b>. Power BI's model is an OLAP-style layer sitting on top of your star schema.</p>
+
+  <table class="tbl">
+    <tr><th></th><th>OLTP (transactional)</th><th>OLAP (analytical)</th></tr>
+    <tr><td>Purpose</td><td>Run operations</td><td>Analyse &amp; decide</td></tr>
+    <tr><td>Typical query</td><td>Insert/update one order</td><td>Sum revenue by region by quarter</td></tr>
+    <tr><td>Data shape</td><td>Normalized (3NF)</td><td>Star / cube, denormalized</td></tr>
+    <tr><td>Reads vs writes</td><td>Many small writes</td><td>Few large reads</td></tr>
+    <tr><td>Example here</td><td>The GOLD order portal</td><td>Your Power BI KPI dashboard</td></tr>
+  </table>
+
+  <h3 style="margin:24px 0 6px">The OLAP cube</h3>
+  <p style="max-width:70ch">Think of measures sitting inside a cube whose edges are dimensions. Each cell is a pre-aggregated number — e.g. <em>revenue</em> for <em>EMEA</em> / <em>SD-WAN</em> / <em>Q1</em>.</p>
+  <div class="figure">
+    <svg viewBox="0 0 520 330" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+      <!-- cube faces -->
+      <polygon points="150,90 350,90 410,50 210,50" style="fill:color-mix(in srgb,var(--accent) 30%,var(--surface));stroke:var(--accent)" stroke-width="1.6"/>
+      <polygon points="350,90 410,50 410,210 350,250" style="fill:color-mix(in srgb,var(--accent) 18%,var(--surface));stroke:var(--accent)" stroke-width="1.6"/>
+      <polygon points="150,90 350,90 350,250 150,250" style="fill:var(--surface);stroke:var(--accent)" stroke-width="1.6"/>
+      <!-- front grid -->
+      <g style="stroke:var(--line)" stroke-width="1">
+        <line x1="216" y1="90" x2="216" y2="250"/><line x1="283" y1="90" x2="283" y2="250"/>
+        <line x1="150" y1="143" x2="350" y2="143"/><line x1="150" y1="196" x2="350" y2="196"/>
+      </g>
+      <!-- highlighted cell -->
+      <rect x="150" y="90" width="66" height="53" style="fill:color-mix(in srgb,var(--accent-2) 55%,transparent);stroke:var(--accent)" stroke-width="1.6"/>
+      <text x="183" y="122" text-anchor="middle" style="fill:var(--ink)" font-size="10" font-weight="700">€ 1.2M</text>
+      <!-- axis labels -->
+      <text x="250" y="278" text-anchor="middle" style="fill:var(--ink)" font-size="12" font-weight="700">Service type →</text>
+      <text x="120" y="170" text-anchor="middle" style="fill:var(--ink)" font-size="12" font-weight="700" transform="rotate(-90 120 170)">Quarter →</text>
+      <text x="400" y="36" text-anchor="middle" style="fill:var(--ink)" font-size="12" font-weight="700">Region ↗</text>
+      <text x="183" y="84" text-anchor="middle" style="fill:var(--muted)" font-size="9">EMEA · SD-WAN · Q1</text>
+    </svg>
+    <p class="cap"><b>One cell = one answer.</b> Slide along an axis and you're changing the question — by service, by quarter, by region.</p>
+  </div>
+
+  <h3 style="margin:24px 0 6px">The five OLAP operations</h3>
+  <div class="deflist">
+    <div class="d"><b>Roll-up</b> — aggregate <em>up</em> a hierarchy. Site totals → Country → Region. "Show revenue by region instead of by site."</div>
+    <div class="d"><b>Drill-down</b> — the reverse. Region → Country → Site. "EMEA looks high — break it down by site."</div>
+    <div class="d"><b>Slice</b> — fix one dimension to a single value, taking a flat slab of the cube. "Just Q1, all regions, all services."</div>
+    <div class="d"><b>Dice</b> — pick a sub-cube across several dimensions. "Q1–Q2, SD-WAN + LAN only, EMEA + APAC."</div>
+    <div class="d"><b>Pivot (rotate)</b> — reorient the axes. Swap services-as-rows for regions-as-rows to read the same data a different way.</div>
+  </div>
+
+  <h3 style="margin:24px 0 6px">The questions OLAP is built to answer</h3>
+  <p style="max-width:70ch">If a business question sounds like "<em>measure</em> by <em>dimension</em> by <em>dimension</em>", it's an OLAP question. A few from the DPM world:</p>
+  <table class="tbl">
+    <tr><th>Question</th><th>Operation</th></tr>
+    <tr><td>Total revenue by region this year</td><td>Roll-up</td></tr>
+    <tr><td>That region is high — show it by site</td><td>Drill-down</td></tr>
+    <tr><td>On-time delivery % for Q1 only</td><td>Slice</td></tr>
+    <tr><td>FTE days for SD-WAN + LAN across EMEA &amp; APAC, H1</td><td>Dice</td></tr>
+    <tr><td>Flip the table: services down the side, quarters across the top</td><td>Pivot</td></tr>
+  </table>
+
+  <!-- QUIZ -->
+  <h3 style="margin:30px 0 6px">Quick self-check</h3>
+  <div class="quiz">
+    <p><b>1.</b> In a star schema, what does the <em>fact</em> table mainly hold?</p>
+    <button class="opt" data-correct="1">Numeric measures + foreign keys to dimensions</button>
+    <button class="opt">Long descriptive text about customers</button>
+    <button class="opt">One row per dimension value</button>
+    <p class="fb" data-msg="The fact table is the events you measure (one row per order) with measures like revenue and FKs out to the dimensions."></p>
+  </div>
+  <div class="quiz">
+    <p><b>2.</b> You're modeling for Power BI and want simple relationships and fast queries. Which do you lean toward?</p>
+    <button class="opt" data-correct="1">Star schema</button>
+    <button class="opt">Snowflake schema</button>
+    <button class="opt">Fully normalized 3NF OLTP tables</button>
+    <p class="fb" data-msg="Power BI's engine and DAX are happiest with a star: denormalized dimensions, one hop from the fact."></p>
+  </div>
+  <div class="quiz">
+    <p><b>3.</b> "EMEA is high — show me the breakdown by individual site." Which OLAP operation is that?</p>
+    <button class="opt">Roll-up</button>
+    <button class="opt" data-correct="1">Drill-down</button>
+    <button class="opt">Slice</button>
+    <p class="fb" data-msg="Going from a higher level (region) down to a lower one (site) is drilling down."></p>
+  </div>
+  <div class="quiz">
+    <p><b>4.</b> Why does a database read an entire <em>page</em> when you only asked for one row?</p>
+    <button class="opt" data-correct="1">The page is the smallest unit of disk I/O</button>
+    <button class="opt">To check every row for duplicates</button>
+    <button class="opt">Because rows have no fixed location</button>
+    <p class="fb" data-msg="Engines read and write whole fixed-size pages (e.g. 8 KB); an index tells them which page, and the buffer pool caches it for reuse."></p>
+  </div>
+</div></section>
+
+<footer class="foot"><div class="wrap">
+  <p>Data Foundations · DPM Learning Hub. Get the model right and Excel, Power BI and Power Automate all get easier. <a href="index.html">Back to home →</a> · <a href="powerbi.html">On to Power BI →</a></p>
+</div></footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
