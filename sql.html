@@ -32,16 +32,6 @@
   <p class="lead">SQL is how you pull, filter and summarise data straight from the source — the language behind almost every database, dashboard and report. This page teaches the core clauses, then lets you <b>run real queries in your browser</b> against the same DPM delivery dataset used across the hub. No setup, nothing to install.</p>
 </div></header>
 
-<!-- ORIENTATION -->
-<section><div class="wrap">
-  <span class="eyebrow">Orientation</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .35em">What SQL is, and where it sits</h2>
-  <p class="lead" style="max-width:70ch">SQL (Structured Query Language) reads and writes data in <b>relational tables</b> — the rows-and-columns model from the <a href="data-foundations.html">Foundations</a> page. As an analyst you'll mostly write <b>SELECT</b> queries: pick columns, filter rows, group and aggregate. Master that and you can answer almost any "how much / how many / by what" question without waiting on anyone.</p>
-  <div class="pills" style="margin-top:8px">
-    <span class="term">SELECT</span><span class="term">WHERE</span><span class="term">ORDER BY</span><span class="term">GROUP BY</span><span class="term">HAVING</span><span class="term">JOIN</span><span class="term">aggregates</span>
-  </div>
-</div></section>
-
 <!-- DOWNLOAD SETUP GUIDE -->
 <section><div class="wrap">
   <div class="card" style="border-left:4px solid var(--accent);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap">
@@ -50,20 +40,6 @@
       <p style="margin:0;color:var(--ink-soft)">Everything on this page runs in your browser — but when you're ready to install a real SQL Server on Windows, this step-by-step guide walks you through it end to end: the engine, the tools, connecting, your first query, and fixes for what commonly goes wrong.</p>
     </div>
     <a class="btn" href="assets/docs/Setting-up-SQL-Server-on-Windows.docx" download>⬇ Download setup guide (Word)</a>
-  </div>
-</div></section>
-
-<!-- LEVELS -->
-<section style="background:var(--surface-2)"><div class="wrap">
-  <span class="eyebrow">The path</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .35em">Five levels, basics to advanced</h2>
-  <p class="lead" style="max-width:70ch">You don't need all of SQL at once. Climb these five levels in order — the lessons below follow the same path, and everything is runnable in the in-browser engine.</p>
-  <div class="deflist">
-    <div class="d"><b>Level 1 · Read data</b> — <code>SELECT</code>, <code>FROM</code>, <code>WHERE</code>, <code>ORDER BY</code>, <code>LIMIT</code>. Pull columns, filter rows, sort, and cap the output.</div>
-    <div class="d"><b>Level 2 · Summarise</b> — aggregates (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code>), <code>GROUP BY</code>, column aliases with <code>AS</code>, and <code>DISTINCT</code>. Turn many rows into one number per category.</div>
-    <div class="d"><b>Level 3 · Filter &amp; shape</b> — <code>HAVING</code>, pattern matching with <code>LIKE</code>, <code>IN</code>/<code>BETWEEN</code>, <code>NULL</code> handling, and <code>CASE</code> for if-then logic.</div>
-    <div class="d"><b>Level 4 · Combine tables</b> — <code>JOIN</code> (inner and <code>LEFT JOIN</code>) to bring two tables together on a shared key.</div>
-    <div class="d"><b>Level 5 · Advanced</b> — subqueries, common table expressions (<code>WITH</code>), and window functions (<code>RANK() OVER (...)</code>) for ranking and running totals without collapsing rows.</div>
   </div>
 </div></section>
 
@@ -87,51 +63,149 @@
   </div>
 </div></section>
 
-<!-- CORE CLAUSES -->
+<!-- CLAUSES BY LEVEL -->
 <section><div class="wrap">
-  <span class="eyebrow">The core clauses</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .35em">Build a query, one clause at a time</h2>
-  <p class="lead" style="max-width:70ch">SQL reads almost like English, and the clauses always run in a set order. Copy any example into the runner further down to see it work.</p>
+  <span class="eyebrow">Clauses by level</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .2em">Build your SQL vocabulary</h2>
+  <p class="lead">SQL reads and summarises data in <b>relational tables</b> — the model from the <a href="data-foundations.html">Foundations</a> page. This track is split into <strong>three levels</strong> — tap any card to switch. Start at Level 1 and climb. Each clause has a worked example on the <code>orders</code> table and a task to try yourself — paste your answer into the <a href="#runner">runner below</a> to check it.</p>
 
-  <h3 style="margin:22px 0 4px">SELECT … FROM — choose columns</h3>
-  <p>Pick the columns you want from a table. <code>*</code> means "all columns".</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, region, revenue
+  <div class="tiers" data-tiers="s" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab">
+      <span class="lvl">1</span>
+      <span class="tier-txt"><b>Basic</b><small>SELECT, WHERE, ORDER BY, DISTINCT</small></span>
+    </button>
+    <button class="tier-btn" data-tier="inter" aria-selected="false" role="tab">
+      <span class="lvl">2</span>
+      <span class="tier-txt"><b>Intermediate</b><small>Aggregates, GROUP BY, HAVING, JOIN</small></span>
+    </button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab">
+      <span class="lvl">3</span>
+      <span class="tier-txt"><b>Advanced</b><small>CASE, subqueries, CTEs, window functions</small></span>
+    </button>
+  </div>
+
+  <!-- ===================== BASIC ===================== -->
+  <div data-tier-panel="s" data-tier="basic" class="tier-panel active">
+
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">SELECT / FROM</span> Choose columns <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Pick the columns you want from a table. <code>*</code> means "all columns"; otherwise list names separated by commas.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, region, revenue
 FROM orders;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Return just the <code>site_code</code> and <code>city</code> for every order.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT site_code, city
+FROM orders;</span></div>
+          <p>Column names go after <code>SELECT</code>; the table after <code>FROM</code>.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">WHERE — filter rows</h3>
-  <p>Keep only the rows that match a condition. Text goes in single quotes.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">WHERE</span> Filter rows <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Keep only the rows that match a condition. Text values go in <code>'single quotes'</code>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
 FROM orders
 WHERE region = 'EMEA' AND status = 'Delivered';</span></div>
+      <div class="note"><span class="ic">i</span><div>Operators: <span class="mono">=</span> equals, <span class="mono">&lt;&gt;</span> not equal, <span class="mono">&gt; &lt; &gt;= &lt;=</span>, and <span class="mono">AND</span> / <span class="mono">OR</span> to combine conditions.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>List the <code>customer</code> and <code>revenue</code> of every order in the <em>APAC</em> region.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+WHERE region = 'APAC';</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">ORDER BY &amp; LIMIT — sort and cap</h3>
-  <p>Sort by a column (<code>DESC</code> for high-to-low) and keep just the top few.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">ORDER BY / LIMIT</span> Sort and cap <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Sort by a column (<code>DESC</code> for high-to-low, <code>ASC</code> for low-to-high) and keep just the top few with <code>LIMIT</code>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
 FROM orders
 ORDER BY revenue DESC
 LIMIT 5;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Show the <strong>3 smallest</strong> orders by revenue (customer and revenue).</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+ORDER BY revenue ASC
+LIMIT 3;</span></div>
+          <p><code>ASC</code> is the default sort, but spelling it out makes intent clear.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">Aggregates + GROUP BY — summarise</h3>
-  <p>Functions like <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code> collapse many rows into one. <code>GROUP BY</code> does it per category. <code>AS</code> renames a column.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region,
-       COUNT(*)        AS orders,
-       ROUND(SUM(revenue)) AS total_rev,
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">DISTINCT</span> Unique values <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Remove duplicates so each value appears once — handy for "what values exist in this column?".</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT DISTINCT country
+FROM orders
+ORDER BY country;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>List each <code>service_type</code> exactly once.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT DISTINCT service_type
+FROM orders;</span></div>
+        </div></details>
+      </div>
+    </div></details>
+
+  </div>
+
+  <!-- ===================== INTERMEDIATE ===================== -->
+  <div data-tier-panel="s" data-tier="inter" class="tier-panel">
+
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Aggregates + GROUP BY</span> Summarise <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p><code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code> collapse many rows into one. <code>GROUP BY</code> does it per category, and <code>AS</code> renames the output column.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region,
+       COUNT(*)               AS orders,
+       ROUND(SUM(revenue))    AS total_rev,
        ROUND(AVG(fte_days),1) AS avg_fte
 FROM orders
 GROUP BY region
 ORDER BY total_rev DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>For each <code>service_type</code>, show the number of orders and total revenue, busiest first.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT service_type,
+       COUNT(*)            AS orders,
+       ROUND(SUM(revenue)) AS total_rev
+FROM orders
+GROUP BY service_type
+ORDER BY orders DESC;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">HAVING — filter groups</h3>
-  <p><code>WHERE</code> filters rows <em>before</em> grouping; <code>HAVING</code> filters the groups <em>after</em>.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT dpm, COUNT(*) AS orders
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">HAVING</span> Filter groups <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p><code>WHERE</code> filters rows <em>before</em> grouping; <code>HAVING</code> filters the groups <em>after</em>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT dpm, COUNT(*) AS orders
 FROM orders
 GROUP BY dpm
 HAVING COUNT(*) >= 10
 ORDER BY orders DESC;</span></div>
+      <div class="note"><span class="ic">i</span><div><b>Order of execution:</b> <code>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code>. That's why a <code>SELECT</code> alias can't be used in <code>WHERE</code> — it doesn't exist yet.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Which customers have <strong>more than 8</strong> orders? Show the customer and the count.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, COUNT(*) AS orders
+FROM orders
+GROUP BY customer
+HAVING COUNT(*) > 8
+ORDER BY orders DESC;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">JOIN — combine tables</h3>
-  <p>Match rows from two tables on a shared key. Here we compare each region's actual revenue to its target.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT o.region,
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">JOIN</span> Combine tables <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>Match rows from two tables on a shared key. Here we compare each region's actual revenue to its target from the <code>targets</code> table.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT o.region,
        ROUND(SUM(o.revenue)) AS actual,
        t.revenue_target,
        ROUND(100.0 * SUM(o.revenue) / t.revenue_target) AS pct_of_target
@@ -139,36 +213,68 @@ FROM orders o
 JOIN targets t ON o.region = t.region
 GROUP BY o.region
 ORDER BY actual DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Show each region with its actual total revenue and its <code>revenue_target</code> side by side.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT o.region,
+       ROUND(SUM(o.revenue)) AS actual,
+       t.revenue_target
+FROM orders o
+JOIN targets t ON o.region = t.region
+GROUP BY o.region;</span></div>
+          <p>Table aliases (<code>o</code>, <code>t</code>) keep the column references short and unambiguous.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-  <div class="note"><span class="ic">i</span><div><b>Order of execution:</b> <code>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code>. That's why you can't use a <code>SELECT</code> alias inside <code>WHERE</code> — the alias doesn't exist yet at that point.</div></div>
-</div></section>
+  </div>
 
-<!-- ADVANCED -->
-<section><div class="wrap">
-  <span class="eyebrow">Levels 3 &amp; 5 · go deeper</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .35em">Shaping logic and advanced queries</h2>
-  <p class="lead" style="max-width:70ch">Once the core clauses feel natural, these four take you most of the rest of the way. All of them run in the engine below.</p>
+  <!-- ===================== ADVANCED ===================== -->
+  <div data-tier-panel="s" data-tier="adv" class="tier-panel">
 
-  <h3 style="margin:22px 0 4px">CASE — if-then logic in a column</h3>
-  <p>Bucket rows into categories on the fly, then group by the result.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT CASE WHEN revenue >= 30000 THEN 'large'
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">CASE</span> If-then logic in a column <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Bucket rows into categories on the fly, then group by the result.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT CASE WHEN revenue >= 30000 THEN 'large'
             WHEN revenue >= 15000 THEN 'mid'
             ELSE 'small' END AS band,
        COUNT(*) AS orders
 FROM orders
 GROUP BY band
 ORDER BY orders DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Label each order <em>'High'</em> when <code>priority</code> is 'High', otherwise <em>'Other'</em>, and count each label.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT CASE WHEN priority = 'High' THEN 'High' ELSE 'Other' END AS bucket,
+       COUNT(*) AS n
+FROM orders
+GROUP BY bucket;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">Subqueries — a query inside a query</h3>
-  <p>Use the result of one query inside another. Here: orders above the overall average revenue.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Subquery</span> A query inside a query <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Use the result of one query inside another. Here: orders above the overall average revenue.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
 FROM orders
 WHERE revenue > (SELECT AVG(revenue) FROM orders)
 ORDER BY revenue DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>List orders whose revenue is above the average revenue <strong>of EMEA orders</strong>.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+WHERE revenue > (SELECT AVG(revenue) FROM orders WHERE region = 'EMEA')
+ORDER BY revenue DESC;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">CTE (WITH) — name a step for readability</h3>
-  <p>A common table expression is a named temporary result you can build on — cleaner than nesting subqueries.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">WITH region_rev AS (
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">CTE (WITH)</span> Name a step for readability <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>A common table expression is a named temporary result you can build on — cleaner than nesting subqueries.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">WITH region_rev AS (
   SELECT region, SUM(revenue) AS total
   FROM orders
   GROUP BY region
@@ -176,18 +282,61 @@ ORDER BY revenue DESC;</span></div>
 SELECT region, total
 FROM region_rev
 ORDER BY total DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Using a CTE of orders-per-DPM, return only the DPMs with <strong>10 or more</strong> orders.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">WITH c AS (
+  SELECT dpm, COUNT(*) AS n
+  FROM orders
+  GROUP BY dpm
+)
+SELECT * FROM c
+WHERE n >= 10
+ORDER BY n DESC;</span></div>
+          <p>Because the CTE already computed <code>n</code>, you can filter on it with a plain <code>WHERE</code>.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-  <h3 style="margin:22px 0 4px">Window functions — rank without collapsing rows</h3>
-  <p>Aggregate <em>across</em> rows while keeping every row. <code>RANK() OVER (...)</code> ranks each order by revenue within its region.</p>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region, customer, revenue,
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Window functions</span> Rank without collapsing rows <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Aggregate <em>across</em> rows while keeping every row. <code>RANK() OVER (...)</code> ranks each order by revenue within its region.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region, customer, revenue,
        RANK() OVER (PARTITION BY region ORDER BY revenue DESC) AS rev_rank
 FROM orders
 ORDER BY region, rev_rank
 LIMIT 15;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Rank <strong>all</strong> orders by revenue (highest = 1), showing customer, revenue and the rank.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue,
+       RANK() OVER (ORDER BY revenue DESC) AS rnk
+FROM orders
+ORDER BY rnk
+LIMIT 15;</span></div>
+          <p>Drop <code>PARTITION BY</code> to rank across the whole table instead of within each group.</p>
+        </div></details>
+      </div>
+    </div></details>
+
+  </div>
+</div></section>
+
+<!-- GOOD HABITS -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Good habits</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">A few things that trip people up</h2>
+  <div class="deflist">
+    <div class="d"><b>Single vs double quotes</b> — text values use <code>'single quotes'</code>. Double quotes are for identifiers (column/table names), not strings.</div>
+    <div class="d"><b>= vs LIKE</b> — <code>=</code> is exact. For partial matches use <code>LIKE 'SD-WAN%'</code> (<code>%</code> = any characters, <code>_</code> = one character).</div>
+    <div class="d"><b>NULL is special</b> — use <code>IS NULL</code> / <code>IS NOT NULL</code>, never <code>= NULL</code>. Here, <code>actual_go_live</code> is NULL for orders not yet delivered.</div>
+    <div class="d"><b>Integer division</b> — <code>3/2</code> can return <code>1</code>. Multiply by <code>1.0</code> (e.g. <code>100.0 * a / b</code>) to force decimals.</div>
+    <div class="d"><b>COUNT(*) vs COUNT(col)</b> — <code>COUNT(*)</code> counts rows; <code>COUNT(col)</code> ignores NULLs in that column.</div>
+  </div>
 </div></section>
 
 <!-- PLAYGROUND -->
-<section style="background:var(--surface-2)"><div class="wrap">
+<section id="runner"><div class="wrap">
   <span class="eyebrow">Try it for real</span>
   <h2 style="font-size:2rem;margin:.2em 0 .35em">SQL runner</h2>
   <p class="lead" style="max-width:70ch">A full SQLite engine, running entirely in your browser. Write a query and hit Run — or load an example to start. Tip: <kbd>Ctrl/Cmd + Enter</kbd> runs.</p>
@@ -218,19 +367,6 @@ ORDER BY total_rev DESC;</textarea>
   </div>
 
   <div class="note"><span class="ic">i</span><div>Everything runs locally on a copy of the data — you can't break anything. Try <code>UPDATE</code>, <code>INSERT</code> or <code>CREATE TABLE</code> too; refresh the page to reset. Prefer the real thing? <a href="assets/docs/Setting-up-SQL-Server-on-Windows.docx" download>Download the Windows setup guide</a>.</div></div>
-</div></section>
-
-<!-- TIPS -->
-<section><div class="wrap">
-  <span class="eyebrow">Good habits</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .35em">A few things that trip people up</h2>
-  <div class="deflist">
-    <div class="d"><b>Single vs double quotes</b> — text values use <code>'single quotes'</code>. Double quotes are for identifiers (column/table names), not strings.</div>
-    <div class="d"><b>= vs LIKE</b> — <code>=</code> is exact. For partial matches use <code>LIKE 'SD-WAN%'</code> (<code>%</code> = any characters, <code>_</code> = one character).</div>
-    <div class="d"><b>NULL is special</b> — use <code>IS NULL</code> / <code>IS NOT NULL</code>, never <code>= NULL</code>. Here, <code>actual_go_live</code> is NULL for orders not yet delivered.</div>
-    <div class="d"><b>Integer division</b> — <code>3/2</code> can return <code>1</code>. Multiply by <code>1.0</code> (e.g. <code>100.0 * a / b</code>) to force decimals.</div>
-    <div class="d"><b>COUNT(*) vs COUNT(col)</b> — <code>COUNT(*)</code> counts rows; <code>COUNT(col)</code> ignores NULLs in that column.</div>
-  </div>
 </div></section>
 
 <!-- EXAM -->
