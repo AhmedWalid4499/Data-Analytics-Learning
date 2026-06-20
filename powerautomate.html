@@ -33,6 +33,17 @@
   <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:14px">Open <strong>make.powerautomate.com</strong> with your work account to follow along. No data download needed — the exercises are design challenges.</p>
 </div></header>
 
+<!-- DOWNLOAD -->
+<section><div class="wrap">
+  <div class="card" style="border-left:4px solid var(--accent);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+    <div style="flex:1 1 340px">
+      <h3 style="margin:0 0 .3em">Grab the printable cheat sheet</h3>
+      <p style="margin:0;color:var(--ink-soft)">A dense, two-page Power Automate reference — flow types, controls, and the expression functions you'll reach for most (triggerBody, items, formatDateTime, OData filters) — in the style of the classic R/RStudio cards.</p>
+    </div>
+    <a class="btn" href="assets/docs/Power-Automate-Cheat-Sheet.pdf" download>⬇ Download cheat sheet (PDF)</a>
+  </div>
+</div></section>
+
 <!-- WHAT IS IT -->
 <section><div class="wrap">
   <span class="eyebrow">Orientation</span>
@@ -62,7 +73,15 @@
 <section><div class="wrap">
   <span class="eyebrow">The building blocks</span>
   <h2 style="font-size:2rem;margin:.2em 0 .3em">Every element, explained</h2>
-  <p class="lead">These are the pieces you'll drag together inside a flow. Learn what each one is for and you can build almost anything.</p>
+  <p class="lead">These are the pieces you drag together inside a flow, grouped into <strong>three levels</strong> — tap a card to switch. Learn what each is for and you can build almost anything. Remember the spine: a <strong>trigger</strong> (the "when") followed by <strong>actions</strong> (the "then").</p>
+
+  <div class="tiers" data-tiers="f" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab"><span class="lvl">1</span><span class="tier-txt"><b>Basics</b><small>Trigger, action, connector, data</small></span></button>
+    <button class="tier-btn" data-tier="logic" aria-selected="false" role="tab"><span class="lvl">2</span><span class="tier-txt"><b>Logic</b><small>Conditions, loops, variables</small></span></button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab"><span class="lvl">3</span><span class="tier-txt"><b>Advanced</b><small>Expressions &amp; approvals</small></span></button>
+  </div>
+
+  <div data-tier-panel="f" data-tier="basic" class="tier-panel active">
 
   <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Trigger</span> The "when" <span class="tag">Core</span></summary>
   <div class="body"><p>The event that starts the flow. Exactly one per flow. Choosing it well matters: <span class="mono">When an item is created</span> vs <span class="mono">created or modified</span> changes everything downstream. Many triggers have filters (e.g. only emails with a certain subject) — use them to avoid firing on everything.</p></div></details>
@@ -77,7 +96,11 @@
   <div class="body"><p>The output of one step, dropped into a later one — the email's subject, the new item's ID, the file name. This is the wiring that makes a flow more than a list of unrelated actions.</p>
   <div class="note"><span class="ic">i</span><div>If the dynamic value you need isn't offered, it's usually because the step that produces it is <em>below</em> the one you're editing, or inside a different branch.</div></div></div></details>
 
-  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Condition</span> If / else <span class="tag">Logic</span></summary>
+  </div>
+
+  <div data-tier-panel="f" data-tier="logic" class="tier-panel">
+
+  <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Condition</span> If / else <span class="tag">Logic</span></summary>
   <div class="body"><p>Splits the flow into a <strong>Yes</strong> branch and a <strong>No</strong> branch based on a test (Priority is equal to "High"). Put the steps for each outcome in the matching branch.</p>
   <div class="code"><button class="copy">Copy</button><span class="code-text">Condition:  Priority   is equal to   High
    ├─ If yes →  send the manager an alert
@@ -102,7 +125,11 @@ Increment variable    →  TotalRevenue  by  items('Apply_to_each')?['Revenue']<
   <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Scope &amp; parallel branch</span> Group and split <span class="tag">Logic</span></summary>
   <div class="body"><p><strong>Scope</strong> groups several actions into one block — useful for a single "try" you can wrap error handling around (set the next Scope to run only <em>if the previous failed</em>). A <strong>parallel branch</strong> runs two paths at the same time.</p></div></details>
 
-  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Expressions</span> Functions for the tricky bits <span class="tag">Advanced</span></summary>
+  </div>
+
+  <div data-tier-panel="f" data-tier="adv" class="tier-panel">
+
+  <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Expressions</span> Functions for the tricky bits <span class="tag">Advanced</span></summary>
   <div class="body"><p>When dynamic content isn't enough, write an expression in the formula box. Common ones:</p>
   <div class="code"><button class="copy">Copy</button><span class="code-text">utcNow()                          // current timestamp
 formatDateTime(utcNow(),'dd/MM/yyyy')
@@ -113,6 +140,8 @@ length(body('List_rows')?['value'])   // how many rows came back</span></div></d
 
   <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Approvals</span> Get a human yes/no <span class="tag">Action</span></summary>
   <div class="body"><p>The <strong>Start and wait for an approval</strong> action pauses the flow, emails an approver, and continues based on their response — perfect for sign-off on an escalation or a change window.</p></div></details>
+
+  </div>
 </div></section>
 
 <!-- DESIGN CHALLENGES -->
@@ -211,6 +240,7 @@ If NO  →  Add a comment / append a row to the log table</span></div>
   <p>Power Automate track · DPM Learning Hub. Remember: trigger = when, actions = then, everything else makes the then smarter. <a href="courses.html">Next up: Courses →</a></p>
 </div></footer>
 
+<script src="assets/js/exam.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

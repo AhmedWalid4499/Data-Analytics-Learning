@@ -37,11 +37,32 @@
   <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:14px">Get it free: install <strong>Power BI Desktop</strong> from the Microsoft Store, then <em>Get Data ▸ Excel</em> and pick the Projects sheet.</p>
 </div></header>
 
-<!-- WHAT IS IT -->
+<!-- DOWNLOAD -->
 <section><div class="wrap">
-  <span class="eyebrow">Orientation</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">What Power BI actually is</h2>
-  <div class="grid cols-2">
+  <div class="card" style="border-left:4px solid var(--accent);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+    <div style="flex:1 1 340px">
+      <h3 style="margin:0 0 .3em">Grab the printable cheat sheet</h3>
+      <p style="margin:0;color:var(--ink-soft)">A dense, two-page Power BI &amp; DAX reference — modelling, CALCULATE and filter context, time intelligence, the chart chooser and performance tips — in the style of the classic R/RStudio cards.</p>
+    </div>
+    <a class="btn" href="assets/docs/DAX-PowerBI-Cheat-Sheet.pdf" download>⬇ Download cheat sheet (PDF)</a>
+  </div>
+</div></section>
+
+<!-- LESSONS BY LEVEL -->
+<section><div class="wrap">
+  <span class="eyebrow">Power BI by level</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .2em">Learn it in the build order</h2>
+  <p class="lead">Power BI follows a pipeline: get data, shape it, model it, write DAX, then visualize. This track is split into <strong>three levels</strong> — tap any card to switch. Each lesson has worked examples on the sample workbook and a task to try before you reveal the answer.</p>
+  <div class="tiers" data-tiers="p" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab"><span class="lvl">1</span><span class="tier-txt"><b>Basics</b><small>What it is &amp; getting data</small></span></button>
+    <button class="tier-btn" data-tier="inter" aria-selected="false" role="tab"><span class="lvl">2</span><span class="tier-txt"><b>Intermediate</b><small>Model &amp; visualize</small></span></button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab"><span class="lvl">3</span><span class="tier-txt"><b>Advanced</b><small>DAX — the calculation language</small></span></button>
+  </div>
+
+  <div data-tier-panel="p" data-tier="basic" class="tier-panel active">
+    <details class="lesson open"><summary><span class="caret">▸</span><span class="fn">Orientation</span> Desktop, Service &amp; the build order <span class="tag">Basics</span></summary>
+    <div class="body">
+<div class="grid cols-2">
     <div class="card"><h3>Desktop vs Service</h3><p><strong>Power BI Desktop</strong> (free, on your PC) is where you build. <strong>Power BI Service</strong> (powerbi.com) is where you <em>publish</em> so others can view and where scheduled refresh lives.</p></div>
     <div class="card"><h3>The three things you'll make</h3><p>A <strong>semantic model</strong> (the data + relationships + measures), <strong>reports</strong> (interactive multi-visual pages), and <strong>dashboards</strong> (pinned highlights, Service-only).</p></div>
   </div>
@@ -54,13 +75,10 @@
     <div class="step"><b>5 · VISUALIZE</b> Choose visuals, add slicers, arrange the page</div><div class="conn"></div>
     <div class="step"><b>6 · PUBLISH</b> Push to the Service, schedule refresh, share</div>
   </div>
-</div></section>
-
-<!-- POWER QUERY -->
-<section style="background:var(--surface)"><div class="wrap">
-  <span class="eyebrow">Step 2 · Power Query</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">Shape the data (rows, columns, types)</h2>
-  <p class="lead">It's the <em>same</em> Power Query as Excel — Home ▸ Transform data. This is where you manipulate columns and rows before anything reaches a chart.</p>
+    </div></details>
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Power Query</span> Get &amp; shape the data <span class="tag">Basics</span></summary>
+    <div class="body">
+<p class="lead">It's the <em>same</em> Power Query as Excel — Home ▸ Transform data. This is where you manipulate columns and rows before anything reaches a chart.</p>
   <table class="tbl">
     <thead><tr><th>You want to…</th><th>Do this</th></tr></thead>
     <tbody>
@@ -75,74 +93,22 @@
     </tbody>
   </table>
   <div class="note"><span class="ic">i</span><div><strong>Rule of thumb:</strong> shape and clean in Power Query; <em>calculate</em> business logic in DAX. Adding a column in Power Query bakes it into the data; a DAX measure recalculates live as users filter.</div></div>
-</div></section>
+    </div></details>
+  </div>
 
-<!-- MODELING -->
-<section><div class="wrap">
-  <span class="eyebrow">Step 3 · Modeling</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">Relationships &amp; the star schema</h2>
-  <p class="lead">In the Model view you connect tables so a filter on one flows to another. The clean pattern is a <strong>star schema</strong>: one central <em>fact</em> table of events surrounded by <em>dimension</em> tables that describe them.</p>
+  <div data-tier-panel="p" data-tier="inter" class="tier-panel">
+    <details class="lesson open"><summary><span class="caret">▸</span><span class="fn">Data model</span> Relationships &amp; the star schema <span class="tag">Model</span></summary>
+    <div class="body">
+<p class="lead">In the Model view you connect tables so a filter on one flows to another. The clean pattern is a <strong>star schema</strong>: one central <em>fact</em> table of events surrounded by <em>dimension</em> tables that describe them.</p>
   <div class="grid cols-2">
     <div class="card"><h3>Fact table</h3><p>The events you measure — here, the <strong>Projects</strong> rows (each order, with revenue, FTE, dates). Lots of rows, mostly numbers and keys.</p></div>
     <div class="card"><h3>Dimension tables</h3><p>The descriptors you slice by — a <strong>Date</strong> table, a <strong>Customer</strong> table, a <strong>Region</strong> table. Fewer rows, used for filtering and grouping.</p></div>
   </div>
   <div class="note"><span class="ic">★</span><div>Almost always add a dedicated <strong>Date table</strong> and relate it to your date column. Time-intelligence DAX (YTD, prior month) depends on it.</div></div>
-</div></section>
-
-<!-- DAX -->
-<section style="background:var(--surface)"><div class="wrap">
-  <span class="eyebrow">Step 4 · DAX</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">Calculations that respond to clicks</h2>
-  <p class="lead">DAX (Data Analysis Expressions) is the formula language. The single most important distinction:</p>
-  <div class="grid cols-2" style="margin:6px 0 8px">
-    <div class="card"><h3>Calculated column</h3><p>Computed <em>per row</em>, stored in the table, fixed at refresh. Use for row-level attributes you'll group or filter by.</p>
-      <div class="code"><button class="copy">Copy</button><span class="code-text">Days Late =
-IF( ISBLANK(Projects[Actual Go-Live]),
-    BLANK(),
-    Projects[Actual Go-Live] - Projects[Target Go-Live] )</span></div>
-    </div>
-    <div class="card"><h3>Measure</h3><p>Computed <em>on the fly</em> for whatever's on screen, reacting to every slicer and click. Use for all aggregations and KPIs.</p>
-      <div class="code"><button class="copy">Copy</button><span class="code-text">Total Revenue = SUM( Projects[Revenue (EUR)] )</span></div>
-    </div>
-  </div>
-  <div class="note warn"><span class="ic">!</span><div>Beginner trap: don't build measures as calculated columns. If you find yourself wanting a <em>total</em> or <em>average</em> that should change with filters, it's a <strong>measure</strong>.</div></div>
-
-  <h3 style="margin-top:30px">The measures you'll write first</h3>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">Order Count       = COUNTROWS( Projects )
-
-Delivered Orders  = CALCULATE( [Order Count], Projects[Status] = "Delivered" )
-
-Delivered %       = DIVIDE( [Delivered Orders], [Order Count] )
-
-Avg FTE Days      = AVERAGE( Projects[FTE Days] )
-
-Distinct Customers= DISTINCTCOUNT( Projects[Customer] )
-
-EMEA Revenue      = CALCULATE( [Total Revenue], Projects[Region] = "EMEA" )</span></div>
-  <p><strong>CALCULATE</strong> is the heart of DAX — it changes the filter context an expression runs in. <strong>DIVIDE</strong> is safe division (returns blank, not an error, on divide-by-zero).</p>
-
-  <h3 style="margin-top:30px">Time intelligence (needs a Date table)</h3>
-  <div class="code"><button class="copy">Copy</button><span class="code-text">Revenue YTD       = TOTALYTD( [Total Revenue], 'Date'[Date] )
-Revenue Last Month= CALCULATE( [Total Revenue], PREVIOUSMONTH( 'Date'[Date] ) )</span></div>
-
-  <div class="try"><p class="q">Try it</p>
-    <p>Write two measures: the <em>number of On Hold orders</em>, and the <em>average revenue per delivered order</em>.</p>
-    <details class="reveal"><summary>Show answer</summary><div class="ans">
-      <div class="code"><button class="copy">Copy</button><span class="code-text">On Hold Orders     = CALCULATE( [Order Count], Projects[Status] = "On Hold" )
-
-Avg Delivered Rev  = DIVIDE(
-                       CALCULATE( [Total Revenue], Projects[Status]="Delivered" ),
-                       [Delivered Orders]
-                     )</span></div>
     </div></details>
-  </div>
-</div></section>
-
-<!-- CHART CHOOSER -->
-<section><div class="wrap">
-  <span class="eyebrow">Step 5 · Visualize</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">The chart chooser</h2>
-  <p class="lead">A chart's job is to make one comparison obvious. Pick by the <em>question</em> you're answering — not by what looks fanciest. Here's when each earns its place, and when it misleads.</p>
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Chart chooser</span> Pick the visual by the question <span class="tag">Visualize</span></summary>
+    <div class="body">
+<p class="lead">A chart's job is to make one comparison obvious. Pick by the <em>question</em> you're answering — not by what looks fanciest. Here's when each earns its place, and when it misleads.</p>
 
   <div class="viz-grid" style="margin-top:24px">
     <div class="viz">
@@ -200,6 +166,72 @@ Avg Delivered Rev  = DIVIDE(
     <details class="reveal"><summary>Show answer</summary><div class="ans">
       <p><strong>a)</strong> Line chart (time trend). &nbsp; <strong>b)</strong> Bar chart, sorted descending. &nbsp; <strong>c)</strong> KPI/Card. &nbsp; <strong>d)</strong> Scatter plot (FTE Days on X, Revenue on Y).</p>
     </div></details>
+  </div>
+    </div></details>
+  </div>
+
+  <div data-tier-panel="p" data-tier="adv" class="tier-panel">
+    <details class="lesson open"><summary><span class="caret">▸</span><span class="fn">DAX</span> Measures that react to filters <span class="tag">DAX</span></summary>
+    <div class="body">
+<p class="lead">DAX (Data Analysis Expressions) is the formula language. The single most important distinction:</p>
+  <div class="grid cols-2" style="margin:6px 0 8px">
+    <div class="card"><h3>Calculated column</h3><p>Computed <em>per row</em>, stored in the table, fixed at refresh. Use for row-level attributes you'll group or filter by.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">Days Late =
+IF( ISBLANK(Projects[Actual Go-Live]),
+    BLANK(),
+    Projects[Actual Go-Live] - Projects[Target Go-Live] )</span></div>
+    </div>
+    <div class="card"><h3>Measure</h3><p>Computed <em>on the fly</em> for whatever's on screen, reacting to every slicer and click. Use for all aggregations and KPIs.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">Total Revenue = SUM( Projects[Revenue (EUR)] )</span></div>
+    </div>
+  </div>
+  <div class="note warn"><span class="ic">!</span><div>Beginner trap: don't build measures as calculated columns. If you find yourself wanting a <em>total</em> or <em>average</em> that should change with filters, it's a <strong>measure</strong>.</div></div>
+
+  <h3 style="margin-top:30px">The measures you'll write first</h3>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">Order Count       = COUNTROWS( Projects )
+
+Delivered Orders  = CALCULATE( [Order Count], Projects[Status] = "Delivered" )
+
+Delivered %       = DIVIDE( [Delivered Orders], [Order Count] )
+
+Avg FTE Days      = AVERAGE( Projects[FTE Days] )
+
+Distinct Customers= DISTINCTCOUNT( Projects[Customer] )
+
+EMEA Revenue      = CALCULATE( [Total Revenue], Projects[Region] = "EMEA" )</span></div>
+  <p><strong>CALCULATE</strong> is the heart of DAX — it changes the filter context an expression runs in. <strong>DIVIDE</strong> is safe division (returns blank, not an error, on divide-by-zero).</p>
+
+  <h3 style="margin-top:30px">Time intelligence (needs a Date table)</h3>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">Revenue YTD       = TOTALYTD( [Total Revenue], 'Date'[Date] )
+Revenue Last Month= CALCULATE( [Total Revenue], PREVIOUSMONTH( 'Date'[Date] ) )</span></div>
+
+  <div class="try"><p class="q">Try it</p>
+    <p>Write two measures: the <em>number of On Hold orders</em>, and the <em>average revenue per delivered order</em>.</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">On Hold Orders     = CALCULATE( [Order Count], Projects[Status] = "On Hold" )
+
+Avg Delivered Rev  = DIVIDE(
+                       CALCULATE( [Total Revenue], Projects[Status]="Delivered" ),
+                       [Delivered Orders]
+                     )</span></div>
+    </div></details>
+  </div>
+    </div></details>
+  </div>
+
+</div></section>
+
+<!-- GOOD HABITS -->
+<section style="background:var(--surface)"><div class="wrap">
+  <span class="eyebrow">Good habits</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">What separates a clean report</h2>
+  <div class="deflist">
+    <div class="d"><b>Measures, not columns</b> — if a total or average should react to slicers, it's a measure. Reserve calculated columns for row-level attributes you group or filter by.</div>
+    <div class="d"><b>Star schema first</b> — one fact table surrounded by dimensions. The engine and DAX are built for it; a single flat table fights you later.</div>
+    <div class="d"><b>Always add a Date table</b> — and mark it as one. Every time-intelligence measure (YTD, prior month, YoY) depends on it.</div>
+    <div class="d"><b>DIVIDE, not /</b> — <code>DIVIDE(a, b, 0)</code> returns a blank or your fallback instead of a divide-by-zero error.</div>
+    <div class="d"><b>One visual, one question</b> — pick the chart by the comparison you're making, then add slicers and let interactions do the exploring.</div>
+    <div class="d"><b>Name &amp; format measures</b> — explicit, well-named, pre-formatted measures keep a model readable and reusable.</div>
   </div>
 </div></section>
 
