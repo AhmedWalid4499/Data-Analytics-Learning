@@ -340,7 +340,7 @@
 </div></section>
 
 <!-- 6. OLAP -->
-<section><div class="wrap">
+<section id="olap"><div class="wrap">
   <span class="eyebrow">6 · OLAP</span>
   <h2 style="font-size:2rem;margin:.2em 0 .35em">OLAP — analysing data by dimensions</h2>
   <p class="lead" style="max-width:70ch">The systems that <em>run</em> the business (writing one order at a time) are <b>OLTP</b>. The systems you <em>analyse</em> with — slicing totals by region, by quarter, by service — are <b>OLAP</b>. Power BI's model is an OLAP-style layer sitting on top of your star schema.</p>
@@ -388,7 +388,7 @@
     <div class="d"><b>Pivot (rotate)</b> — reorient the axes. Swap services-as-rows for regions-as-rows to read the same data a different way.</div>
   </div>
 
-  <h3 style="margin:24px 0 6px">The questions OLAP is built to answer</h3>
+  <h3 id="olap-questions" style="margin:24px 0 6px">The questions OLAP is built to answer</h3>
   <p style="max-width:70ch">If a business question sounds like "<em>measure</em> by <em>dimension</em> by <em>dimension</em>", it's an OLAP question. A few from the DPM world:</p>
   <table class="tbl">
     <tr><th>Question</th><th>Operation</th></tr>
