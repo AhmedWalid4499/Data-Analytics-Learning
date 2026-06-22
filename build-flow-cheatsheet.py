@@ -1,81 +1,274 @@
-/* Auto-generated shared sample dataset for the DPM Learning Hub runners.
-   72 fictional delivery orders. Used by the Excel, DAX and SQL playgrounds. */
-window.DPM_DATA = {
-  excelHeaders: ["Order ID", "Customer", "Site Code", "City", "Country", "Region", "Service Type", "Status", "DPM", "Field Engineer", "Order Date", "Target Go-Live", "Actual Go-Live", "FTE Days", "Revenue (EUR)", "APs Migrated", "Priority"],
-  sqlColumns: ["order_id", "customer", "site_code", "city", "country", "region", "service_type", "status", "dpm", "field_engineer", "order_date", "target_go_live", "actual_go_live", "fte_days", "revenue", "aps_migrated", "priority"],
-  sqlTypes: ["TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "REAL", "INTEGER", "INTEGER", "TEXT"],
-  rows: [
-    ["10-10174194", "Harman International", "USNOR", "Northridge", "USA", "Americas", "SD-WAN Migration", "Delivered", "Mia Larsson", "S. Okafor", "2025-03-18", "2025-04-21", "2025-05-06", 21.3, 31411, 0, "High"],
-    ["10-10174329", "Volvo Group", "SEGOT", "Gothenburg", "Sweden", "EMEA", "LAN Refresh", "In Progress", "Neha Saini", "J. Becker", "2025-10-12", "2025-12-25", null, 7.7, 12431, 1, "Medium"],
-    ["10-10174653", "Network International", "AEDXB", "Dubai", "UAE", "EMEA", "SD-WAN Migration", "Delivered", "Ahmed El Bourgy", "J. Becker", "2025-07-19", "2025-08-21", "2025-08-26", 24.0, 31385, 0, "Medium"],
-    ["10-10174820", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "On Hold", "Neha Saini", "P. Dubois", "2025-11-18", "2026-01-24", null, 17.0, 16694, 0, "Low"],
-    ["10-10175098", "Harman International", "DEGAR", "Garching", "Germany", "EMEA", "SD-WAN Migration", "Delivered", "Ahmed El Bourgy", "T. Nakamura", "2025-07-11", "2025-08-21", "2025-08-26", 11.2, 16011, 0, "Medium"],
-    ["10-10175684", "Volvo Group", "SEGOT", "Gothenburg", "Sweden", "EMEA", "MPLS Service Order", "Delivered", "Ahmed El Bourgy", "P. Dubois", "2025-11-29", "2026-03-01", "2026-03-02", 19.8, 19886, 0, "Medium"],
-    ["10-10175791", "Volvo Group", "BEGEN", "Ghent", "Belgium", "EMEA", "Wireless Migration", "In Progress", "Karim El Zarka", "J. Becker", "2025-07-27", "2025-10-14", null, 5.7, 6949, 137, "Medium"],
-    ["10-10176428", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "Wireless Migration", "Cancelled", "Neha Saini", "J. Becker", "2025-03-17", "2025-06-11", null, 14.8, 17557, 28, "High"],
-    ["10-10177164", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "MPLS Service Order", "Delivered", "Ahmed El Bourgy", "J. Becker", "2025-09-02", "2025-11-29", "2025-12-01", 27.2, 27565, 0, "Low"],
-    ["10-10177972", "Nordea Bank", "FIHEL", "Helsinki", "Finland", "EMEA", "LAN Refresh", "Delivered", "Neha Saini", "T. Nakamura", "2025-03-27", "2025-06-14", "2025-06-08", 26.8, 35309, 128, "Low"],
-    ["10-10178652", "Nordea Bank", "DKCPH", "Copenhagen", "Denmark", "EMEA", "Wireless Migration", "Delivered", "Carlos Mendez", "L. Andersson", "2025-03-29", "2025-06-27", "2025-07-15", 26.0, 25853, 82, "High"],
-    ["10-10179063", "Nordea Bank", "DKCPH", "Copenhagen", "Denmark", "EMEA", "LAN Refresh", "Delivered", "Neha Saini", "R. Kumar", "2025-10-23", "2025-11-23", "2025-11-19", 21.0, 23485, 136, "Medium"],
-    ["10-10179665", "Network International", "AEAUH", "Abu Dhabi", "UAE", "EMEA", "MPLS Service Order", "Cancelled", "Karim El Zarka", "S. Okafor", "2025-10-09", "2025-11-24", null, 20.5, 29565, 0, "Low"],
-    ["10-10180167", "Harman International", "USNOR", "Northridge", "USA", "Americas", "Wireless Migration", "Delivered", "Neha Saini", "L. Andersson", "2025-01-16", "2025-04-17", "2025-04-18", 17.3, 15981, 15, "Low"],
-    ["10-10180545", "Harman International", "CNSHA", "Shanghai", "China", "APAC", "Wireless Migration", "Delivered", "Neha Saini", "S. Okafor", "2025-09-11", "2025-10-29", "2025-11-09", 5.4, 10373, 121, "Low"],
-    ["10-10180779", "Harman International", "USNOR", "Northridge", "USA", "Americas", "MPLS Service Order", "Delivered", "Carlos Mendez", "J. Becker", "2025-08-04", "2025-10-23", "2025-11-09", 3.4, 3648, 0, "Medium"],
-    ["10-10180930", "Volvo Group", "SEGOT", "Gothenburg", "Sweden", "EMEA", "Wireless Migration", "In Progress", "Carlos Mendez", "T. Nakamura", "2025-03-18", "2025-06-01", null, 6.8, 10359, 19, "High"],
-    ["10-10181637", "SKF Industrial", "SEGOT", "Gothenburg", "Sweden", "EMEA", "Wireless Migration", "Delivered", "Ahmed El Bourgy", "S. Okafor", "2025-09-11", "2025-12-02", "2025-12-02", 24.5, 24194, 97, "High"],
-    ["10-10182479", "Atlas Copco", "INPUN", "Pune", "India", "APAC", "MPLS Service Order", "In Progress", "Ahmed El Bourgy", "T. Nakamura", "2025-10-17", "2026-01-08", null, 6.0, 8109, 0, "Medium"],
-    ["10-10182581", "Maersk Logistics", "DKCPH", "Copenhagen", "Denmark", "EMEA", "LAN Refresh", "In Progress", "Ahmed El Bourgy", "T. Nakamura", "2025-09-20", "2025-12-17", null, 6.1, 8990, 47, "High"],
-    ["10-10182861", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "Wireless Migration", "In Progress", "Karim El Zarka", "P. Dubois", "2025-01-26", "2025-02-26", null, 12.9, 21626, 133, "High"],
-    ["10-10183634", "Maersk Logistics", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "Delivered", "Carlos Mendez", "T. Nakamura", "2025-12-02", "2026-01-30", "2026-02-07", 10.2, 9972, 0, "Low"],
-    ["10-10183776", "Harman International", "CNSHA", "Shanghai", "China", "APAC", "Wireless Migration", "In Progress", "Neha Saini", "S. Okafor", "2025-03-14", "2025-05-18", null, 24.9, 30148, 72, "Low"],
-    ["10-10184536", "Nordea Bank", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "Cancelled", "Mia Larsson", "R. Kumar", "2025-02-28", "2025-04-07", null, 8.9, 12020, 0, "High"],
-    ["10-10185195", "Volvo Group", "BEGEN", "Ghent", "Belgium", "EMEA", "Wireless Migration", "In Progress", "Karim El Zarka", "L. Andersson", "2025-05-21", "2025-08-14", null, 14.7, 14372, 108, "High"],
-    ["10-10186024", "Network International", "AEAUH", "Abu Dhabi", "UAE", "EMEA", "Wireless Migration", "Staging", "Mia Larsson", "L. Andersson", "2025-10-15", "2025-12-29", null, 16.6, 17140, 38, "Low"],
-    ["10-10186660", "Network International", "AEAUH", "Abu Dhabi", "UAE", "EMEA", "Wireless Migration", "Delivered", "Karim El Zarka", "T. Nakamura", "2025-07-11", "2025-08-06", "2025-08-11", 7.5, 11393, 26, "Low"],
-    ["10-10187116", "Network International", "AEDXB", "Dubai", "UAE", "EMEA", "Wireless Migration", "Cancelled", "Neha Saini", "P. Dubois", "2025-04-06", "2025-06-18", null, 2.6, 6428, 105, "High"],
-    ["10-10187874", "Harman International", "DEGAR", "Garching", "Germany", "EMEA", "LAN Refresh", "On Hold", "Neha Saini", "R. Kumar", "2025-04-29", "2025-06-14", null, 23.2, 33239, 78, "High"],
-    ["10-10188111", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "SD-WAN Migration", "On Hold", "Mia Larsson", "P. Dubois", "2025-05-28", "2025-08-01", null, 18.7, 27261, 0, "Low"],
-    ["10-10188269", "Nordea Bank", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "Delivered", "Mia Larsson", "T. Nakamura", "2025-11-07", "2026-01-22", "2026-01-27", 20.9, 27305, 0, "High"],
-    ["10-10188899", "Volvo Group", "BEGEN", "Ghent", "Belgium", "EMEA", "LAN Refresh", "Staging", "Karim El Zarka", "S. Okafor", "2025-01-06", "2025-04-03", null, 26.1, 40684, 50, "High"],
-    ["10-10189619", "Maersk Logistics", "SGSIN", "Singapore", "Singapore", "APAC", "LAN Refresh", "Staging", "Karim El Zarka", "T. Nakamura", "2025-06-08", "2025-09-01", null, 10.0, 14516, 103, "High"],
-    ["10-10190089", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "Delivered", "Karim El Zarka", "S. Okafor", "2025-01-06", "2025-03-06", "2025-03-09", 7.5, 13681, 0, "Medium"],
-    ["10-10190820", "Volvo Group", "BEGEN", "Ghent", "Belgium", "EMEA", "Wireless Migration", "In Progress", "Karim El Zarka", "R. Kumar", "2025-05-31", "2025-08-25", null, 19.3, 24371, 60, "Low"],
-    ["10-10191010", "SKF Industrial", "SEGOT", "Gothenburg", "Sweden", "EMEA", "Wireless Migration", "Cancelled", "Carlos Mendez", "S. Okafor", "2025-11-14", "2025-12-14", null, 13.8, 21344, 98, "High"],
-    ["10-10191721", "SKF Industrial", "SEGOT", "Gothenburg", "Sweden", "EMEA", "MPLS Service Order", "Delivered", "Neha Saini", "S. Okafor", "2025-09-28", "2025-12-17", "2025-12-12", 16.5, 18765, 0, "Medium"],
-    ["10-10192333", "Maersk Logistics", "SGSIN", "Singapore", "Singapore", "APAC", "MPLS Service Order", "On Hold", "Karim El Zarka", "R. Kumar", "2025-10-13", "2025-12-30", null, 25.3, 36908, 0, "Low"],
-    ["10-10192656", "Atlas Copco", "SESTO", "Stockholm", "Sweden", "EMEA", "SD-WAN Migration", "Delivered", "Neha Saini", "R. Kumar", "2025-06-01", "2025-07-22", "2025-07-24", 10.7, 15877, 0, "High"],
-    ["10-10193406", "Network International", "AEDXB", "Dubai", "UAE", "EMEA", "LAN Refresh", "Delivered", "Carlos Mendez", "T. Nakamura", "2025-06-24", "2025-09-22", "2025-09-30", 12.8, 17631, 107, "Low"],
-    ["10-10193466", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "LAN Refresh", "Cancelled", "Mia Larsson", "R. Kumar", "2025-06-07", "2025-08-16", null, 24.2, 34365, 139, "Medium"],
-    ["10-10193785", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "LAN Refresh", "Delivered", "Mia Larsson", "T. Nakamura", "2025-08-01", "2025-09-12", "2025-09-20", 25.9, 37561, 100, "Medium"],
-    ["10-10193910", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "MPLS Service Order", "Delivered", "Carlos Mendez", "P. Dubois", "2025-05-19", "2025-07-27", "2025-07-31", 7.5, 10637, 0, "Medium"],
-    ["10-10194801", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "LAN Refresh", "Delivered", "Ahmed El Bourgy", "R. Kumar", "2025-10-09", "2025-11-05", "2025-11-10", 7.8, 10765, 10, "High"],
-    ["10-10194861", "Network International", "AEDXB", "Dubai", "UAE", "EMEA", "Wireless Migration", "Delivered", "Neha Saini", "T. Nakamura", "2025-03-05", "2025-06-06", "2025-06-06", 14.1, 19525, 94, "Medium"],
-    ["10-10195666", "Harman International", "USNOR", "Northridge", "USA", "Americas", "SD-WAN Migration", "Delivered", "Neha Saini", "L. Andersson", "2025-01-19", "2025-03-20", "2025-04-01", 19.6, 26790, 0, "Medium"],
-    ["10-10196556", "Volvo Group", "SEGOT", "Gothenburg", "Sweden", "EMEA", "SD-WAN Migration", "On Hold", "Ahmed El Bourgy", "P. Dubois", "2025-11-09", "2025-12-15", null, 22.7, 36778, 0, "Medium"],
-    ["10-10197273", "Maersk Logistics", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "Delivered", "Carlos Mendez", "J. Becker", "2025-08-09", "2025-10-31", "2025-10-28", 13.3, 19494, 0, "High"],
-    ["10-10197493", "Nordea Bank", "FIHEL", "Helsinki", "Finland", "EMEA", "MPLS Service Order", "Delivered", "Carlos Mendez", "R. Kumar", "2025-11-05", "2025-12-30", "2026-01-03", 24.1, 24952, 0, "Medium"],
-    ["10-10198116", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "LAN Refresh", "Delivered", "Mia Larsson", "J. Becker", "2025-06-21", "2025-08-04", "2025-08-13", 7.5, 10124, 71, "Low"],
-    ["10-10198725", "SKF Industrial", "FRSCY", "Cergy", "France", "EMEA", "Wireless Migration", "Delivered", "Carlos Mendez", "L. Andersson", "2025-08-02", "2025-10-24", "2025-11-04", 21.7, 32742, 125, "High"],
-    ["10-10198991", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "SD-WAN Migration", "In Progress", "Mia Larsson", "P. Dubois", "2025-07-13", "2025-10-02", null, 16.4, 22274, 0, "Medium"],
-    ["10-10199495", "Nordea Bank", "FIHEL", "Helsinki", "Finland", "EMEA", "SD-WAN Migration", "Delivered", "Neha Saini", "J. Becker", "2025-04-14", "2025-06-14", "2025-06-11", 21.3, 23979, 0, "Medium"],
-    ["10-10200276", "Nordea Bank", "DKCPH", "Copenhagen", "Denmark", "EMEA", "Wireless Migration", "Delivered", "Ahmed El Bourgy", "L. Andersson", "2025-07-09", "2025-08-21", "2025-08-24", 2.4, 3988, 70, "Medium"],
-    ["10-10201030", "Network International", "AEAUH", "Abu Dhabi", "UAE", "EMEA", "LAN Refresh", "On Hold", "Ahmed El Bourgy", "P. Dubois", "2025-10-26", "2025-12-22", null, 14.2, 20579, 47, "Low"],
-    ["10-10201559", "Harman International", "USNOR", "Northridge", "USA", "Americas", "MPLS Service Order", "Delivered", "Karim El Zarka", "L. Andersson", "2025-10-28", "2025-11-24", "2025-11-22", 5.9, 12595, 0, "Low"],
-    ["10-10201720", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "MPLS Service Order", "Delivered", "Mia Larsson", "L. Andersson", "2025-08-20", "2025-10-18", "2025-10-30", 27.7, 35901, 0, "Medium"],
-    ["10-10202517", "Harman International", "USNOR", "Northridge", "USA", "Americas", "Wireless Migration", "Delivered", "Carlos Mendez", "S. Okafor", "2025-02-16", "2025-03-29", "2025-03-30", 6.5, 6985, 0, "Medium"],
-    ["10-10203038", "Nordea Bank", "DKCPH", "Copenhagen", "Denmark", "EMEA", "Wireless Migration", "Delivered", "Carlos Mendez", "L. Andersson", "2025-05-30", "2025-08-17", "2025-08-13", 19.9, 26509, 50, "Medium"],
-    ["10-10203741", "Network International", "AEAUH", "Abu Dhabi", "UAE", "EMEA", "Wireless Migration", "Delivered", "Carlos Mendez", "L. Andersson", "2025-03-31", "2025-05-30", "2025-06-12", 21.5, 35636, 73, "Medium"],
-    ["10-10204092", "Carlsberg Group", "PLWAW", "Warsaw", "Poland", "EMEA", "MPLS Service Order", "Delivered", "Ahmed El Bourgy", "R. Kumar", "2025-11-08", "2025-12-04", "2025-12-11", 21.1, 24496, 0, "Low"],
-    ["10-10204988", "SKF Industrial", "SEKIR", "Kiruna", "Sweden", "EMEA", "LAN Refresh", "Staging", "Neha Saini", "T. Nakamura", "2025-04-05", "2025-06-25", null, 15.5, 24708, 71, "Medium"],
-    ["10-10205861", "Atlas Copco", "SESTO", "Stockholm", "Sweden", "EMEA", "MPLS Service Order", "Delivered", "Carlos Mendez", "J. Becker", "2025-06-25", "2025-08-26", "2025-09-10", 4.7, 6350, 0, "Medium"],
-    ["10-10206579", "Carlsberg Group", "DKCPH", "Copenhagen", "Denmark", "EMEA", "MPLS Service Order", "Delivered", "Mia Larsson", "L. Andersson", "2025-05-15", "2025-07-16", "2025-07-13", 27.2, 39255, 0, "Medium"],
-    ["10-10207174", "Atlas Copco", "INPUN", "Pune", "India", "APAC", "LAN Refresh", "Delivered", "Mia Larsson", "R. Kumar", "2025-07-10", "2025-10-02", "2025-10-16", 13.5, 13685, 68, "Low"],
-    ["10-10207662", "Atlas Copco", "SESTO", "Stockholm", "Sweden", "EMEA", "LAN Refresh", "Cancelled", "Mia Larsson", "S. Okafor", "2025-11-13", "2026-01-03", null, 20.5, 27225, 3, "High"],
-    ["10-10207818", "Atlas Copco", "SESTO", "Stockholm", "Sweden", "EMEA", "Wireless Migration", "Delivered", "Carlos Mendez", "T. Nakamura", "2025-06-04", "2025-08-29", "2025-09-14", 9.1, 14619, 62, "High"],
-    ["10-10208053", "Network International", "AEDXB", "Dubai", "UAE", "EMEA", "SD-WAN Migration", "Staging", "Ahmed El Bourgy", "P. Dubois", "2025-08-06", "2025-10-09", null, 26.3, 38413, 0, "Medium"],
-    ["10-10208950", "Atlas Copco", "SESTO", "Stockholm", "Sweden", "EMEA", "MPLS Service Order", "In Progress", "Carlos Mendez", "P. Dubois", "2025-07-01", "2025-09-02", null, 16.3, 25277, 0, "Low"],
-    ["10-10209704", "Volvo Group", "BEGEN", "Ghent", "Belgium", "EMEA", "Wireless Migration", "On Hold", "Carlos Mendez", "J. Becker", "2025-08-04", "2025-08-30", null, 10.3, 17143, 97, "Medium"],
-    ["10-10210411", "Network International", "AEAUH", "Abu Dhabi", "UAE", "EMEA", "LAN Refresh", "Delivered", "Carlos Mendez", "L. Andersson", "2025-11-04", "2026-01-06", "2026-01-03", 24.7, 33753, 134, "Medium"],
-    ["10-10210870", "Network International", "AEDXB", "Dubai", "UAE", "EMEA", "MPLS Service Order", "Staging", "Ahmed El Bourgy", "P. Dubois", "2025-05-21", "2025-07-24", null, 18.2, 26448, 0, "Low"],
-  ]
-};
+#!/usr/bin/env python3
+# Excel Formula & Function Cheat Sheet — Posit/RStudio-style reference card (2-page, 3-column).
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.units import inch
+from reportlab.lib import colors
+from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
+                                Table, TableStyle, Spacer, KeepTogether, Flowable,
+                                NextPageTemplate)
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.enums import TA_LEFT
+
+OUT = "/mnt/user-data/outputs/Excel-Formula-Cheat-Sheet.pdf"
+
+GREEN = colors.HexColor("#217346"); DARK = colors.HexColor("#14233A")
+INK = colors.HexColor("#26323F"); MUTED = colors.HexColor("#6B7280")
+CODEBG = colors.HexColor("#EEF5F0"); CODEINK = colors.HexColor("#0F3D29")
+LINE = colors.HexColor("#D9E5DD")
+
+PW, PH = landscape(letter)
+M = 0.38 * inch; GUT = 13; HEADER_H = 62; NCOL = 3
+COLW = (PW - 2*M - (NCOL-1)*GUT) / NCOL
+
+desc = ParagraphStyle("desc", fontName="Helvetica", fontSize=7.2, leading=8.6, textColor=INK, alignment=TA_LEFT)
+codes = ParagraphStyle("code", fontName="Courier-Bold", fontSize=7.0, leading=8.4, textColor=CODEINK)
+sub = ParagraphStyle("sub", fontName="Helvetica-Bold", fontSize=7.4, leading=9, textColor=GREEN)
+intro = ParagraphStyle("intro", fontName="Helvetica", fontSize=7.4, leading=9.2, textColor=INK)
+
+class SectionHeader(Flowable):
+    def __init__(self, text, w): super().__init__(); self.text=text; self.w=w; self.h=13
+    def wrap(self,*a): return (self.w,self.h)
+    def draw(self):
+        c=self.canv; c.setFillColor(GREEN); c.roundRect(0,0,self.w,self.h,2.5,fill=1,stroke=0)
+        txt=self.text.replace("&amp;","&").replace("&gt;",">").replace("&lt;","<")
+        c.setFillColor(colors.white); c.setFont("Helvetica-Bold",8); c.drawString(5,3.3,txt.upper())
+
+def kv_table(rows,w):
+    cw0=w*0.46; cw1=w-cw0
+    data=[[Paragraph(code,codes),Paragraph(d,desc)] for code,d in rows]
+    t=Table(data,colWidths=[cw0,cw1])
+    t.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),
+        ("LEFTPADDING",(0,0),(-1,-1),3),("RIGHTPADDING",(0,0),(-1,-1),3),
+        ("TOPPADDING",(0,0),(-1,-1),1.6),("BOTTOMPADDING",(0,0),(-1,-1),1.6),
+        ("BACKGROUND",(0,0),(0,-1),CODEBG),("LINEBELOW",(0,0),(-1,-2),0.3,LINE),
+        ("BOX",(0,0),(-1,-1),0.3,LINE)]))
+    return t
+
+def section(title,rows,w=COLW):
+    return KeepTogether([SectionHeader(title,w),Spacer(1,2.5),kv_table(rows,w),Spacer(1,7)])
+def subsection(title,rows,w=COLW):
+    return KeepTogether([Spacer(1,1),Paragraph(title,sub),Spacer(1,1.5),kv_table(rows,w),Spacer(1,6)])
+
+story=[NextPageTemplate("later")]
+story.append(Paragraph("A printable reference for the formulas, functions and moves that cover most day-to-day Excel work. "
+    "Examples assume a table with headers in row 1 and data in rows 2&#8211;100.", intro))
+story.append(Spacer(1,7))
+
+story.append(section("The basics",[
+    ("=","Every formula starts with an equals sign."),
+    ("=A1+A2*3","Operators: + - * / ^  and  &amp; (join text)."),
+    ("( )","Parentheses force the order of evaluation."),
+    ("F4","Toggle $ absolute refs while editing."),
+    ("Ctrl+Enter","Fill the whole selection with one formula."),
+    ("Alt+=","AutoSum the column/row above or left."),
+]))
+story.append(section("Operators &amp; order",[
+    ("^","Power — evaluated first."),
+    ("* /","Then multiply / divide."),
+    ("+ -","Then add / subtract."),
+    ("&amp;","Join text together."),
+    ("= &lt;&gt; &gt; &lt; &gt;= &lt;=","Comparisons (evaluated last)."),
+    ("( )","Override the order with parentheses."),
+]))
+story.append(section("Cell references",[
+    ("A1","Relative — shifts when copied."),
+    ("$A$1","Absolute — locked row and column."),
+    ("A$1 / $A1","Mixed — lock row only / column only."),
+    ("A1:B10","A rectangular range."),
+    ("A:A / 2:2","A whole column / whole row."),
+    ("Sheet2!A1","A cell on another sheet."),
+    ("Table[Col]","A structured reference (Excel Table)."),
+]))
+story.append(section("Math &amp; statistics",[
+    ("SUM(rng)","Add all numbers in a range."),
+    ("AVERAGE(rng)","Arithmetic mean."),
+    ("MEDIAN(rng)","Middle value."),
+    ("COUNT(rng)","Count cells containing numbers."),
+    ("COUNTA(rng)","Count non-empty cells."),
+    ("COUNTBLANK(rng)","Count empty cells."),
+    ("MIN / MAX(rng)","Smallest / largest value."),
+    ("ROUND(x, n)","Round x to n decimals."),
+    ("ROUNDUP / ROUNDDOWN","Round away from / toward zero."),
+    ("INT(x) / MOD(a,b)","Integer part / remainder."),
+    ("ABS(x)","Absolute (non-negative) value."),
+    ("SUMPRODUCT(a, b)","Multiply arrays then sum — weighted totals."),
+]))
+story.append(section("Conditional aggregation",[
+    ("SUMIF(rng, crit, [sum])","Sum where one condition is met."),
+    ("SUMIFS(sum, r1,c1, r2,c2)","Sum where ALL conditions met. Sum range first."),
+    ("COUNTIF(rng, crit)","Count matching one condition."),
+    ("COUNTIFS(r1,c1, r2,c2)","Count matching all conditions."),
+    ("AVERAGEIF(S)(...)","Mean of matching rows."),
+    ("MAXIFS / MINIFS(...)","Max / min of matching rows."),
+]))
+story.append(subsection("Criteria you can pass",[
+    ('"&gt;100"',"Greater than 100 (quote operators)."),
+    ('"&lt;&gt;EMEA"',"Not equal to EMEA."),
+    ('"*WAN*"',"Wildcards: * = any text, ? = one char."),
+    ('"&gt;"&amp;G1',"Build criteria from a cell with &amp;."),
+]))
+story.append(section("Logic",[
+    ("IF(test, yes, no)","Branch on a true/false test."),
+    ("IFS(t1,v1, t2,v2, …)","Many tests in order — no nesting."),
+    ("AND(a, b) / OR(a, b)","All true / any true."),
+    ("NOT(a)","Reverse a true/false value."),
+    ("IFERROR(x, fallback)","Replace any error with a fallback."),
+    ("IFNA(x, fallback)","Catch only #N/A."),
+    ("SWITCH(v, k1,r1, …, def)","Match a value to a result."),
+]))
+story.append(section("Lookups",[
+    ("XLOOKUP(find, in, return,","Best modern lookup — looks left or right,"),
+    ("  [if_na], [mode])","exact by default, with a not-found value."),
+    ("VLOOKUP(find, tbl, col, 0)","Legacy. 0/FALSE = exact. Looks right only."),
+    ("INDEX(rng, row, [col])","Value at a position in a range."),
+    ("MATCH(find, rng, 0)","Position of a value (0 = exact)."),
+    ("INDEX(ret, MATCH(...))","2-way lookup; survives column moves."),
+]))
+story.append(section("Common patterns",[
+    ("=O2/SUM($O$2:$O$100)","% of total (lock the total)."),
+    ("=SUM($O$2:O2)","Running total down a column."),
+    ("=RANK.EQ(O2,$O$2:$O$100)","Rank a value within a list."),
+    ("=(cur-prev)/prev","Year-on-year / growth %."),
+    ("=COUNTIF($B$2:B2,B2)&gt;1","Flag duplicate rows TRUE/FALSE."),
+    ('=IF(x=0,"",x)',"Show blank instead of zero."),
+]))
+story.append(section("Text",[
+    ("LEN(t)","Number of characters."),
+    ("LEFT / RIGHT(t, n)","First / last n characters."),
+    ("MID(t, start, n)","n characters from a position."),
+    ("FIND / SEARCH(sub, t)","Position of text (SEARCH ignores case)."),
+    ("SUBSTITUTE(t, old, new)","Replace text by content."),
+    ("UPPER / LOWER / PROPER","Change case."),
+    ("TRIM(t)","Strip extra spaces."),
+    ("CONCAT(a, b) / a&amp;b","Join text."),
+    ('TEXTJOIN(", ",TRUE,rng)',"Join a range, skip blanks."),
+    ('TEXT(v, "0.0%")',"Format a number as text by a pattern."),
+]))
+story.append(section("Dates &amp; time",[
+    ("TODAY() / NOW()","Current date / date-time (live)."),
+    ("DATE(y, m, d)","Build a date from parts."),
+    ("YEAR / MONTH / DAY(d)","Pull a part out of a date."),
+    ("EDATE(d, n)","n months after a date."),
+    ("EOMONTH(d, n)","End of month, n months out."),
+    ("WEEKDAY(d, 2)","Day number (2 = Mon..Sun)."),
+    ("NETWORKDAYS(a, b)","Working days between two dates."),
+    ('DATEDIF(a, b, "d")',"Difference in d / m / y units."),
+]))
+story.append(section("Number format codes",[
+    ("0","Whole number."),
+    ("#,##0","Thousands separator."),
+    ("0.0%","Percent, one decimal."),
+    ('"€"#,##0',"Currency prefix."),
+    ("yyyy-mm-dd","ISO date."),
+    ("0;[Red]-0","Negatives in red."),
+]))
+story.append(section("Dynamic arrays (365)",[
+    ("FILTER(rng, condition)","Return only rows meeting a condition."),
+    ("SORT(rng, [col], [order])","Sort a range; spills automatically."),
+    ("SORTBY(rng, byrng, …)","Sort by another range."),
+    ("UNIQUE(rng)","Distinct values, live."),
+    ("SEQUENCE(rows, [cols])","Generate a list of numbers."),
+    ("A2#","The # spill operator = the whole spilled range."),
+]))
+story.append(section("LET &amp; LAMBDA (365)",[
+    ("LET(name, val, …, calc)","Name sub-results once, reuse them; clearer &amp; faster."),
+    ("LAMBDA(x, x*2)","Define a reusable custom function."),
+    ("Name Manager","Save a LAMBDA as your own named function."),
+]))
+story.append(section("Financial",[
+    ("PMT(rate, nper, pv)","Loan/lease payment per period."),
+    ("FV(rate, nper, pmt)","Future value of savings."),
+    ("PV(rate, nper, pmt)","Present value."),
+    ("NPV(rate, cashflows)","Net present value of cash flows."),
+    ("RATE(nper, pmt, pv)","Interest rate per period."),
+]))
+story.append(section("Error values",[
+    ("#DIV/0!","Divided by zero or an empty cell."),
+    ("#N/A","A lookup found no match."),
+    ("#VALUE!","Wrong type — text where a number is needed."),
+    ("#NAME?","Unknown function or misspelt name."),
+    ("#REF!","A referenced cell was deleted."),
+    ("#NUM!","Invalid number for the calculation."),
+    ("#SPILL!","A dynamic array can't spill — clear the cells."),
+]))
+story.append(section("PivotTable in 5 steps",[
+    ("1","Click any cell in your data."),
+    ("2","Insert &gt; PivotTable &gt; OK."),
+    ("3","Drag a category to Rows."),
+    ("4","Drag a number to Values."),
+    ("5","Set Values to Sum (not Count) &amp; format."),
+]))
+story.append(section("Power Query in 5 steps",[
+    ("1","Data &gt; Get Data (or From Table/Range)."),
+    ("2","Clean: split, replace, change types, remove cols."),
+    ("3","Each action is recorded as an Applied Step."),
+    ("4","Close &amp; Load to a sheet."),
+    ("5","New file next week? Just Refresh All."),
+]))
+story.append(section("Conditional formatting",[
+    ("1","Select the range."),
+    ("2","Home &gt; Conditional Formatting."),
+    ("3","Pick a rule (Highlight, Data Bars, Scales)."),
+    ("4","Use a formula rule for full control."),
+]))
+story.append(section("Data validation (dropdowns)",[
+    ("1","Select the cells."),
+    ("2","Data &gt; Data Validation."),
+    ("3","Allow: List &gt; Source = range or items."),
+    ("4","Add optional input / error messages."),
+]))
+story.append(section("Named ranges",[
+    ("Name box","Type a name for a selection, press Enter."),
+    ("=Revenue","Use the name in any formula."),
+    ("Formulas &gt; Name Mgr","Edit or delete names."),
+]))
+story.append(section("Handy shortcuts (Windows)",[
+    ("Ctrl+; / Ctrl+Shift+;","Insert today's date / time."),
+    ("Ctrl+Shift+L","Toggle filters."),
+    ("Ctrl+T","Make a range an Excel Table."),
+    ("Ctrl+Arrow","Jump to edge of data."),
+    ("Ctrl+Shift+Arrow","Select to edge of data."),
+    ("F2 / Esc","Edit a cell / cancel editing."),
+    ("Ctrl+`","Show formulas instead of results."),
+]))
+story.append(section("Tips that save hours",[
+    ("Lock with $","Press F4 before copying a formula down."),
+    ("Tables, not ranges","Ctrl+T — formulas auto-extend &amp; read clearly."),
+    ("IFERROR wrap","Hide expected errors, not real bugs."),
+    ("XLOOKUP &gt; VLOOKUP","No column counting; looks both directions."),
+    ("Don't repeat work","Cleaning weekly? Use Power Query."),
+]))
+
+def draw_header(canvas,doc,first):
+    canvas.saveState()
+    if first:
+        canvas.setFillColor(GREEN); canvas.rect(0,PH-HEADER_H,PW,HEADER_H,fill=1,stroke=0)
+        canvas.setFillColor(colors.white); canvas.setFont("Helvetica-Bold",19)
+        canvas.drawString(M,PH-30,"Excel Formula & Function Cheat Sheet")
+        canvas.setFont("Helvetica",9.5)
+        canvas.drawString(M,PH-46,"A double-sided quick reference  ·  DPM Learning Hub")
+        canvas.setFont("Helvetica-Bold",9); canvas.drawRightString(PW-M,PH-38,"ahmedwalid4499.github.io")
+    canvas.setFillColor(MUTED); canvas.setFont("Helvetica",7)
+    canvas.drawString(M,M*0.55,"DPM Learning Hub — Excel track")
+    canvas.drawRightString(PW-M,M*0.55,"Page %d of 2"%doc.page)
+    canvas.setStrokeColor(LINE); canvas.setLineWidth(0.5); canvas.line(M,M*0.55+11,PW-M,M*0.55+11)
+    canvas.restoreState()
+
+def on_first(c,d): draw_header(c,d,True)
+def on_later(c,d): draw_header(c,d,False)
+
+def make_frames(top_y):
+    frames=[]; bottom=M*0.55+14; height=top_y-bottom
+    for i in range(NCOL):
+        x=M+i*(COLW+GUT)
+        frames.append(Frame(x,bottom,COLW,height,leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0,id="c%d"%i))
+    return frames
+
+doc=BaseDocTemplate(OUT,pagesize=landscape(letter),leftMargin=M,rightMargin=M,topMargin=M,bottomMargin=M,
+                    title="Excel Formula & Function Cheat Sheet",author="DPM Learning Hub")
+doc.addPageTemplates([
+    PageTemplate(id="first",frames=make_frames(PH-HEADER_H-6),onPage=on_first),
+    PageTemplate(id="later",frames=make_frames(PH-M),onPage=on_later),
+])
+doc.build(story)
+print("built:",OUT)

@@ -1,114 +1,182 @@
-/* ============================================================
-   DPM Learning Hub — code playgrounds
-   Wires up whichever runners are present on the page:
-     #xl-play  → Excel formula engine (ExcelEngine)
-     #dax-play → DAX validator (DaxValidator)
-     #sql-play → SQLite via vendored sql.js
-   All run fully client-side. Data = window.DPM_DATA.
-   The SQL section also exposes window.DPM_SQL_READY (a promise that
-   resolves to the loaded database) so the exam engine can grade
-   typed queries against the very same tables.
-   ============================================================ */
-(function () {
-  'use strict';
-  var D = window.DPM_DATA || { excelHeaders: [], sqlColumns: [], sqlTypes: [], rows: [] };
-  function $(id) { return document.getElementById(id); }
-  function escHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+from cs_common import build_cheatsheet
 
-  // Shared builder: create the orders + targets tables in a fresh DB.
-  window.DPM_buildSqlDb = function (SQL) {
-    var db = new SQL.Database();
-    var cols = D.sqlColumns, types = D.sqlTypes;
-    db.run('CREATE TABLE orders (' + cols.map(function (c, i) { return c + ' ' + (types[i] || 'TEXT'); }).join(', ') + ');');
-    var stmt = db.prepare('INSERT INTO orders VALUES (' + cols.map(function () { return '?'; }).join(',') + ')');
-    D.rows.forEach(function (row) { stmt.run(row.map(function (v) { return v === null ? null : v; })); });
-    stmt.free();
-    db.run('CREATE TABLE targets (region TEXT, revenue_target INTEGER);');
-    db.run("INSERT INTO targets VALUES ('EMEA',1200000),('APAC',150000),('Americas',120000);");
-    return db;
-  };
+S = [
+ ("Power BI in one page", [
+    ("Desktop","Build models, measures &amp; reports (free)."),
+    ("Service (powerbi.com)","Publish, share, schedule refresh."),
+    ("You'll make 3 things","Semantic model · reports · dashboards."),
+    ("Build order","Get &gt; Transform &gt; Model &gt; DAX &gt; Visualize &gt; Publish."),
+ ]),
+ ("Power Query (get &amp; shape)", [
+    ("Home &gt; Transform data","Opens the query editor (same as Excel)."),
+    ("Change type / Rename","Click the type icon / double-click header."),
+    ("Filter / Remove rows","Header dropdown · Remove Rows."),
+    ("Split / Merge columns","Transform tab."),
+    ("Unpivot","Wide &gt; tall (tidy data for modelling)."),
+    ("Merge / Append","Join on a key / stack tables."),
+    ("Rule","Shape in Power Query; calculate in DAX."),
+ ]),
+ ("Model &amp; relationships", [
+    ("Star schema","One fact table + dimension tables."),
+    ("1-to-many","Dimension (one) &gt; fact (many)."),
+    ("Single direction","Default filter flow; avoid both-ways."),
+    ("Date table","Add one; Mark as date table."),
+    ("Hide keys","Hide id columns from report view."),
+ ]),
+ ("Column vs measure", [
+    ("Calculated column","Per row, stored at refresh; group/filter by it."),
+    ("Measure","Live, reacts to filters; all totals &amp; KPIs."),
+    ("Trap","A total/average that should react = measure."),
+    ("Col = …  /  Measure = …","Both written in DAX, evaluated differently."),
+ ]),
+ ("Aggregations", [
+    ("SUM(t[col])","Total a column."),
+    ("AVERAGE / MIN / MAX","Mean / smallest / largest."),
+    ("COUNT(t[col])","Count non-blank values."),
+    ("COUNTROWS(t)","Count rows in a table."),
+    ("DISTINCTCOUNT(t[col])","Unique values."),
+ ]),
+ ("CALCULATE — the heart", [
+    ("CALCULATE(expr, filter1, …)","Evaluate expr under modified filters."),
+    ("CALCULATE([Rev], t[region]=\"EMEA\")","Filter to EMEA."),
+    ("CALCULATE([Rev], ALL(t))","Ignore filters (grand total)."),
+    ("Use FILTER for complex","CALCULATE([Rev], FILTER(t, t[x]&gt;5))."),
+ ]),
+ ("Filter functions", [
+    ("ALL(t) / ALL(t[col])","Remove filters from table/column."),
+    ("ALLEXCEPT(t, t[k])","Remove all filters except the key."),
+    ("REMOVEFILTERS()","Clear filters (modern ALL)."),
+    ("KEEPFILTERS(…)","Add a filter without replacing."),
+    ("VALUES(t[col])","Distinct values in current context."),
+ ]),
+ ("Safe math &amp; logic", [
+    ("DIVIDE(a, b, 0)","Safe division — no #DIV/0."),
+    ("IF(test, yes, no)","Branch on a condition."),
+    ("SWITCH(TRUE(), c1,r1, …, def)","Clean multi-branch (vs nested IF)."),
+    ("a &amp;&amp; b  /  a || b","AND / OR."),
+    ("COALESCE(a, b)","First non-blank value."),
+    ("ISBLANK(x)","Test for blank."),
+ ]),
+ ("Iterators (X functions)", [
+    ("SUMX(t, expr)","Evaluate expr per row, then sum."),
+    ("AVERAGEX / MAXX / MINX","Row-by-row then aggregate."),
+    ("SUMX(t, t[qty]*t[price])","Row-level multiply then total."),
+    ("RANKX(ALL(t[c]), [M])","Rank by a measure."),
+ ]),
+ ("Relationships in DAX", [
+    ("RELATED(dim[col])","Pull a column from the one-side."),
+    ("RELATEDTABLE(fact)","Related rows from the many-side."),
+    ("USERELATIONSHIP(a, b)","Activate an inactive relationship in CALCULATE."),
+ ]),
+ ("VAR / RETURN", [
+    ("VAR x = SUM(t[rev])","Compute once, name it."),
+    ("RETURN  DIVIDE(x, …)","Use the variable — clearer &amp; faster."),
+    ("Tip","Great for readable, debuggable measures."),
+ ]),
+ ("Time intelligence", [
+    ("Needs a Date table","Marked as date table."),
+    ("TOTALYTD([Rev], 'Date'[Date])","Year-to-date."),
+    ("SAMEPERIODLASTYEAR('Date'[Date])","Shift back one year."),
+    ("DATEADD('Date'[Date], -1, MONTH)","Shift by a period."),
+    ("PREVIOUSMONTH('Date'[Date])","Prior month."),
+ ]),
+ ("Common measures", [
+    ("Total Rev = SUM(t[rev])","Base total."),
+    ("Order Count = COUNTROWS(t)","Row count."),
+    ("Delivered % = DIVIDE([Del],[Cnt])","A rate, safely."),
+    ("YoY % = DIVIDE([Rev]-[RevLY],[RevLY])","Year-on-year growth."),
+    ("Running = CALCULATE([Rev], DATESYTD(…))","Cumulative."),
+ ]),
+ ("Text &amp; format", [
+    ("a &amp; b  /  CONCATENATE(a,b)","Join text."),
+    ("FORMAT(v, \"0.0%\")","Format a value as text."),
+    ("LEFT/RIGHT/MID(s, n)","Slice text."),
+    ("UPPER/LOWER(s) · LEN(s)","Case · length."),
+ ]),
+ ("Row vs filter context", [
+    ("Row context","'Current row' — in columns &amp; iterators (X)."),
+    ("Filter context","Filters from slicers, rows, visuals."),
+    ("CALCULATE","Turns row context into filter context."),
+    ("Why blanks","A measure with no rows in context = BLANK."),
+ ]),
+ ("Choose the visual", [
+    ("Bar / column","Compare across categories (default)."),
+    ("Line","Trend over time."),
+    ("Card / KPI","One headline number (+ target)."),
+    ("Matrix / table","Precise numbers, drill by row × col."),
+    ("Scatter","Relationship between two measures."),
+    ("Map","Values by geography."),
+ ]),
+ ("Report UX", [
+    ("Slicers","Region / Date / Status filters for viewers."),
+    ("Edit interactions","Control which visuals cross-filter."),
+    ("Conditional formatting","Colour by value / rules."),
+    ("Tooltips","Add detail on hover (even a mini page)."),
+    ("Bookmarks","Saved view states for navigation."),
+ ]),
+ ("Performance", [
+    ("Star schema","Fastest shape for the engine."),
+    ("Measures, not columns","Less stored data, more flexible."),
+    ("Avoid bi-directional","Use single-direction relationships."),
+    ("Reduce cardinality","Fewer unique values = smaller model."),
+    ("Hide unused columns","Trim the model; remove what you don't use."),
+ ]),
+ ("Gotchas", [
+    ("Measure vs column","Totals/averages = measures."),
+    ("Naked SUM in a card","Fine; but reuse via a named measure."),
+    ("Filter context surprises","Wrap with CALCULATE to control it."),
+    ("BLANK vs 0","Use COALESCE / +0 if you need a zero."),
+    ("Implicit measures","Prefer explicit named measures."),
+ ]),
+ ("Publish &amp; refresh", [
+    ("Publish","Desktop &gt; Publish to a workspace."),
+    ("Scheduled refresh","Set in the Service (dataset settings)."),
+    ("Gateway","Needed to refresh on-prem sources."),
+    ("RLS","Row-level security filters by the viewer."),
+    ("Apps","Package reports for an audience."),
+ ]),
+ ("Get data (sources)", [
+    ("Excel / CSV","File sources for quick models."),
+    ("SQL / database","Import a table or a query."),
+    ("Web / SharePoint","Pull from a URL or list."),
+    ("Dataflows","Reusable cloud Power Query."),
+    ("Import vs DirectQuery","Cached &amp; fast vs live &amp; large."),
+ ]),
+ ("DAX table functions", [
+    ("FILTER(t, cond)","Return a filtered table."),
+    ("VALUES / DISTINCT(t[c])","Unique values as a table."),
+    ("SUMMARIZE(t, t[c], …)","Group into a summary table."),
+    ("ADDCOLUMNS(tbl, \"n\", e)","Add computed columns."),
+    ("TOPN(n, tbl, [m])","Top n rows by a measure."),
+    ("CALENDAR(a, b)","Build a date table."),
+ ]),
+ ("Format a measure", [
+    ("Measure tools &gt; Format","Set %, currency, decimals."),
+    ("FORMAT(v, \"#,0\")","Inline text format (returns text)."),
+    ("Data category","Tag URL / geo / image for visuals."),
+    ("Display folders","Organise many measures."),
+ ]),
+ ("Hierarchies &amp; drill", [
+    ("Build a hierarchy","Group Year &gt; Quarter &gt; Month."),
+    ("Drill down","Expand levels on a visual."),
+    ("Sort by column","Sort Month by MonthNo, not text."),
+    ("Groups / bins","Bucket values without DAX."),
+ ]),
+ ("Productivity (Desktop)", [
+    ("Quick measures","Build common DAX from a dialog."),
+    ("Performance analyzer","See what's slow on a page."),
+    ("View &gt; Themes","Apply consistent colours."),
+    ("Templates (.pbit)","Reuse a model skeleton."),
+ ]),
+]
 
-  // ---------------- EXCEL ----------------
-  (function () {
-    var host = $('xl-play'); if (!host || !window.ExcelEngine) return;
-    var input = $('xl-in'), out = $('xl-out');
-    function run() {
-      var r = window.ExcelEngine.evaluate(input.value, { headers: D.excelHeaders, rows: D.rows });
-      if (r.ok) { out.className = 'out ok'; out.innerHTML = '<span class="res-val">' + escHtml(r.value) + '</span>'; }
-      else { out.className = 'out err'; out.innerHTML = '<b>' + escHtml(r.error) + '</b> — check the formula and try again.'; }
-    }
-    $('xl-run').addEventListener('click', run);
-    input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); } });
-    host.querySelectorAll('.chip-btn').forEach(function (c) { c.addEventListener('click', function () { input.value = c.dataset.f; run(); input.focus(); }); });
-    run();
-  })();
-
-  // ---------------- DAX ----------------
-  (function () {
-    var host = $('dax-play'); if (!host || !window.DaxValidator) return;
-    var input = $('dax-in'), out = $('dax-out');
-    function run() {
-      var r = window.DaxValidator.validate(input.value);
-      var html = '';
-      if (r.ok) html += '<b style="color:var(--good)">✓ Syntax looks valid.</b>';
-      else { html += '<b style="color:var(--bad)">Issues found:</b>'; r.issues.forEach(function (i) { html += '<div class="tip-line">' + i + '</div>'; }); }
-      if (r.notes && r.notes.length) r.notes.forEach(function (n) { html += '<div class="tip-line">' + n + '</div>'; });
-      if (r.tips && r.tips.length) { html += '<div style="margin-top:8px;font-weight:700;font-size:.9rem">Tips</div>'; r.tips.forEach(function (t) { html += '<div class="tip-line">' + t + '</div>'; }); }
-      html += '<p class="legend" style="margin-top:10px">This is a syntax &amp; style check — DAX needs a Power BI model to actually run.</p>';
-      out.className = r.ok ? 'out ok' : 'out err';
-      out.innerHTML = html;
-    }
-    $('dax-run').addEventListener('click', run);
-    host.querySelectorAll('.chip-btn').forEach(function (c) { c.addEventListener('click', function () { input.value = c.dataset.f; run(); input.focus(); }); });
-    run();
-  })();
-
-  // ---------------- SQL ----------------
-  // Start the DB whenever sql.js is on the page (the exam may need it
-  // even if the visible #sql-play runner is absent).
-  if (typeof window.initSqlJs === 'function' && !window.DPM_SQL_READY) {
-    window.DPM_SQL_READY = window.initSqlJs({ locateFile: function (f) { return 'assets/vendor/' + f; } })
-      .then(function (SQL) { return window.DPM_buildSqlDb(SQL); });
-  }
-  (function () {
-    var host = $('sql-play'); if (!host) return;
-    var input = $('sql-in'), out = $('sql-out'), status = $('sql-status'), runBtn = $('sql-run');
-    var db = null;
-    if (typeof window.initSqlJs !== 'function' || !window.DPM_SQL_READY) {
-      runBtn.disabled = true; if (out) { out.className = 'out err'; out.textContent = 'SQL engine failed to load.'; }
-      return;
-    }
-    runBtn.disabled = true; if (status) status.textContent = 'Loading SQL engine…';
-    window.DPM_SQL_READY.then(function (database) {
-      db = database;
-      runBtn.disabled = false;
-      if (status) status.textContent = 'Ready · "orders" (' + D.rows.length + ' rows) and "targets" (3 rows) loaded.';
-    }).catch(function (e) {
-      if (status) status.textContent = '';
-      out.className = 'out err'; out.textContent = 'Could not start the SQL engine: ' + e.message;
-    });
-
-    function run() {
-      if (!db) return;
-      try {
-        var res = db.exec(input.value);
-        if (!res.length) { out.className = 'out ok'; out.innerHTML = '<b style="color:var(--good)">Query OK.</b> No rows returned.'; return; }
-        var last = res[res.length - 1];
-        var rows = last.values, cols = last.columns, cap = 200;
-        var html = '<div style="max-height:340px;overflow:auto"><table class="rtbl"><tr>' +
-          cols.map(function (c) { return '<th>' + escHtml(c) + '</th>'; }).join('') + '</tr>';
-        rows.slice(0, cap).forEach(function (r) { html += '<tr>' + r.map(function (v) { return '<td>' + escHtml(v) + '</td>'; }).join('') + '</tr>'; });
-        html += '</table></div>';
-        var note = rows.length + ' row' + (rows.length === 1 ? '' : 's') + (rows.length > cap ? ' (showing first ' + cap + ')' : '');
-        out.className = 'out ok';
-        out.innerHTML = '<div style="font-size:.84rem;color:var(--muted);margin-bottom:6px">' + note + '</div>' + html;
-      } catch (e) {
-        out.className = 'out err';
-        out.innerHTML = '<b>SQL error:</b> ' + escHtml(e.message);
-      }
-    }
-    runBtn.addEventListener('click', run);
-    input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); } });
-    host.querySelectorAll('.chip-btn').forEach(function (c) { c.addEventListener('click', function () { input.value = c.dataset.f; run(); input.focus(); }); });
-  })();
-})();
+build_cheatsheet(
+    "/mnt/user-data/outputs/DAX-PowerBI-Cheat-Sheet.pdf",
+    "Power BI & DAX Cheat Sheet",
+    "A double-sided quick reference  ·  DPM Learning Hub",
+    S,
+    accent="#262626", code_border="#C19C00", code_bg="#FBF6E1",
+    code_ink="#5C4A00", line="#E8E0C5", band_title_color="#F2C811",
+    footer_label="DPM Learning Hub — Power BI track",
+    intro="A printable reference for building models and writing DAX in Power BI. "
+          "t = your table; 'Date' = a marked date table. Measures react to filters; columns don't.")
