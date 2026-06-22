@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL — Timed Final Exam · DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .exam-wrap{max-width:820px}
+  .start-card{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:26px 24px}
+  .start-card ul{margin:14px 0 0;padding-left:20px}
+  .start-card li{margin:6px 0}
+  .rulegrid{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px}
+  .rule{flex:1 1 150px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg)}
+  .rule b{display:block;font-size:1.35rem;font-family:"Bricolage Grotesque",sans-serif}
+  .rule small{color:var(--muted)}
+  .exambar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;
+           background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:18px;
+           box-shadow:0 4px 18px rgba(0,0,0,.12)}
+  .timer{font:800 1.5rem/1 "JetBrains Mono",monospace;letter-spacing:.02em;color:var(--accent)}
+  .timer.warn{color:#D97706}
+  .timer.danger{color:var(--bad);animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  .barmeta{font-size:.85rem;color:var(--muted)}
+  .barmeta b{color:var(--ink)}
+  .qcard{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:18px 20px;margin:14px 0}
+  .qcard .qn{font:700 .72rem/1 "JetBrains Mono",monospace;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+  .qcard .qt{font-weight:600;margin:6px 0 12px;font-size:1.05rem}
+  .opt{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin:8px 0;cursor:pointer;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt input{margin-top:3px;accent-color:var(--accent);flex:none}
+  .opt.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  .opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
+  .opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+  .opt .mark{margin-left:auto;font-weight:700;font-size:.85rem;flex:none}
+  .opt.correct .mark{color:var(--good)} .opt.wrong .mark{color:var(--bad)}
+  .why{margin:8px 0 0;font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--accent);padding-left:12px}
+  .score-card{border:1px solid var(--line);border-radius:16px;padding:26px;text-align:center;background:var(--surface)}
+  .score-num{font:800 3.4rem/1 "Bricolage Grotesque",sans-serif}
+  .verdict{display:inline-block;margin-top:10px;padding:6px 16px;border-radius:999px;font-weight:700}
+  .verdict.pass{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+  .verdict.fail{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .hidden{display:none!important}
+  .unans{color:var(--bad);font-weight:600}
+</style>
+</head>
+<body data-theme="sql">
+<div class="scrollbar"></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html" aria-current="page">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+  </div>
+</div></nav>
+
+<header class="hero" style="padding-bottom:18px"><div class="wrap exam-wrap">
+  <span class="tool-badge"><span class="glyph">⏱</span> Timed final exam</span>
+  <h1 style="font-size:2.4rem">SQL final exam</h1>
+  <p class="lead">A timed, closed-book test covering the whole SQL track — SELECT, WHERE, ORDER BY and DISTINCT, aggregates with GROUP BY and HAVING, every join type, subqueries, CTEs, window functions, set operators, NULL handling and common gotchas.</p>
+</div></header>
+
+<section><div class="wrap exam-wrap">
+
+  <!-- START SCREEN -->
+  <div id="start">
+    <div class="start-card">
+      <h2 style="margin:0 0 4px;font-size:1.5rem">Before you begin</h2>
+      <div class="rulegrid">
+        <div class="rule"><b id="r-count">40</b><small>multiple-choice questions</small></div>
+        <div class="rule"><b>60:00</b><small>minutes on the clock</small></div>
+        <div class="rule"><b>70%</b><small>to pass</small></div>
+      </div>
+      <ul>
+        <li>Every question is multiple choice with one best answer.</li>
+        <li>The timer starts when you press <b>Start</b> and the exam <b>submits automatically</b> when it reaches zero.</li>
+        <li>You can change answers freely until you submit. Unanswered questions are marked wrong.</li>
+        <li>Questions and answer options are <b>shuffled</b> each attempt, and drawn from a larger bank — so retaking is worthwhile.</li>
+        <li>After submitting you'll see your score and a full review with explanations.</li>
+      </ul>
+      <div class="actions">
+        <button class="btn" id="start-btn">Start the exam →</button>
+        <a class="btn ghost" href="sql.html">Review SQL first</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div id="exam" class="hidden">
+    <div class="exambar">
+      <div><span class="timer" id="timer">60:00</span></div>
+      <div class="barmeta">Answered <b id="answered">0</b> / <span id="total">40</span></div>
+      <button class="btn" id="submit-btn">Submit</button>
+    </div>
+    <div id="questions"></div>
+    <div class="actions" style="justify-content:flex-end">
+      <button class="btn" id="submit-btn2">Submit exam</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results" class="hidden">
+    <div class="score-card">
+      <div class="score-num" id="score-num">—</div>
+      <div id="score-detail" class="barmeta"></div>
+      <div id="verdict" class="verdict"></div>
+      <div class="actions" style="justify-content:center">
+        <button class="btn" id="retake-btn">Retake the exam</button>
+        <a class="btn ghost" href="sql.html">Back to SQL</a>
+      </div>
+    </div>
+    <h2 style="font-size:1.5rem;margin:30px 0 4px">Review</h2>
+    <p class="lead" style="margin-bottom:6px">Your answer against the correct one, with a short explanation for each.</p>
+    <div id="review"></div>
+    <div class="actions" style="justify-content:center;margin-top:20px">
+      <button class="btn" id="retake-btn2">Retake the exam</button>
+    </div>
+  </div>
+
+</div></section>
+
+<footer class="foot"><div class="wrap">
+  <p>SQL final exam · DPM Learning Hub. <a href="sql.html">← Back to the SQL track</a></p>
+</div></footer>
+
+<!-- ============ QUESTION BANK (all multiple choice) ============ -->
+<script type="application/json" id="sqlExamBank">
+[
+{"q": "In a query, <code>SELECT</code> specifies…", "opts": ["Which columns to return", "Which table to read", "How to sort", "Which rows to keep"], "correct": 0, "why": "SELECT lists the columns (or expressions) to return; FROM names the table."},
+{"q": "<code>FROM orders</code> tells the query…", "opts": ["Which table to read from", "Which columns to show", "How many rows to return", "The sort order"], "correct": 0, "why": "FROM names the source table(s)."},
+{"q": "<code>SELECT *</code> returns…", "opts": ["Every column", "Only the first column", "A count of rows", "Distinct rows"], "correct": 0, "why": "* means all columns; list names explicitly when you only need some."},
+{"q": "Text literals in SQL are written in…", "opts": ["Single quotes, e.g. 'EMEA'", "Double quotes", "Backticks", "Square brackets"], "correct": 0, "why": "Single quotes mark string values; double quotes denote identifiers in standard SQL."},
+{"q": "A SQL statement is normally ended with a…", "opts": ["Semicolon ;", "Full stop .", "Colon :", "Slash /"], "correct": 0, "why": "The semicolon separates statements."},
+{"q": "A single-line comment starts with…", "opts": ["--", "//", "#", "/*"], "correct": 0, "why": "-- begins a line comment; /* … */ is a block comment."},
+{"q": "<code>AS</code> is used to…", "opts": ["Give a column or table an alias (rename it)", "Filter rows", "Sort results", "Join tables"], "correct": 0, "why": "AS renames output columns or tables for readability."},
+{"q": "The <code>WHERE</code> clause…", "opts": ["Filters individual rows before grouping", "Filters groups after aggregation", "Sorts the rows", "Joins two tables"], "correct": 0, "why": "WHERE removes rows early; HAVING filters grouped results later."},
+{"q": "In SQL, <code>&lt;&gt;</code> means…", "opts": ["Not equal to", "Approximately equal", "Greater or less", "Concatenate"], "correct": 0, "why": "&lt;&gt; (or != in many dialects) is the not-equal operator."},
+{"q": "<code>WHERE a = 1 AND b = 2</code> keeps rows where…", "opts": ["Both conditions are true", "Either condition is true", "Neither is true", "Only the first is true"], "correct": 0, "why": "AND requires all conditions; OR requires at least one."},
+{"q": "<code>LIKE 'SD-WAN%'</code> matches values that…", "opts": ["Start with 'SD-WAN'", "Contain a literal percent sign", "Equal 'SD-WAN' exactly", "End with 'SD-WAN'"], "correct": 0, "why": "% matches any run of characters; here it anchors the start."},
+{"q": "In a <code>LIKE</code> pattern, the underscore <code>_</code> matches…", "opts": ["Exactly one character", "Any number of characters", "A digit only", "A space only"], "correct": 0, "why": "_ is the single-character wildcard; % is the any-length wildcard."},
+{"q": "<code>WHERE region IN ('EMEA','APAC')</code> is equivalent to…", "opts": ["region = 'EMEA' OR region = 'APAC'", "region = 'EMEA' AND region = 'APAC'", "region &lt;&gt; 'EMEA'", "region LIKE 'EMEA'"], "correct": 0, "why": "IN tests membership in a list — a tidy shorthand for several ORs."},
+{"q": "<code>BETWEEN 10 AND 20</code> includes…", "opts": ["Both 10 and 20 (inclusive)", "Neither endpoint", "Only 10", "Only 20"], "correct": 0, "why": "BETWEEN is inclusive of both bounds."},
+{"q": "The correct way to test for a missing value is…", "opts": ["IS NULL", "= NULL", "== NULL", "NULL()"], "correct": 0, "why": "Comparisons with = never match NULL; use IS NULL / IS NOT NULL."},
+{"q": "<code>WHERE actual_go_live = NULL</code> returns no rows because…", "opts": ["NULL never equals anything; use IS NULL", "NULL equals every value", "The column doesn't exist", "= is not allowed in WHERE"], "correct": 0, "why": "NULL means 'unknown', so equality is never true — IS NULL is required."},
+{"q": "<code>ORDER BY revenue DESC</code> sorts…", "opts": ["Highest to lowest", "Lowest to highest", "Alphabetically", "Randomly"], "correct": 0, "why": "DESC is descending; ASC (the default) is ascending."},
+{"q": "If you omit ASC/DESC, <code>ORDER BY</code> sorts…", "opts": ["Ascending by default", "Descending by default", "In insertion order", "Randomly"], "correct": 0, "why": "Ascending is the default direction."},
+{"q": "<code>LIMIT 10</code> returns…", "opts": ["The first 10 rows", "Every 10th row", "10% of rows", "The last 10 rows"], "correct": 0, "why": "LIMIT caps the number of rows returned (often combined with ORDER BY)."},
+{"q": "<code>SELECT DISTINCT region</code> returns…", "opts": ["Each region once (duplicates removed)", "Every row", "Only the first region", "The count of regions"], "correct": 0, "why": "DISTINCT removes duplicate rows from the result."},
+{"q": "<code>COUNT(*)</code> returns…", "opts": ["The number of rows", "The number of columns", "The sum of a column", "The distinct values"], "correct": 0, "why": "COUNT(*) counts rows; COUNT(col) counts non-NULL values in that column."},
+{"q": "<code>COUNT(actual_go_live)</code> differs from <code>COUNT(*)</code> because it…", "opts": ["Ignores rows where that column is NULL", "Counts columns", "Counts duplicates only", "Rounds the result"], "correct": 0, "why": "COUNT(column) skips NULLs; COUNT(*) counts all rows."},
+{"q": "Which is NOT an aggregate function?", "opts": ["SUBSTR", "SUM", "AVG", "MAX"], "correct": 0, "why": "SUBSTR is a string function; SUM/AVG/MIN/MAX/COUNT are aggregates."},
+{"q": "<code>GROUP BY region</code> produces…", "opts": ["One result row per region", "One row per order", "All rows unsorted", "Only the first region"], "correct": 0, "why": "GROUP BY collapses rows into one per group so aggregates apply per group."},
+{"q": "<code>HAVING COUNT(*) &gt;= 10</code>…", "opts": ["Filters groups after aggregation", "Filters rows before grouping", "Sorts the groups", "Joins two tables"], "correct": 0, "why": "HAVING applies to grouped/aggregated results; WHERE applies to raw rows."},
+{"q": "The difference between WHERE and HAVING is…", "opts": ["WHERE filters rows before grouping; HAVING filters groups after", "They are identical", "HAVING runs first", "WHERE only works with JOINs"], "correct": 0, "why": "Use WHERE for row conditions and HAVING for conditions on aggregates."},
+{"q": "Can a column alias defined in SELECT be used in the WHERE clause?", "opts": ["No — SELECT is evaluated after WHERE", "Yes, always", "Only with GROUP BY", "Only in subqueries"], "correct": 0, "why": "Logically WHERE runs before SELECT, so the alias doesn't exist yet there."},
+{"q": "To count the number of distinct customers, use…", "opts": ["COUNT(DISTINCT customer)", "COUNT(customer)", "DISTINCT COUNT(customer)", "SUM(DISTINCT customer)"], "correct": 0, "why": "COUNT(DISTINCT col) counts unique non-NULL values."},
+{"q": "The logical order SQL evaluates clauses is…", "opts": ["FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT", "SELECT → FROM → WHERE → ORDER BY", "WHERE → FROM → SELECT → GROUP BY", "FROM → SELECT → WHERE → GROUP BY"], "correct": 0, "why": "This order explains why SELECT aliases can't be used in WHERE."},
+{"q": "An <code>INNER JOIN</code> returns…", "opts": ["Only rows that match in both tables", "All rows from the left table", "All rows from both tables", "Rows from neither table"], "correct": 0, "why": "INNER keeps only matched pairs; LEFT/RIGHT/FULL keep unmatched rows too."},
+{"q": "A <code>LEFT JOIN</code> returns…", "opts": ["All left-table rows, plus matches (NULLs where none)", "Only matching rows", "All right-table rows only", "Every combination"], "correct": 0, "why": "LEFT JOIN preserves every row from the left side."},
+{"q": "The <code>ON</code> clause of a join specifies…", "opts": ["The matching condition between the tables", "Which columns to return", "The sort order", "The row limit"], "correct": 0, "why": "ON defines how rows from the two tables are matched (usually key = key)."},
+{"q": "A <code>CROSS JOIN</code> produces…", "opts": ["Every combination of rows from both tables", "Only matching rows", "All left rows", "A single row"], "correct": 0, "why": "A cross join is the Cartesian product — no ON condition."},
+{"q": "Joining a table to itself (e.g. employees to their managers) is a…", "opts": ["Self join (using table aliases)", "Cross join", "Natural join only", "Union"], "correct": 0, "why": "A self join references the same table twice with different aliases."},
+{"q": "In queries, a many-to-many relationship is navigated through…", "opts": ["A junction/bridge table", "A single foreign key", "A CROSS JOIN only", "A window function"], "correct": 0, "why": "The junction table links both sides, each via a 1-to-many join."},
+{"q": "A scalar subquery is one that…", "opts": ["Returns a single value", "Returns many rows", "Returns many columns", "Cannot be used in WHERE"], "correct": 0, "why": "A scalar subquery yields one value, e.g. WHERE revenue &gt; (SELECT AVG(revenue) …)."},
+{"q": "<code>WHERE id IN (SELECT id FROM …)</code> uses the subquery as…", "opts": ["A list of values to match against", "A scalar value", "A join condition", "A sort key"], "correct": 0, "why": "IN with a subquery checks membership in the returned set."},
+{"q": "<code>EXISTS (SELECT 1 FROM …)</code> is true when…", "opts": ["The subquery returns at least one row", "The subquery returns no rows", "A value equals NULL", "The table is empty"], "correct": 0, "why": "EXISTS tests for the presence of any matching row (correlated subqueries)."},
+{"q": "A subquery used in the <code>FROM</code> clause is a…", "opts": ["Derived table (must be given an alias)", "Scalar subquery", "Window function", "Set operator"], "correct": 0, "why": "A derived table is a query treated as a table; it needs an alias."},
+{"q": "A <code>WITH</code> clause defines a…", "opts": ["Common table expression (CTE) — a named temporary result", "Permanent table", "Window function", "Trigger"], "correct": 0, "why": "A CTE names a query you can reference later, improving readability."},
+{"q": "The main benefit of a CTE over nested subqueries is…", "opts": ["Readability and reuse of a named step", "It runs faster always", "It removes duplicates", "It enforces keys"], "correct": 0, "why": "CTEs let you build a query in clear, named stages."},
+{"q": "<code>ROW_NUMBER() OVER (ORDER BY revenue DESC)</code>…", "opts": ["Numbers each row without collapsing rows", "Sums revenue", "Removes duplicates", "Groups rows"], "correct": 0, "why": "Window functions add a value to each row while keeping all rows."},
+{"q": "<code>RANK()</code> differs from <code>DENSE_RANK()</code> because RANK…", "opts": ["Leaves gaps after ties", "Never allows ties", "Sorts ascending only", "Removes duplicates"], "correct": 0, "why": "RANK skips numbers after ties (1,1,3); DENSE_RANK doesn't (1,1,2)."},
+{"q": "<code>PARTITION BY region</code> in a window function…", "opts": ["Restarts the calculation within each region", "Filters out regions", "Sorts by region", "Joins the regions table"], "correct": 0, "why": "PARTITION BY defines the groups the window function works within."},
+{"q": "<code>SUM(revenue) OVER (ORDER BY order_date)</code> produces…", "opts": ["A running (cumulative) total", "A grand total only", "A row count", "The average"], "correct": 0, "why": "Adding ORDER BY to a window SUM yields a running total."},
+{"q": "Compared with GROUP BY, window functions…", "opts": ["Keep every individual row", "Always collapse rows", "Cannot use ORDER BY", "Only work on text"], "correct": 0, "why": "Window functions compute across rows but return a value per row."},
+{"q": "<code>LAG(revenue) OVER (ORDER BY order_date)</code> returns…", "opts": ["The previous row's revenue", "The next row's revenue", "The total revenue", "A random row"], "correct": 0, "why": "LAG looks back; LEAD looks forward, within the ordered window."},
+{"q": "<code>UNION</code> combines two result sets and…", "opts": ["Removes duplicate rows", "Keeps duplicates", "Returns only common rows", "Joins on a key"], "correct": 0, "why": "UNION de-duplicates; UNION ALL keeps every row (and is faster)."},
+{"q": "<code>UNION ALL</code> differs from <code>UNION</code> because it…", "opts": ["Keeps duplicate rows", "Removes duplicates", "Sorts the result", "Joins the tables"], "correct": 0, "why": "UNION ALL doesn't de-duplicate, so it avoids that sorting cost."},
+{"q": "<code>INTERSECT</code> returns rows that are…", "opts": ["Present in both result sets", "In the first only", "In neither", "Joined on a key"], "correct": 0, "why": "INTERSECT returns the common rows of two queries."},
+{"q": "<code>EXCEPT</code> returns rows that are…", "opts": ["In the first query but not the second", "In both", "In the second only", "Duplicated"], "correct": 0, "why": "EXCEPT (MINUS in Oracle) subtracts the second set from the first."},
+{"q": "<code>COALESCE(a, b, 0)</code> returns…", "opts": ["The first value that isn't NULL", "The last value", "Always 0", "The sum of a and b"], "correct": 0, "why": "COALESCE returns the first non-NULL argument — handy for defaults."},
+{"q": "In many databases <code>3/2</code> returns 1 because…", "opts": ["Integer division truncates; multiply by 1.0 for decimals", "Rounding is on by default", "SQL can't divide", "It's a syntax error"], "correct": 0, "why": "With integer operands the result is an integer; use 3 * 1.0 / 2 for 1.5."},
+{"q": "In standard SQL, single quotes are for text and double quotes are for…", "opts": ["Identifiers (column/table names)", "Comments", "Numbers", "Dates only"], "correct": 0, "why": "'text' is a string literal; \"name\" quotes an identifier."},
+{"q": "Whether <code>LIKE</code> is case-sensitive…", "opts": ["Depends on the database/collation", "Is always case-sensitive", "Is never case-sensitive", "Depends on the row count"], "correct": 0, "why": "Case sensitivity of LIKE varies by engine and collation settings."},
+{"q": "<code>CASE WHEN revenue &gt;= 30000 THEN 'big' ELSE 'small' END</code> is used to…", "opts": ["Return a value based on conditions (if/then)", "Join two tables", "Aggregate revenue", "Sort the result"], "correct": 0, "why": "CASE is SQL's if/then expression; great inside SELECT or aggregates."},
+{"q": "To return only the first N rows, SQLite/PostgreSQL/MySQL use <code>LIMIT</code>, while SQL Server uses…", "opts": ["TOP", "HEAD", "FIRST", "CAP"], "correct": 0, "why": "SQL Server uses SELECT TOP n; the ANSI form is FETCH FIRST n ROWS ONLY."},
+{"q": "A portable way to count rows that meet a condition within one query is…", "opts": ["SUM(CASE WHEN condition THEN 1 ELSE 0 END)", "COUNT(condition)", "ONLY(condition)", "FILTER(condition)"], "correct": 0, "why": "Conditional aggregation with CASE works across all dialects."}
+]
+</script>
+
+<script src="assets/js/main.js"></script>
+<script>
+(function(){
+  'use strict';
+  var SHOWN = 40, PASS = 0.70, SECONDS = 60*60;
+  var bank = JSON.parse(document.getElementById('sqlExamBank').textContent);
+  var attempt = [], timeLeft = SECONDS, ticker = null, submitted = false;
+
+  function $(id){ return document.getElementById(id); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+  function build(){
+    var pick = shuffle(bank).slice(0, Math.min(SHOWN, bank.length));
+    attempt = pick.map(function(item){
+      var opts = item.opts.map(function(text,i){ return {text:text, correct:i===item.correct}; });
+      return { q:item.q, why:item.why, opts:shuffle(opts), chosen:null };
+    });
+  }
+
+  function render(){
+    var html = '';
+    attempt.forEach(function(it, qi){
+      html += '<div class="qcard" id="qc'+qi+'"><div class="qn">Question '+(qi+1)+' of '+attempt.length+'</div>'+
+              '<div class="qt">'+it.q+'</div>';
+      it.opts.forEach(function(o, oi){
+        html += '<label class="opt" data-q="'+qi+'" data-o="'+oi+'">'+
+                '<input type="radio" name="q'+qi+'" value="'+oi+'"><span>'+o.text+'</span></label>';
+      });
+      html += '</div>';
+    });
+    $('questions').innerHTML = html;
+    $('total').textContent = attempt.length;
+    $('r-count').textContent = attempt.length;
+
+    $('questions').querySelectorAll('.opt input').forEach(function(inp){
+      inp.addEventListener('change', function(){
+        var lab = inp.closest('.opt');
+        var qi = +lab.dataset.q, oi = +inp.value;
+        attempt[qi].chosen = oi;
+        var card = $('qc'+qi);
+        card.querySelectorAll('.opt').forEach(function(l){ l.classList.remove('sel'); });
+        lab.classList.add('sel');
+        updateAnswered();
+      });
+    });
+  }
+
+  function updateAnswered(){
+    var n = attempt.filter(function(a){ return a.chosen!==null; }).length;
+    $('answered').textContent = n;
+    $('answered').className = (n < attempt.length) ? 'unans' : '';
+  }
+
+  function fmt(s){ var m=Math.floor(s/60), ss=s%60; return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss; }
+
+  function tick(){
+    timeLeft--;
+    var t = $('timer'); t.textContent = fmt(Math.max(0,timeLeft));
+    t.classList.toggle('warn', timeLeft<=300 && timeLeft>60);
+    t.classList.toggle('danger', timeLeft<=60);
+    if(timeLeft<=0){ clearInterval(ticker); submit(true); }
+  }
+
+  function start(){
+    build(); render(); updateAnswered();
+    submitted=false; timeLeft=SECONDS; $('timer').textContent=fmt(timeLeft); $('timer').className='timer';
+    $('start').classList.add('hidden'); $('results').classList.add('hidden'); $('exam').classList.remove('hidden');
+    window.scrollTo(0,0);
+    clearInterval(ticker); ticker=setInterval(tick,1000);
+  }
+
+  function submit(auto){
+    if(submitted) return; submitted=true;
+    clearInterval(ticker);
+    var unanswered = attempt.filter(function(a){ return a.chosen===null; }).length;
+    if(!auto && unanswered>0){
+      if(!confirm(unanswered+' question'+(unanswered>1?'s are':' is')+' unanswered (they will be marked wrong). Submit anyway?')){
+        submitted=false; ticker=setInterval(tick,1000); return;
+      }
+    }
+    var correct = 0;
+    attempt.forEach(function(a){ if(a.chosen!==null && a.opts[a.chosen].correct) correct++; });
+    var pct = Math.round(correct/attempt.length*100);
+    var passed = (correct/attempt.length) >= PASS;
+
+    $('score-num').textContent = pct+'%';
+    $('score-num').style.color = passed ? 'var(--good)' : 'var(--bad)';
+    $('score-detail').innerHTML = '<b>'+correct+'</b> of <b>'+attempt.length+'</b> correct'+
+        (auto ? ' · time expired' : '') + (unanswered? ' · '+unanswered+' left blank':'');
+    var v=$('verdict');
+    v.textContent = passed ? '✓ Passed' : 'Not yet — keep studying';
+    v.className = 'verdict '+(passed?'pass':'fail');
+
+    var rev='';
+    attempt.forEach(function(it, qi){
+      rev += '<div class="qcard"><div class="qn">Question '+(qi+1)+'</div><div class="qt">'+it.q+'</div>';
+      it.opts.forEach(function(o, oi){
+        var cls='opt', mark='';
+        if(o.correct){ cls+=' correct'; mark='<span class="mark">Correct</span>'; }
+        if(it.chosen===oi && !o.correct){ cls+=' wrong'; mark='<span class="mark">Your answer</span>'; }
+        rev += '<div class="'+cls+'"><span>'+o.text+'</span>'+mark+'</div>';
+      });
+      if(it.chosen===null) rev += '<div class="why"><b>You left this blank.</b> '+it.why+'</div>';
+      else rev += '<div class="why">'+it.why+'</div>';
+      rev += '</div>';
+    });
+    $('review').innerHTML = rev;
+
+    $('exam').classList.add('hidden'); $('results').classList.remove('hidden');
+    window.scrollTo(0,0);
+  }
+
+  function toStart(){ $('results').classList.add('hidden'); $('exam').classList.add('hidden'); $('start').classList.remove('hidden'); window.scrollTo(0,0); }
+
+  $('start-btn').addEventListener('click', start);
+  $('submit-btn').addEventListener('click', function(){ submit(false); });
+  $('submit-btn2').addEventListener('click', function(){ submit(false); });
+  $('retake-btn').addEventListener('click', toStart);
+  $('retake-btn2').addEventListener('click', toStart);
+  window.addEventListener('beforeunload', function(e){ if(!submitted && !$('exam').classList.contains('hidden')){ e.preventDefault(); e.returnValue=''; } });
+})();
+</script>
+</body>
+</html>

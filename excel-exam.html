@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel — Timed Final Exam · DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .exam-wrap{max-width:820px}
+  .start-card{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:26px 24px}
+  .start-card ul{margin:14px 0 0;padding-left:20px}
+  .start-card li{margin:6px 0}
+  .rulegrid{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px}
+  .rule{flex:1 1 150px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg)}
+  .rule b{display:block;font-size:1.35rem;font-family:"Bricolage Grotesque",sans-serif}
+  .rule small{color:var(--muted)}
+  .exambar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;
+           background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:18px;
+           box-shadow:0 4px 18px rgba(0,0,0,.12)}
+  .timer{font:800 1.5rem/1 "JetBrains Mono",monospace;letter-spacing:.02em;color:var(--accent)}
+  .timer.warn{color:#D97706}
+  .timer.danger{color:var(--bad);animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  .barmeta{font-size:.85rem;color:var(--muted)}
+  .barmeta b{color:var(--ink)}
+  .qcard{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:18px 20px;margin:14px 0}
+  .qcard .qn{font:700 .72rem/1 "JetBrains Mono",monospace;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+  .qcard .qt{font-weight:600;margin:6px 0 12px;font-size:1.05rem}
+  .opt{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin:8px 0;cursor:pointer;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt input{margin-top:3px;accent-color:var(--accent);flex:none}
+  .opt.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  .opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
+  .opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+  .opt .mark{margin-left:auto;font-weight:700;font-size:.85rem;flex:none}
+  .opt.correct .mark{color:var(--good)} .opt.wrong .mark{color:var(--bad)}
+  .why{margin:8px 0 0;font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--accent);padding-left:12px}
+  .score-card{border:1px solid var(--line);border-radius:16px;padding:26px;text-align:center;background:var(--surface)}
+  .score-num{font:800 3.4rem/1 "Bricolage Grotesque",sans-serif}
+  .verdict{display:inline-block;margin-top:10px;padding:6px 16px;border-radius:999px;font-weight:700}
+  .verdict.pass{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+  .verdict.fail{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .hidden{display:none!important}
+  .unans{color:var(--bad);font-weight:600}
+</style>
+</head>
+<body data-theme="excel">
+<div class="scrollbar"></div>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html" aria-current="page">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+  </div>
+</div></nav>
+
+<header class="hero" style="padding-bottom:18px"><div class="wrap exam-wrap">
+  <span class="tool-badge"><span class="glyph">⏱</span> Timed final exam</span>
+  <h1 style="font-size:2.4rem">Excel final exam</h1>
+  <p class="lead">A timed, closed-book test covering the whole Excel track — references and the $ lock, conditional aggregation, logic, lookups, text and dates, dynamic arrays, errors, PivotTables and Power Query.</p>
+</div></header>
+
+<section><div class="wrap exam-wrap">
+
+  <!-- START SCREEN -->
+  <div id="start">
+    <div class="start-card">
+      <h2 style="margin:0 0 4px;font-size:1.5rem">Before you begin</h2>
+      <div class="rulegrid">
+        <div class="rule"><b id="r-count">40</b><small>multiple-choice questions</small></div>
+        <div class="rule"><b>60:00</b><small>minutes on the clock</small></div>
+        <div class="rule"><b>70%</b><small>to pass</small></div>
+      </div>
+      <ul>
+        <li>Every question is multiple choice with one best answer.</li>
+        <li>The timer starts when you press <b>Start</b> and the exam <b>submits automatically</b> when it reaches zero.</li>
+        <li>You can change answers freely until you submit. Unanswered questions are marked wrong.</li>
+        <li>Questions and answer options are <b>shuffled</b> each attempt, and drawn from a larger bank — so retaking is worthwhile.</li>
+        <li>After submitting you'll see your score and a full review with explanations.</li>
+      </ul>
+      <div class="actions">
+        <button class="btn" id="start-btn">Start the exam →</button>
+        <a class="btn ghost" href="excel.html">Review Excel first</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div id="exam" class="hidden">
+    <div class="exambar">
+      <div><span class="timer" id="timer">60:00</span></div>
+      <div class="barmeta">Answered <b id="answered">0</b> / <span id="total">40</span></div>
+      <button class="btn" id="submit-btn">Submit</button>
+    </div>
+    <div id="questions"></div>
+    <div class="actions" style="justify-content:flex-end">
+      <button class="btn" id="submit-btn2">Submit exam</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results" class="hidden">
+    <div class="score-card">
+      <div class="score-num" id="score-num">—</div>
+      <div id="score-detail" class="barmeta"></div>
+      <div id="verdict" class="verdict"></div>
+      <div class="actions" style="justify-content:center">
+        <button class="btn" id="retake-btn">Retake the exam</button>
+        <a class="btn ghost" href="excel.html">Back to Excel</a>
+      </div>
+    </div>
+    <h2 style="font-size:1.5rem;margin:30px 0 4px">Review</h2>
+    <p class="lead" style="margin-bottom:6px">Your answer against the correct one, with a short explanation for each.</p>
+    <div id="review"></div>
+    <div class="actions" style="justify-content:center;margin-top:20px">
+      <button class="btn" id="retake-btn2">Retake the exam</button>
+    </div>
+  </div>
+
+</div></section>
+
+<footer class="foot"><div class="wrap">
+  <p>Excel final exam · DPM Learning Hub. <a href="excel.html">← Back to the Excel track</a></p>
+</div></footer>
+
+<!-- ============ QUESTION BANK (all multiple choice) ============ -->
+<script type="application/json" id="excelExamBank">
+[
+{"q": "When you copy <code>=$A$1</code> down a column, the reference…", "opts": ["Stays fixed on A1 (absolute)", "Shifts to A2, A3, …", "Becomes a circular reference", "Turns into text"], "correct": 0, "why": "The $ signs lock both the column and row, so $A$1 never moves when copied."},
+{"q": "Every Excel formula must begin with…", "opts": ["An equals sign <code>=</code>", "A plus sign", "A colon", "An apostrophe"], "correct": 0, "why": "Typing = tells Excel the cell is a formula rather than literal text."},
+{"q": "Pressing <b>F4</b> while editing a reference…", "opts": ["Cycles through the $ absolute/relative forms", "Deletes the cell", "Opens the chart menu", "Refreshes the workbook"], "correct": 0, "why": "F4 toggles A1 → $A$1 → A$1 → $A1, the quickest way to lock a reference."},
+{"q": "<code>A$1</code> is an example of a…", "opts": ["Mixed reference (row locked, column relative)", "Fully absolute reference", "Fully relative reference", "Named range"], "correct": 0, "why": "The $ before the row locks the row only; the column still shifts when copied."},
+{"q": "In <code>=2+3*4^2</code>, which operation runs first?", "opts": ["The exponent <code>4^2</code>", "2+3", "3*4", "Left to right as written"], "correct": 0, "why": "Excel follows maths precedence: exponent, then multiply/divide, then add/subtract."},
+{"q": "The <code>&amp;</code> operator is used to…", "opts": ["Join (concatenate) text", "Add numbers", "Compare values", "Lock a reference"], "correct": 0, "why": "&amp; concatenates: =A2&amp;\" \"&amp;B2 joins two cells with a space."},
+{"q": "<code>A:A</code> in a formula refers to…", "opts": ["The entire column A", "Cell A1 only", "Rows 1 to A", "A named range called A"], "correct": 0, "why": "A:A is a whole-column reference; 2:2 would be a whole row."},
+{"q": "The quickest way to make a range auto-expand as you add rows is…", "opts": ["Format it as a Table (Ctrl+T)", "Merge the cells", "Add blank rows below", "Freeze panes"], "correct": 0, "why": "Excel Tables grow automatically, so formulas and PivotTables pick up new rows."},
+{"q": "<code>COUNT</code> differs from <code>COUNTA</code> because COUNT…", "opts": ["Counts only cells containing numbers", "Counts blank cells", "Counts everything including text", "Ignores duplicates"], "correct": 0, "why": "COUNT tallies numeric cells; COUNTA counts any non-empty cell."},
+{"q": "<code>AVERAGE(B2:B100)</code> ignores…", "opts": ["Text and blank cells", "Negative numbers", "The first row", "Hidden columns"], "correct": 0, "why": "AVERAGE only divides by the count of numeric values, skipping text and blanks."},
+{"q": "<code>=ROUND(123.456, 1)</code> returns…", "opts": ["123.5", "123.46", "123", "120"], "correct": 0, "why": "The second argument is the number of decimals to keep — here, one."},
+{"q": "Which function multiplies two ranges element-by-element and sums the result?", "opts": ["SUMPRODUCT", "SUMIFS", "PRODUCT", "AGGREGATE"], "correct": 0, "why": "SUMPRODUCT is ideal for weighted totals: SUMPRODUCT(qty, price)."},
+{"q": "<code>SUMIFS</code> differs from <code>SUMIF</code> because SUMIFS…", "opts": ["Supports multiple criteria and takes the sum range first", "Can only sum one column", "Rounds the result", "Ignores blanks automatically"], "correct": 0, "why": "SUMIFS(sum_range, range1, crit1, range2, crit2, …) handles many conditions."},
+{"q": "In <code>COUNTIF(F2:F73, \"&gt;100\")</code>, the criterion is quoted because…", "opts": ["Operators in criteria must be passed as text", "Numbers are always text", "It refers to a sheet name", "Otherwise it counts blanks"], "correct": 0, "why": "Comparison operators inside criteria are written as text, e.g. \"&gt;100\" or \"&lt;&gt;EMEA\"."},
+{"q": "In COUNTIF/SUMIF criteria, the wildcards <code>*</code> and <code>?</code> mean…", "opts": ["Any run of characters / exactly one character", "Multiply / divide", "Absolute / relative", "Comment / note"], "correct": 0, "why": "* matches any text, ? matches a single character, e.g. \"*WAN*\"."},
+{"q": "To build a criterion from a cell value you…", "opts": ["Concatenate with &amp;, e.g. \"&gt;\"&amp;G1", "Put the cell in quotes", "Use the = sign twice", "Wrap it in ROUND"], "correct": 0, "why": "\"&gt;\"&amp;G1 turns the value in G1 into a 'greater than' criterion."},
+{"q": "<code>IFERROR(x, 0)</code> is used to…", "opts": ["Replace any error result with a fallback value", "Force an error", "Round x to zero", "Count errors"], "correct": 0, "why": "IFERROR returns the fallback (here 0) whenever x would be an error such as #DIV/0!."},
+{"q": "A cleaner alternative to deeply nested <code>IF</code> statements is…", "opts": ["IFS", "COUNTIF", "CHOOSE only", "VLOOKUP"], "correct": 0, "why": "IFS(test1, val1, test2, val2, …) evaluates conditions in order without nesting."},
+{"q": "<code>AND(x, y)</code> returns TRUE when…", "opts": ["Both x and y are true", "Either x or y is true", "Neither is true", "Only x is true"], "correct": 0, "why": "AND needs every condition true; OR needs at least one."},
+{"q": "<code>IFNA</code> differs from <code>IFERROR</code> because IFNA…", "opts": ["Catches only the #N/A error", "Catches every error", "Never returns a value", "Rounds the result"], "correct": 0, "why": "IFNA traps just #N/A (handy for lookups) and lets other errors show."},
+{"q": "An exact-match <code>VLOOKUP</code> needs its 4th argument set to…", "opts": ["FALSE (or 0)", "TRUE", "1", "blank"], "correct": 0, "why": "FALSE/0 forces an exact match; TRUE does an approximate match on sorted data."},
+{"q": "A key limitation of <code>VLOOKUP</code> is that it…", "opts": ["Can't look to the left of the lookup column", "Can't return text", "Only works on one sheet", "Ignores exact matches"], "correct": 0, "why": "VLOOKUP searches the first column and returns columns to its right only."},
+{"q": "An advantage of <code>XLOOKUP</code> over VLOOKUP is…", "opts": ["It looks left or right, is exact by default, and has a not-found argument", "It is faster to type only", "It sorts the data", "It removes duplicates"], "correct": 0, "why": "XLOOKUP(lookup, lookup_array, return_array, [if_not_found]) is far more flexible."},
+{"q": "<code>INDEX/MATCH</code> is often preferred because…", "opts": ["It does flexible two-way lookups and survives inserted columns", "It is the only exact-match option", "It auto-formats results", "It needs no arguments"], "correct": 0, "why": "MATCH finds the position and INDEX returns the value, in any direction."},
+{"q": "<code>MATCH(value, range, 0)</code> returns…", "opts": ["The position of the value in the range", "The value itself", "The sum of the range", "A TRUE/FALSE result"], "correct": 0, "why": "MATCH returns the relative position; the 0 means exact match."},
+{"q": "<code>LEN(text)</code> returns…", "opts": ["The number of characters", "The first character", "The text in capitals", "The position of a space"], "correct": 0, "why": "LEN counts characters, including spaces."},
+{"q": "To pull the first 3 characters from a cell you use…", "opts": ["LEFT(text, 3)", "RIGHT(text, 3)", "MID(text, 3)", "TRIM(text)"], "correct": 0, "why": "LEFT returns characters from the start; RIGHT from the end; MID from a position."},
+{"q": "<code>TRIM(text)</code> is used to…", "opts": ["Remove extra spaces", "Round numbers", "Delete the cell", "Change case"], "correct": 0, "why": "TRIM strips leading/trailing spaces and collapses doubles between words."},
+{"q": "<code>TEXTJOIN(\", \", TRUE, range)</code>…", "opts": ["Joins a range with a delimiter, skipping blanks", "Splits text into columns", "Counts the items", "Sorts the range"], "correct": 0, "why": "The TRUE argument tells it to ignore empty cells while joining."},
+{"q": "<code>SEARCH</code> differs from <code>FIND</code> because SEARCH…", "opts": ["Is case-insensitive (and allows wildcards)", "Is faster", "Returns text", "Only works on numbers"], "correct": 0, "why": "FIND is case-sensitive; SEARCH ignores case and supports * and ?."},
+{"q": "<code>UPPER</code>, <code>LOWER</code> and <code>PROPER</code> change…", "opts": ["The letter case of text", "The cell colour", "The number format", "The font"], "correct": 0, "why": "PROPER capitalises the first letter of each word."},
+{"q": "<code>TODAY()</code> returns…", "opts": ["Today's date, recalculating each day", "A fixed date you typed", "The current time only", "The day of the week number"], "correct": 0, "why": "TODAY() is volatile — it updates to the current date whenever the sheet recalculates."},
+{"q": "Subtracting two dates, <code>=M2-L2</code>, gives…", "opts": ["The number of days between them", "A text string", "An error", "The later date"], "correct": 0, "why": "Dates are stored as serial numbers, so subtraction yields the day difference."},
+{"q": "To get just the year from a date in K2 you use…", "opts": ["YEAR(K2)", "LEFT(K2,4)", "ROUND(K2)", "DAY(K2)"], "correct": 0, "why": "YEAR/MONTH/DAY extract the relevant part of a date serial."},
+{"q": "<code>EOMONTH(date, 0)</code> returns…", "opts": ["The last day of that date's month", "The first day of the month", "The same date next year", "The number of days in the month"], "correct": 0, "why": "EOMONTH gives month-end; the second argument shifts by whole months."},
+{"q": "<code>NETWORKDAYS(start, end)</code> counts…", "opts": ["Working days (excluding weekends)", "Every calendar day", "Only weekends", "Hours between dates"], "correct": 0, "why": "NETWORKDAYS excludes Saturdays/Sundays and any holidays you supply."},
+{"q": "The dynamic-array function that returns only rows meeting a condition is…", "opts": ["FILTER", "SUMIF", "CHOOSE", "OFFSET"], "correct": 0, "why": "FILTER(array, include) spills the matching rows automatically."},
+{"q": "<code>UNIQUE(range)</code>…", "opts": ["Returns the distinct values, updating live", "Counts duplicates", "Sorts ascending only", "Removes the header"], "correct": 0, "why": "UNIQUE spills a live list of distinct values."},
+{"q": "The spill operator <code>A2#</code> refers to…", "opts": ["The entire spilled range that starts at A2", "Only cell A2", "A comment on A2", "An absolute reference"], "correct": 0, "why": "The # picks up the whole dynamic-array result that originates in A2."},
+{"q": "A <code>#SPILL!</code> error means…", "opts": ["A dynamic array can't spill because cells are blocked", "A divide by zero", "An unknown function name", "A circular reference"], "correct": 0, "why": "Clear the cells in the spill range (or move the formula) to fix #SPILL!."},
+{"q": "The error <code>#DIV/0!</code> appears when…", "opts": ["You divide by zero or an empty cell", "A lookup finds no match", "A cell is deleted", "Text is used as a number"], "correct": 0, "why": "Guard it with IFERROR or check the denominator."},
+{"q": "A <code>#N/A</code> error from a lookup usually means…", "opts": ["No matching value was found", "The file is too large", "A missing chart", "A wrong font"], "correct": 0, "why": "#N/A signals the lookup value wasn't found — often a type or trailing-space mismatch."},
+{"q": "The error <code>#REF!</code> means…", "opts": ["A referenced cell or range was deleted", "A divide by zero", "A misspelt function name", "Text where a number is needed"], "correct": 0, "why": "Deleting cells a formula points to breaks the reference with #REF!."},
+{"q": "The error <code>#NAME?</code> usually means…", "opts": ["A function or name is misspelt/unknown", "A division by zero", "A blocked spill", "A deleted reference"], "correct": 0, "why": "Check the spelling of the function or defined name."},
+{"q": "In PivotTable terms, fields dragged to <b>Rows</b> and <b>Columns</b> are the OLAP…", "opts": ["Dimensions", "Measures", "Filters only", "Keys"], "correct": 0, "why": "Rows/Columns are the categories you group by — the dimensions."},
+{"q": "A PivotTable's <b>Values</b> area (Sum of Revenue) is the OLAP…", "opts": ["Measure (an aggregation)", "Dimension", "Slicer", "Schema"], "correct": 0, "why": "The aggregated number in each cell is the measure."},
+{"q": "Filtering a PivotTable to a single region — fixing one dimension — is the OLAP operation…", "opts": ["Slice", "Dice", "Drill down", "Roll up"], "correct": 0, "why": "A slice fixes one dimension to one value."},
+{"q": "A PivotTable shows stale numbers after the source changes. You should…", "opts": ["Right-click and Refresh", "Rebuild it from scratch", "Retype the values", "Delete the source"], "correct": 0, "why": "A PivotTable is a snapshot; Refresh re-reads the source data."},
+{"q": "Where should you clean a messy export you receive every month?", "opts": ["Power Query (the steps replay on Refresh)", "By hand each time", "In the chart", "With merged cells"], "correct": 0, "why": "Power Query records each cleaning step and replays them on every refresh."},
+{"q": "In Power Query, the recorded transformations are stored as…", "opts": ["Applied Steps that re-run on refresh", "Hidden formulas", "A pivot cache", "Conditional formats"], "correct": 0, "why": "Each action becomes an Applied Step, so the whole clean-up repeats automatically."},
+{"q": "'Show Values As ▸ % of Grand Total' turns a measure into…", "opts": ["A share / ratio of the total", "A new dimension", "A slicer", "A primary key"], "correct": 0, "why": "It re-expresses each value as its percentage of the overall total."},
+{"q": "A benefit of using an Excel <b>Table</b> (Ctrl+T) is…", "opts": ["Structured references and automatic expansion", "Smaller file size only", "It prevents all errors", "It hides formulas"], "correct": 0, "why": "Tables give readable structured references and grow with your data."},
+{"q": "<b>Freeze Panes</b> is used to…", "opts": ["Keep header rows/columns visible while scrolling", "Lock formulas", "Protect the sheet", "Stop recalculation"], "correct": 0, "why": "Freezing keeps headers in view on large sheets."},
+{"q": "<b>Ctrl+;</b> inserts…", "opts": ["Today's date as a fixed value", "A live TODAY() formula", "The current sheet name", "A line break"], "correct": 0, "why": "Ctrl+; stamps a static date; TODAY() would keep changing."},
+{"q": "Conditional formatting is used to…", "opts": ["Colour cells automatically based on their values or a rule", "Lock the cells", "Convert text to numbers", "Create a chart"], "correct": 0, "why": "Rules (highlight, data bars, colour scales, or a formula) style cells by value."}
+]
+</script>
+
+<script src="assets/js/main.js"></script>
+<script>
+(function(){
+  'use strict';
+  var SHOWN = 40, PASS = 0.70, SECONDS = 60*60;
+  var bank = JSON.parse(document.getElementById('excelExamBank').textContent);
+  var attempt = [], timeLeft = SECONDS, ticker = null, submitted = false;
+
+  function $(id){ return document.getElementById(id); }
+  function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+  function build(){
+    var pick = shuffle(bank).slice(0, Math.min(SHOWN, bank.length));
+    attempt = pick.map(function(item){
+      var opts = item.opts.map(function(text,i){ return {text:text, correct:i===item.correct}; });
+      return { q:item.q, why:item.why, opts:shuffle(opts), chosen:null };
+    });
+  }
+
+  function render(){
+    var html = '';
+    attempt.forEach(function(it, qi){
+      html += '<div class="qcard" id="qc'+qi+'"><div class="qn">Question '+(qi+1)+' of '+attempt.length+'</div>'+
+              '<div class="qt">'+it.q+'</div>';
+      it.opts.forEach(function(o, oi){
+        html += '<label class="opt" data-q="'+qi+'" data-o="'+oi+'">'+
+                '<input type="radio" name="q'+qi+'" value="'+oi+'"><span>'+o.text+'</span></label>';
+      });
+      html += '</div>';
+    });
+    $('questions').innerHTML = html;
+    $('total').textContent = attempt.length;
+    $('r-count').textContent = attempt.length;
+
+    $('questions').querySelectorAll('.opt input').forEach(function(inp){
+      inp.addEventListener('change', function(){
+        var lab = inp.closest('.opt');
+        var qi = +lab.dataset.q, oi = +inp.value;
+        attempt[qi].chosen = oi;
+        var card = $('qc'+qi);
+        card.querySelectorAll('.opt').forEach(function(l){ l.classList.remove('sel'); });
+        lab.classList.add('sel');
+        updateAnswered();
+      });
+    });
+  }
+
+  function updateAnswered(){
+    var n = attempt.filter(function(a){ return a.chosen!==null; }).length;
+    $('answered').textContent = n;
+    $('answered').className = (n < attempt.length) ? 'unans' : '';
+  }
+
+  function fmt(s){ var m=Math.floor(s/60), ss=s%60; return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss; }
+
+  function tick(){
+    timeLeft--;
+    var t = $('timer'); t.textContent = fmt(Math.max(0,timeLeft));
+    t.classList.toggle('warn', timeLeft<=300 && timeLeft>60);
+    t.classList.toggle('danger', timeLeft<=60);
+    if(timeLeft<=0){ clearInterval(ticker); submit(true); }
+  }
+
+  function start(){
+    build(); render(); updateAnswered();
+    submitted=false; timeLeft=SECONDS; $('timer').textContent=fmt(timeLeft); $('timer').className='timer';
+    $('start').classList.add('hidden'); $('results').classList.add('hidden'); $('exam').classList.remove('hidden');
+    window.scrollTo(0,0);
+    clearInterval(ticker); ticker=setInterval(tick,1000);
+  }
+
+  function submit(auto){
+    if(submitted) return; submitted=true;
+    clearInterval(ticker);
+    var unanswered = attempt.filter(function(a){ return a.chosen===null; }).length;
+    if(!auto && unanswered>0){
+      if(!confirm(unanswered+' question'+(unanswered>1?'s are':' is')+' unanswered (they will be marked wrong). Submit anyway?')){
+        submitted=false; ticker=setInterval(tick,1000); return;
+      }
+    }
+    var correct = 0;
+    attempt.forEach(function(a){ if(a.chosen!==null && a.opts[a.chosen].correct) correct++; });
+    var pct = Math.round(correct/attempt.length*100);
+    var passed = (correct/attempt.length) >= PASS;
+
+    $('score-num').textContent = pct+'%';
+    $('score-num').style.color = passed ? 'var(--good)' : 'var(--bad)';
+    $('score-detail').innerHTML = '<b>'+correct+'</b> of <b>'+attempt.length+'</b> correct'+
+        (auto ? ' · time expired' : '') + (unanswered? ' · '+unanswered+' left blank':'');
+    var v=$('verdict');
+    v.textContent = passed ? '✓ Passed' : 'Not yet — keep studying';
+    v.className = 'verdict '+(passed?'pass':'fail');
+
+    var rev='';
+    attempt.forEach(function(it, qi){
+      rev += '<div class="qcard"><div class="qn">Question '+(qi+1)+'</div><div class="qt">'+it.q+'</div>';
+      it.opts.forEach(function(o, oi){
+        var cls='opt', mark='';
+        if(o.correct){ cls+=' correct'; mark='<span class="mark">Correct</span>'; }
+        if(it.chosen===oi && !o.correct){ cls+=' wrong'; mark='<span class="mark">Your answer</span>'; }
+        rev += '<div class="'+cls+'"><span>'+o.text+'</span>'+mark+'</div>';
+      });
+      if(it.chosen===null) rev += '<div class="why"><b>You left this blank.</b> '+it.why+'</div>';
+      else rev += '<div class="why">'+it.why+'</div>';
+      rev += '</div>';
+    });
+    $('review').innerHTML = rev;
+
+    $('exam').classList.add('hidden'); $('results').classList.remove('hidden');
+    window.scrollTo(0,0);
+  }
+
+  function toStart(){ $('results').classList.add('hidden'); $('exam').classList.add('hidden'); $('start').classList.remove('hidden'); window.scrollTo(0,0); }
+
+  $('start-btn').addEventListener('click', start);
+  $('submit-btn').addEventListener('click', function(){ submit(false); });
+  $('submit-btn2').addEventListener('click', function(){ submit(false); });
+  $('retake-btn').addEventListener('click', toStart);
+  $('retake-btn2').addEventListener('click', toStart);
+  window.addEventListener('beforeunload', function(e){ if(!submitted && !$('exam').classList.contains('hidden')){ e.preventDefault(); e.returnValue=''; } });
+})();
+</script>
+</body>
+</html>
