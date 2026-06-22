@@ -1,161 +1,176 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Downloads — DPM Learning Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
-<style>
-  .dl-card{display:flex;flex-direction:column;gap:10px}
-  .dl-card h3{margin:.15em 0 .1em;font-size:1.18rem}
-  .dl-card p{margin:0;color:var(--ink-soft);flex:1}
-  .dl-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .fmt{font:700 .68rem/1 "JetBrains Mono",monospace;letter-spacing:.04em;padding:5px 8px;border-radius:6px;color:#fff}
-  .fmt.pdf{background:#C0392B}.fmt.docx{background:#2B579A}.fmt.xlsx{background:#217346}.fmt.csv{background:#5b6470}
-  .dl-sz{color:var(--muted);font-size:.85rem}
-  .dl-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-  .dl-count{color:var(--muted);font-size:.9rem;margin-top:-2px}
-</style>
-</head>
-<body data-theme="hub">
-<div class="scrollbar"></div>
+from cs_common import build_cheatsheet
 
-<nav class="nav"><div class="wrap">
-  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
-  <button class="menu-btn" aria-label="Menu">☰</button>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="data-foundations.html">Foundations</a>
-    <a href="excel.html">Excel</a>
-    <a href="sql.html">SQL</a>
-    <a href="powerbi.html">Power BI</a>
-    <a href="powerautomate.html">Power Automate</a>
-    <a href="courses.html">Courses</a>
-    <a href="downloads.html" aria-current="page">Downloads</a>
-  </div>
-</div></nav>
+S = [
+ ("The flow model", [
+    ("Trigger","The 'when' — exactly one per flow."),
+    ("Action","The 'then' — runs top to bottom."),
+    ("Connector","Bundle of triggers/actions for a service."),
+    ("Dynamic content","Output of one step used in a later one."),
+    ("Expression","Functions for when dynamic content isn't enough."),
+ ]),
+ ("Flow types", [
+    ("Automated","Starts on an event (email, item changed)."),
+    ("Instant","You start it (button / Teams / Power Apps)."),
+    ("Scheduled","Runs on a clock (Recurrence trigger)."),
+    ("Desktop (RPA)","Drives the screen when there's no API."),
+ ]),
+ ("Controls", [
+    ("Condition","If / else — Yes and No branches."),
+    ("Switch","Branch on one value's cases + default."),
+    ("Apply to each","Loop over an array."),
+    ("Do until","Loop until a condition is true (set a limit)."),
+    ("Scope","Group actions (wrap error handling)."),
+    ("Terminate","End the run with a status."),
+ ]),
+ ("Referencing data", [
+    ("Dynamic content","Pick a previous step's output from the list."),
+    ("@{ … }","Expression inside text/JSON."),
+    ("?['name']","Safe-read a property (no error if missing)."),
+    ("Whole expression","Switch the field to expression mode, type a function."),
+ ]),
+ ("Reference functions", [
+    ("triggerBody()?['Subject']","A field from the trigger."),
+    ("triggerOutputs()","The full trigger output."),
+    ("body('List_rows')?['value']","Output of a named action."),
+    ("outputs('Compose')","Output of a Compose/action."),
+    ("items('Apply_to_each')","Current loop item."),
+    ("variables('Total')","A variable's value."),
+    ("item()?['Priority']","Current item in Filter array."),
+ ]),
+ ("String functions", [
+    ("concat(a, b, …)","Join strings."),
+    ("substring(s, start, len)","Slice text."),
+    ("replace(s, old, new)","Swap text."),
+    ("toUpper(s) / toLower(s)","Change case."),
+    ("trim(s) · length(s)","Strip spaces · count chars."),
+    ("split(s, ',')","Text to an array."),
+    ("indexOf(s, 'x')","Position (-1 if absent)."),
+    ("startsWith / endsWith(s, x)","True/false test."),
+    ("guid()","A new unique id."),
+ ]),
+ ("Collection functions", [
+    ("length(arr)","How many items."),
+    ("first(arr) / last(arr)","Edge items."),
+    ("take(arr, n) / skip(arr, n)","Slice an array."),
+    ("contains(arr, x)","Membership test."),
+    ("empty(arr)","True if empty/null."),
+    ("join(arr, ', ')","Array to a string."),
+    ("union / intersection(a, b)","Combine / overlap."),
+ ]),
+ ("Logic &amp; comparison", [
+    ("equals(a, b)","a = b."),
+    ("greater / less(a, b)","a &gt; b / a &lt; b."),
+    ("greaterOrEquals / lessOrEquals","a &gt;= b / a &lt;= b."),
+    ("and(x, y) / or(x, y)","Combine booleans."),
+    ("not(x)","Negate."),
+    ("if(test, yes, no)","Inline branch."),
+    ("coalesce(a, b)","First non-null."),
+ ]),
+ ("Conversion", [
+    ("int(x) / float(x)","Text to number."),
+    ("string(x)","Anything to text."),
+    ("bool(x)","To true/false."),
+    ("json(x)","Parse a JSON string to an object."),
+    ("array(x) / createArray(a,b)","Make an array."),
+    ("base64(s) / base64ToString(s)","Encode / decode."),
+ ]),
+ ("Math", [
+    ("add / sub(a, b)","a + b / a - b."),
+    ("mul / div(a, b)","a * b / a / b."),
+    ("mod(a, b)","Remainder."),
+    ("min / max(a, b)","Smallest / largest."),
+    ("rand(a, b)","Random integer in a range."),
+ ]),
+ ("Date &amp; time", [
+    ("utcNow()","Current UTC timestamp."),
+    ("addDays(d, 7) / addHours(d, 2)","Shift a date."),
+    ("formatDateTime(d, 'dd/MM/yyyy')","Format a date."),
+    ("convertTimeZone(d, src, dst, fmt)","Change time zone."),
+    ("startOfDay(d) / startOfMonth(d)","Truncate."),
+    ("dayOfWeek(d) · ticks(d)","Weekday num · sortable number."),
+ ]),
+ ("Null &amp; safe access", [
+    ("?['field']","Read without erroring on null."),
+    ("coalesce(x, 'n/a')","Default when null."),
+    ("empty(x)","True for null / '' / []."),
+    ("if(empty(x), …, …)","Guard against missing data."),
+ ]),
+ ("Array actions", [
+    ("Filter array","Keep items matching a condition."),
+    ("Select","Reshape items to new keys."),
+    ("Create HTML table","Array to a table (for emails)."),
+    ("Join","Array to a delimited string."),
+    ("Compose","Hold/inspect any value."),
+ ]),
+ ("OData Filter Query", [
+    ("Status eq 'On Hold'","Equals (text in single quotes)."),
+    ("Priority eq 'High' and …","Combine with and / or."),
+    ("Revenue gt 20000","gt ge lt le ne."),
+    ("startswith(Title,'GOLD')","Function filters."),
+    ("Use it on","List rows / Get items — filter at source."),
+ ]),
+ ("Variables", [
+    ("Initialize variable","Once, at the top (name, type, value)."),
+    ("Set variable","Replace the value."),
+    ("Increment variable","Add to a number."),
+    ("Append to array/string","Build up a collection or text."),
+    ("Tip","Init outside loops; set/append inside."),
+ ]),
+ ("Approvals", [
+    ("Start and wait for an approval","Pause until a decision."),
+    ("Approve/Reject — First to respond","Common type."),
+    ("outcome","'Approve' or 'Reject'."),
+    ("responses","Comments &amp; approver details."),
+ ]),
+ ("Error handling", [
+    ("Configure run after","Run a step on failure/timeout/skip."),
+    ("Scope: Try / Catch","Group steps; next Scope runs 'has failed'."),
+    ("result('Try')","Details of steps in a scope."),
+    ("Terminate","End with Failed + a message."),
+    ("Retry policy","Set on an action's settings."),
+ ]),
+ ("HTTP &amp; JSON (premium)", [
+    ("HTTP","Call any REST API (premium connector)."),
+    ("Parse JSON","Turn a response into usable fields."),
+    ("Generate schema","From a sample payload."),
+    ("body('HTTP')?['id']","Read a field from the response."),
+ ]),
+ ("Triggers &amp; conditions", [
+    ("Trigger condition","Only start when an expression is true."),
+    ("@equals(triggerBody()?['Status'],'On Hold')","Example trigger condition."),
+    ("Split On","Debatch an array trigger into runs."),
+    ("Concurrency","Control parallel trigger runs."),
+ ]),
+ ("Common patterns", [
+    ("Notify on change","Trigger filter &gt; Condition &gt; Post to Teams."),
+    ("Weekly digest","Recurrence &gt; List rows &gt; HTML table &gt; email."),
+    ("Escalate","Condition High &gt; Approval &gt; update item."),
+    ("No-API portal","Desktop flow (RPA) drives the UI."),
+    ("Poll a status","Do until status = Closed (with delay)."),
+ ]),
+ ("Gotchas", [
+    ("Loops are slow","Filter before Apply to each; use concurrency."),
+    ("Missing dynamic value","Producing step is below / in another branch."),
+    ("Null fields","Use ?['x'] and coalesce()."),
+    ("Times are UTC","Convert before formatting for users."),
+    ("Filter at source","OData query beats looping + Condition."),
+ ]),
+ ("Productivity", [
+    ("Peek code","See a step's raw JSON (… menu)."),
+    ("Static result","Test a flow without calling services."),
+    ("Run history","Inspect each run's inputs/outputs."),
+    ("Save as / Export","Reuse a flow as a template."),
+    ("Comments","Document tricky steps for the next person."),
+ ]),
+]
 
-<header class="hero"><div class="wrap">
-  <span class="tool-badge"><span class="glyph">⬇</span> Downloads</span>
-  <h1>Everything to take<br>away, in one place.</h1>
-  <p class="lead">Every printable cheat sheet, setup guide and practice dataset from across the hub — with a line on what each one is and when to reach for it. All files download straight to your machine; nothing needs an account.</p>
-  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:14px">Tip: the cheat sheets are designed to be printed double-sided (landscape) and pinned by your keyboard.</p>
-</div></header>
-
-<!-- CHEAT SHEETS -->
-<section><div class="wrap">
-  <span class="eyebrow">Cheat sheets</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .15em">Printable quick references</h2>
-  <p class="dl-count">Four two-page reference cards in the style of the classic R/RStudio cheat sheets.</p>
-  <div class="grid cols-2" style="margin-top:20px">
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt pdf">PDF</span><span class="dl-sz">2 pages · landscape</span></div>
-      <h3>Excel Formula &amp; Function Cheat Sheet</h3>
-      <p>Everyday Excel on one card: relative/absolute references and the <code>$</code> lock, SUMIFS &amp; COUNTIFS, IF/IFS and IFERROR, XLOOKUP and INDEX/MATCH, text and date functions, dynamic arrays, plus PivotTable, Power Query and keyboard shortcuts.</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/docs/Excel-Formula-Cheat-Sheet.pdf" download>⬇ Download</a>
-        <a class="btn ghost" href="excel.html">View Excel track</a>
-      </div>
-    </div>
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt pdf">PDF</span><span class="dl-sz">2 pages · landscape</span></div>
-      <h3>SQL Cheat Sheet</h3>
-      <p>Reading and summarising data: SELECT / WHERE / ORDER BY, joins, GROUP BY &amp; HAVING, subqueries, CTEs and window functions, set operators, common patterns, gotchas and a dialect quick-reference (SQLite / PostgreSQL / MySQL / SQL Server).</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/docs/SQL-Cheat-Sheet.pdf" download>⬇ Download</a>
-        <a class="btn ghost" href="sql.html">View SQL track</a>
-      </div>
-    </div>
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt pdf">PDF</span><span class="dl-sz">2 pages · landscape</span></div>
-      <h3>Power BI &amp; DAX Cheat Sheet</h3>
-      <p>Modelling and DAX: the star schema, column vs measure, CALCULATE and filter context, iterators, time intelligence, the chart chooser, performance tips and publishing to the Service.</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/docs/DAX-PowerBI-Cheat-Sheet.pdf" download>⬇ Download</a>
-        <a class="btn ghost" href="powerbi.html">View Power BI track</a>
-      </div>
-    </div>
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt pdf">PDF</span><span class="dl-sz">2 pages · landscape</span></div>
-      <h3>Power Automate Cheat Sheet</h3>
-      <p>Flows and expressions: the flow types, controls (Condition, Switch, loops, Scope), the reference / string / date functions you reach for most, OData filter queries, error handling and common patterns.</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/docs/Power-Automate-Cheat-Sheet.pdf" download>⬇ Download</a>
-        <a class="btn ghost" href="powerautomate.html">View Power Automate track</a>
-      </div>
-    </div>
-
-  </div>
-</div></section>
-
-<!-- GUIDES -->
-<section style="background:var(--surface-2)"><div class="wrap">
-  <span class="eyebrow">Guides</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .15em">Step-by-step setup</h2>
-  <p class="dl-count">Longer how-to documents for when you move off the in-browser tools.</p>
-  <div class="grid cols-2" style="margin-top:20px">
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt docx">DOCX</span><span class="dl-sz">Word · multi-page guide</span></div>
-      <h3>Setting up SQL Server on Windows</h3>
-      <p>Install a real SQL Server on your own Windows machine, end to end: the database engine (Developer / Express), SQL Server Management Studio, connecting to your instance, running your first query, importing the sample CSV, and fixes for what commonly goes wrong.</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/docs/Setting-up-SQL-Server-on-Windows.docx" download>⬇ Download</a>
-        <a class="btn ghost" href="sql.html">View SQL track</a>
-      </div>
-    </div>
-
-    <div class="card dl-card" style="justify-content:center;align-items:flex-start">
-      <div class="dl-meta"><span class="fmt" style="background:var(--muted)">SOON</span></div>
-      <h3>More guides on the way</h3>
-      <p>Onboarding walkthroughs and tool setup guides will land here as the hub grows. Got one you'd find useful? It belongs on this page.</p>
-    </div>
-
-  </div>
-</div></section>
-
-<!-- SAMPLE DATA -->
-<section><div class="wrap">
-  <span class="eyebrow">Sample data</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .15em">Practice datasets</h2>
-  <p class="dl-count">The datasets used throughout the worked examples — grab them to follow along in Excel, Power BI or your own database.</p>
-  <div class="grid cols-2" style="margin-top:20px">
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt xlsx">XLSX</span><span class="fmt csv">CSV</span><span class="dl-sz">72 rows · 17 columns</span></div>
-      <h3>DPM sample dataset — Projects</h3>
-      <p>The delivery dataset behind the Excel, SQL and Power BI tracks: 72 orders with customer, region, country, site, status, priority, revenue, FTE days and target / actual go-live dates. Load it to reproduce every worked example exactly.</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/data/dpm_projects.xlsx" download>⬇ Excel (.xlsx)</a>
-        <a class="btn ghost" href="assets/data/dpm_projects.csv" download>⬇ CSV</a>
-      </div>
-    </div>
-
-    <div class="card dl-card">
-      <div class="dl-meta"><span class="fmt xlsx">XLSX</span><span class="fmt csv">CSV</span><span class="dl-sz">cleaning practice</span></div>
-      <h3>Messy dataset — for cleaning practice</h3>
-      <p>A deliberately untidy version of the data — inconsistent text and casing, blank cells, mixed date formats and stray spaces. Use it to practise cleaning in Power Query or Excel before you analyse, exactly as you would with real exports.</p>
-      <div class="dl-btns">
-        <a class="btn" href="assets/data/dpm_messy_data.xlsx" download>⬇ Excel (.xlsx)</a>
-        <a class="btn ghost" href="assets/data/dpm_messy_data.csv" download>⬇ CSV</a>
-      </div>
-    </div>
-
-  </div>
-  <div class="note" style="margin-top:24px"><span class="ic">i</span><div>All data is fictional and for training only. Open the <code>.xlsx</code> for a ready-made table, or the <code>.csv</code> to import into a database or load into Power Query.</div></div>
-</div></section>
-
-<footer class="foot"><div class="wrap">
-  <p>Downloads · DPM Learning Hub. Everything here is free to use and reuse across the team. <a href="index.html">← Back to the hub</a></p>
-</div></footer>
-
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+build_cheatsheet(
+    "/mnt/user-data/outputs/Power-Automate-Cheat-Sheet.pdf",
+    "Power Automate Cheat Sheet",
+    "Flows, controls & expressions  ·  DPM Learning Hub",
+    S,
+    accent="#1D4ED8", code_border="#1D4ED8", code_bg="#EEF2FF",
+    code_ink="#1E3A8A", line="#DBE3FF", band_title_color="#FFFFFF",
+    footer_label="DPM Learning Hub — Power Automate track",
+    intro="A printable reference for building flows and writing expressions in Power Automate. "
+          "Trigger = when, actions = then; everything else makes the 'then' smarter. Use ?['field'] to read safely.")
