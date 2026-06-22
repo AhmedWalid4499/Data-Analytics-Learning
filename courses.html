@@ -1,182 +1,233 @@
-from cs_common import build_cheatsheet
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courses &amp; Certifications — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="hub">
+<div class="scrollbar"></div>
 
-S = [
- ("Power BI in one page", [
-    ("Desktop","Build models, measures &amp; reports (free)."),
-    ("Service (powerbi.com)","Publish, share, schedule refresh."),
-    ("You'll make 3 things","Semantic model · reports · dashboards."),
-    ("Build order","Get &gt; Transform &gt; Model &gt; DAX &gt; Visualize &gt; Publish."),
- ]),
- ("Power Query (get &amp; shape)", [
-    ("Home &gt; Transform data","Opens the query editor (same as Excel)."),
-    ("Change type / Rename","Click the type icon / double-click header."),
-    ("Filter / Remove rows","Header dropdown · Remove Rows."),
-    ("Split / Merge columns","Transform tab."),
-    ("Unpivot","Wide &gt; tall (tidy data for modelling)."),
-    ("Merge / Append","Join on a key / stack tables."),
-    ("Rule","Shape in Power Query; calculate in DAX."),
- ]),
- ("Model &amp; relationships", [
-    ("Star schema","One fact table + dimension tables."),
-    ("1-to-many","Dimension (one) &gt; fact (many)."),
-    ("Single direction","Default filter flow; avoid both-ways."),
-    ("Date table","Add one; Mark as date table."),
-    ("Hide keys","Hide id columns from report view."),
- ]),
- ("Column vs measure", [
-    ("Calculated column","Per row, stored at refresh; group/filter by it."),
-    ("Measure","Live, reacts to filters; all totals &amp; KPIs."),
-    ("Trap","A total/average that should react = measure."),
-    ("Col = …  /  Measure = …","Both written in DAX, evaluated differently."),
- ]),
- ("Aggregations", [
-    ("SUM(t[col])","Total a column."),
-    ("AVERAGE / MIN / MAX","Mean / smallest / largest."),
-    ("COUNT(t[col])","Count non-blank values."),
-    ("COUNTROWS(t)","Count rows in a table."),
-    ("DISTINCTCOUNT(t[col])","Unique values."),
- ]),
- ("CALCULATE — the heart", [
-    ("CALCULATE(expr, filter1, …)","Evaluate expr under modified filters."),
-    ("CALCULATE([Rev], t[region]=\"EMEA\")","Filter to EMEA."),
-    ("CALCULATE([Rev], ALL(t))","Ignore filters (grand total)."),
-    ("Use FILTER for complex","CALCULATE([Rev], FILTER(t, t[x]&gt;5))."),
- ]),
- ("Filter functions", [
-    ("ALL(t) / ALL(t[col])","Remove filters from table/column."),
-    ("ALLEXCEPT(t, t[k])","Remove all filters except the key."),
-    ("REMOVEFILTERS()","Clear filters (modern ALL)."),
-    ("KEEPFILTERS(…)","Add a filter without replacing."),
-    ("VALUES(t[col])","Distinct values in current context."),
- ]),
- ("Safe math &amp; logic", [
-    ("DIVIDE(a, b, 0)","Safe division — no #DIV/0."),
-    ("IF(test, yes, no)","Branch on a condition."),
-    ("SWITCH(TRUE(), c1,r1, …, def)","Clean multi-branch (vs nested IF)."),
-    ("a &amp;&amp; b  /  a || b","AND / OR."),
-    ("COALESCE(a, b)","First non-blank value."),
-    ("ISBLANK(x)","Test for blank."),
- ]),
- ("Iterators (X functions)", [
-    ("SUMX(t, expr)","Evaluate expr per row, then sum."),
-    ("AVERAGEX / MAXX / MINX","Row-by-row then aggregate."),
-    ("SUMX(t, t[qty]*t[price])","Row-level multiply then total."),
-    ("RANKX(ALL(t[c]), [M])","Rank by a measure."),
- ]),
- ("Relationships in DAX", [
-    ("RELATED(dim[col])","Pull a column from the one-side."),
-    ("RELATEDTABLE(fact)","Related rows from the many-side."),
-    ("USERELATIONSHIP(a, b)","Activate an inactive relationship in CALCULATE."),
- ]),
- ("VAR / RETURN", [
-    ("VAR x = SUM(t[rev])","Compute once, name it."),
-    ("RETURN  DIVIDE(x, …)","Use the variable — clearer &amp; faster."),
-    ("Tip","Great for readable, debuggable measures."),
- ]),
- ("Time intelligence", [
-    ("Needs a Date table","Marked as date table."),
-    ("TOTALYTD([Rev], 'Date'[Date])","Year-to-date."),
-    ("SAMEPERIODLASTYEAR('Date'[Date])","Shift back one year."),
-    ("DATEADD('Date'[Date], -1, MONTH)","Shift by a period."),
-    ("PREVIOUSMONTH('Date'[Date])","Prior month."),
- ]),
- ("Common measures", [
-    ("Total Rev = SUM(t[rev])","Base total."),
-    ("Order Count = COUNTROWS(t)","Row count."),
-    ("Delivered % = DIVIDE([Del],[Cnt])","A rate, safely."),
-    ("YoY % = DIVIDE([Rev]-[RevLY],[RevLY])","Year-on-year growth."),
-    ("Running = CALCULATE([Rev], DATESYTD(…))","Cumulative."),
- ]),
- ("Text &amp; format", [
-    ("a &amp; b  /  CONCATENATE(a,b)","Join text."),
-    ("FORMAT(v, \"0.0%\")","Format a value as text."),
-    ("LEFT/RIGHT/MID(s, n)","Slice text."),
-    ("UPPER/LOWER(s) · LEN(s)","Case · length."),
- ]),
- ("Row vs filter context", [
-    ("Row context","'Current row' — in columns &amp; iterators (X)."),
-    ("Filter context","Filters from slicers, rows, visuals."),
-    ("CALCULATE","Turns row context into filter context."),
-    ("Why blanks","A measure with no rows in context = BLANK."),
- ]),
- ("Choose the visual", [
-    ("Bar / column","Compare across categories (default)."),
-    ("Line","Trend over time."),
-    ("Card / KPI","One headline number (+ target)."),
-    ("Matrix / table","Precise numbers, drill by row × col."),
-    ("Scatter","Relationship between two measures."),
-    ("Map","Values by geography."),
- ]),
- ("Report UX", [
-    ("Slicers","Region / Date / Status filters for viewers."),
-    ("Edit interactions","Control which visuals cross-filter."),
-    ("Conditional formatting","Colour by value / rules."),
-    ("Tooltips","Add detail on hover (even a mini page)."),
-    ("Bookmarks","Saved view states for navigation."),
- ]),
- ("Performance", [
-    ("Star schema","Fastest shape for the engine."),
-    ("Measures, not columns","Less stored data, more flexible."),
-    ("Avoid bi-directional","Use single-direction relationships."),
-    ("Reduce cardinality","Fewer unique values = smaller model."),
-    ("Hide unused columns","Trim the model; remove what you don't use."),
- ]),
- ("Gotchas", [
-    ("Measure vs column","Totals/averages = measures."),
-    ("Naked SUM in a card","Fine; but reuse via a named measure."),
-    ("Filter context surprises","Wrap with CALCULATE to control it."),
-    ("BLANK vs 0","Use COALESCE / +0 if you need a zero."),
-    ("Implicit measures","Prefer explicit named measures."),
- ]),
- ("Publish &amp; refresh", [
-    ("Publish","Desktop &gt; Publish to a workspace."),
-    ("Scheduled refresh","Set in the Service (dataset settings)."),
-    ("Gateway","Needed to refresh on-prem sources."),
-    ("RLS","Row-level security filters by the viewer."),
-    ("Apps","Package reports for an audience."),
- ]),
- ("Get data (sources)", [
-    ("Excel / CSV","File sources for quick models."),
-    ("SQL / database","Import a table or a query."),
-    ("Web / SharePoint","Pull from a URL or list."),
-    ("Dataflows","Reusable cloud Power Query."),
-    ("Import vs DirectQuery","Cached &amp; fast vs live &amp; large."),
- ]),
- ("DAX table functions", [
-    ("FILTER(t, cond)","Return a filtered table."),
-    ("VALUES / DISTINCT(t[c])","Unique values as a table."),
-    ("SUMMARIZE(t, t[c], …)","Group into a summary table."),
-    ("ADDCOLUMNS(tbl, \"n\", e)","Add computed columns."),
-    ("TOPN(n, tbl, [m])","Top n rows by a measure."),
-    ("CALENDAR(a, b)","Build a date table."),
- ]),
- ("Format a measure", [
-    ("Measure tools &gt; Format","Set %, currency, decimals."),
-    ("FORMAT(v, \"#,0\")","Inline text format (returns text)."),
-    ("Data category","Tag URL / geo / image for visuals."),
-    ("Display folders","Organise many measures."),
- ]),
- ("Hierarchies &amp; drill", [
-    ("Build a hierarchy","Group Year &gt; Quarter &gt; Month."),
-    ("Drill down","Expand levels on a visual."),
-    ("Sort by column","Sort Month by MonthNo, not text."),
-    ("Groups / bins","Bucket values without DAX."),
- ]),
- ("Productivity (Desktop)", [
-    ("Quick measures","Build common DAX from a dialog."),
-    ("Performance analyzer","See what's slow on a page."),
-    ("View &gt; Themes","Apply consistent colours."),
-    ("Templates (.pbit)","Reuse a model skeleton."),
- ]),
-]
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html" aria-current="page">Courses</a>
+    <a href="downloads.html">Downloads</a>
+  </div>
+</div></nav>
 
-build_cheatsheet(
-    "/mnt/user-data/outputs/DAX-PowerBI-Cheat-Sheet.pdf",
-    "Power BI & DAX Cheat Sheet",
-    "A double-sided quick reference  ·  DPM Learning Hub",
-    S,
-    accent="#262626", code_border="#C19C00", code_bg="#FBF6E1",
-    code_ink="#5C4A00", line="#E8E0C5", band_title_color="#F2C811",
-    footer_label="DPM Learning Hub — Power BI track",
-    intro="A printable reference for building models and writing DAX in Power BI. "
-          "t = your table; 'Date' = a marked date table. Measures react to filters; columns don't.")
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">★</span> Keep going</span>
+  <h1>Where to go<br>when you're ready<br>for more.</h1>
+  <p class="lead">This hub gets you started. To go deep, here's a curated shelf of the best free courses, channels and playlists — organised by tool, hand-picked for people who actually want to learn data analytics. Everything below is free and in English. Start with the bootcamp, then dive into whichever tool you need.</p>
+</div></header>
+
+<!-- ROADMAP -->
+<section><div class="wrap">
+  <span class="eyebrow">A suggested path</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">If you only follow one route</h2>
+  <div class="flow" style="max-width:640px">
+    <div class="step"><b>WEEK 1–2</b> This hub's Excel track + Microsoft's free Excel training. Get comfortable with lookups, PivotTables and Power Query.</div><div class="conn"></div>
+    <div class="step"><b>WEEK 3–5</b> Power BI track here + the free PL-900 path. Build one real report from the sample data.</div><div class="conn"></div>
+    <div class="step"><b>WEEK 6+</b> Power Automate track + automate one repetitive task you actually do. That single win teaches more than any course.</div><div class="conn"></div>
+    <div class="step"><b>OPTIONAL</b> Certify: PL-900 first (broad, never expires), then PL-300 if Power BI is core to your work.</div>
+  </div>
+</div></section>
+
+<!-- START HERE: ALL-IN-ONE BOOTCAMP -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Start here · the all-rounder</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">One free bootcamp, the whole picture</h2>
+  <p class="lead">If you want to understand data analytics as a discipline — not just one tool — start with this. It's the most recommended free path on the internet, and it's genuinely good.</p>
+  <div class="card" style="border-left:4px solid var(--accent);margin-top:18px">
+    <div class="pills">
+      <span class="pill">Excel</span><span class="pill">SQL</span><span class="pill">Power BI</span><span class="pill">Tableau</span><span class="pill">Python</span><span class="pill">Portfolio projects</span>
+    </div>
+    <h3 style="margin-top:12px">Alex The Analyst — Data Analyst Bootcamp</h3>
+    <p>A complete, structured, beginner-friendly bootcamp delivered as one YouTube playlist by Alex Freberg. It takes you from "what is a data analyst" through Excel, SQL, Power BI, Tableau and Python, with real hands-on projects and a free honour-system certificate at the end. Work through it in order; do the projects, don't just watch. This single playlist will teach you more than most paid courses.</p>
+    <p style="margin-top:12px">
+      <a class="dl" href="https://www.youtube.com/playlist?list=PLUaB-1hjhk8FE_XZ87vPPSfHqb6OcM0cF" target="_blank" rel="noopener">▶ Open the Bootcamp playlist</a>
+      &nbsp;<a href="https://www.youtube.com/@AlexTheAnalyst" target="_blank" rel="noopener">Channel →</a>
+    </p>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.88rem;margin-top:14px">Prefer to go tool-by-tool? The three blocks below are organised exactly that way.</p>
+</div></section>
+
+<!-- EXCEL BLOCK -->
+<section class="topic" style="--accent:#217346;--accent-2:#33C481"><div class="wrap">
+  <span class="eyebrow">Microsoft Excel</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Get genuinely good at Excel</h2>
+  <p class="lead">The foundation for everything else. Master formulas, PivotTables and Power Query here and Power BI becomes far easier.</p>
+
+  <div class="subhead"><span class="tag">Courses &amp; guided series</span> Follow start to finish</div>
+  <div class="reslist">
+    <a class="res" href="https://www.youtube.com/@ExcelIsFun" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">ExcelIsFun — full Excel classes</span><span class="lvl beg">All levels</span></div>
+      <p class="why">Mike Girvin's free, exhaustive course playlists ("Excel Basics", "Data Analysis", "Highline College" classes) with downloadable workbooks. The most complete free Excel library anywhere — pick a class and work the exercises.</p>
+      <span class="src">YouTube · course playlists →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/@LeilaGharani" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Leila Gharani — Excel Essentials</span><span class="lvl beg">Beginner → Inter</span></div>
+      <p class="why">Polished, modern, beginner-friendly. Her free "Excel for Beginners" course and topic playlists (XLOOKUP, PivotTables, Power Query) are the cleanest explanations you'll find. Start here if ExcelIsFun feels like a lot.</p>
+      <span class="src">YouTube · free course →</span>
+    </a>
+    <a class="res" href="https://support.microsoft.com/excel" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Microsoft Excel training centre</span><span class="lvl beg">Beginner</span></div>
+      <p class="why">Microsoft's own how-to hub — short official videos and articles from the absolute basics through PivotTables and Power Query. Authoritative and always current.</p>
+      <span class="src">support.microsoft.com/excel →</span>
+    </a>
+  </div>
+
+  <div class="subhead"><span class="tag">Channels to subscribe to</span> Dip in by topic</div>
+  <div class="reslist">
+    <a class="res" href="https://www.youtube.com/@KevinStratvert" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Kevin Stratvert</span><span class="lvl beg">Beginner</span></div>
+      <p class="why">The gentlest on-ramp. Calm, step-by-step Office and Excel walkthroughs — ideal when you're brand new and want zero jargon.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/@MyOnlineTrainingHub" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">MyOnlineTrainingHub (Mynda Treacy)</span><span class="lvl mid">Inter → Adv</span></div>
+      <p class="why">Practical, business-focused Excel. Excellent for real reporting problems, dashboards, and a strong Power Query/PivotTable angle.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/c/GoodlyChandeep" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Goodly (Chandeep)</span><span class="lvl adv">Advanced</span></div>
+      <p class="why">The place to go for Power Query and the M language. When you're ready to automate data cleaning properly, this channel goes deep.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+  </div>
+</div></section>
+
+<!-- POWER BI BLOCK -->
+<section class="topic" style="--accent:#C28800;--accent-2:#F2C811;background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Microsoft Power BI</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">From first report to real DAX</h2>
+  <p class="lead">Where your data becomes dashboards. Learn the build order first, then model your data well, then layer on DAX — in that order.</p>
+
+  <div class="subhead"><span class="tag">Courses &amp; guided series</span> Follow start to finish</div>
+  <div class="reslist">
+    <a class="res" href="https://www.youtube.com/@GuyInACube" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Guy in a Cube — Getting Started with Power BI</span><span class="lvl beg">Beginner</span></div>
+      <p class="why">Run by two Microsoft engineers (Adam &amp; Patrick). Open the channel's Playlists tab and work through "Getting Started with Power BI" — the most trusted beginner path, kept current with every release.</p>
+      <span class="src">YouTube · Playlists tab →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/@SQLBI" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">SQLBI — DAX 101 &amp; Mastering DAX</span><span class="lvl mid">Inter → Adv</span></div>
+      <p class="why">Marco Russo &amp; Alberto Ferrari are the definitive DAX authorities. Start with "DAX 101" for measures vs. calculated columns and filter context, then go deeper. This is where DAX finally clicks.</p>
+      <span class="src">YouTube · DAX series →</span>
+    </a>
+    <a class="res" href="https://learn.microsoft.com/training/powerplatform/power-bi" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Microsoft Learn — Power BI paths</span><span class="lvl beg">Beginner → Adv</span></div>
+      <p class="why">Free, hands-on, self-paced modules covering prep, modeling, DAX and publishing — the same content that maps to the PL-300 exam. Best if you prefer reading-and-doing to video.</p>
+      <span class="src">learn.microsoft.com · Power BI →</span>
+    </a>
+  </div>
+
+  <div class="subhead"><span class="tag">Channels to subscribe to</span> Dip in by topic</div>
+  <div class="reslist">
+    <a class="res" href="https://www.youtube.com/@CurbalEN" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Curbal (Ruth Pozuelo Martinez)</span><span class="lvl mid">Intermediate</span></div>
+      <p class="why">Microsoft MVP, weekly uploads, and the brilliant "DAX Fridays" series. Clear, short, immediately useful — a 10-minute watch often saves an hour of work.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/@PragmaticWorks" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Pragmatic Works</span><span class="lvl beg">Beginner → Inter</span></div>
+      <p class="why">Structured beginner series and a popular multi-hour "Power BI Full Course". Great for following a guided arc rather than one-off tips.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/@EnterpriseDNA" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Enterprise DNA</span><span class="lvl adv">Inter → Adv</span></div>
+      <p class="why">Real-world modeling, report design and analytical patterns. Go here once you can build a basic report and want to make it genuinely good.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+  </div>
+</div></section>
+
+<!-- POWER AUTOMATE BLOCK -->
+<section class="topic" style="--accent:#0066FF;--accent-2:#491A8B"><div class="wrap">
+  <span class="eyebrow">Microsoft Power Automate</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Automate the boring stuff</h2>
+  <p class="lead">Triggers and actions, cloud flows and desktop RPA. The fastest way to learn is to automate one real task you do every week.</p>
+
+  <div class="subhead"><span class="tag">Courses &amp; guided series</span> Follow start to finish</div>
+  <div class="reslist">
+    <a class="res" href="https://www.youtube.com/@RezaDorrani" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Reza Dorrani — Power Automate for Beginners</span><span class="lvl beg">Beginner → Adv</span></div>
+      <p class="why">The strongest Power Platform teacher on YouTube. His hands-on cloud-flow beginner series is clear, no-fluff and project-based. Open his channel's Playlists and start with the Power Automate beginner series.</p>
+      <span class="src">YouTube · Playlists tab →</span>
+    </a>
+    <a class="res" href="https://learn.microsoft.com/training/powerplatform/power-automate" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Microsoft Learn — Power Automate paths</span><span class="lvl beg">Beginner → Inter</span></div>
+      <p class="why">Build your first cloud flow, work with connectors and expressions, then step into desktop RPA. Free, official, hands-on modules.</p>
+      <span class="src">learn.microsoft.com · Power Automate →</span>
+    </a>
+    <a class="res" href="https://www.microsoft.com/en-us/power-platform/blog/power-automate/power-automate-learning-resources/" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Microsoft — Power Automate learning hub</span><span class="lvl beg">All levels</span></div>
+      <p class="why">Microsoft's own curated index of docs, learning paths and community creators in one place. A reliable launchpad when you're not sure where to look next.</p>
+      <span class="src">microsoft.com · resources →</span>
+    </a>
+  </div>
+
+  <div class="subhead"><span class="tag">Channels to subscribe to</span> Dip in by topic</div>
+  <div class="reslist">
+    <a class="res" href="https://www.youtube.com/@AprilDunnam" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">April Dunnam</span><span class="lvl beg">Beginner → Inter</span></div>
+      <p class="why">Practical, business-focused automations — Teams, SharePoint and Excel integrations explained step by step. Highly relevant to day-to-day DPM work.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+    <a class="res" href="https://www.youtube.com/@ShanesCows" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Shane Young (PowerApps911)</span><span class="lvl beg">Beginner</span></div>
+      <p class="why">Short, focused, no-rambling "how to do this one task" videos across Power Automate, Power Apps and SharePoint. Microsoft MVP — great when you just need a specific thing solved.</p>
+      <span class="src">YouTube channel →</span>
+    </a>
+    <a class="res" href="https://learn.microsoft.com/shows/" target="_blank" rel="noopener">
+      <div class="rt"><span class="name">Microsoft Learn Shows</span><span class="lvl beg">All levels</span></div>
+      <p class="why">Official walkthroughs and feature deep-dives straight from the source — useful for seeing the "right way" to build something.</p>
+      <span class="src">learn.microsoft.com/shows →</span>
+    </a>
+  </div>
+</div></section>
+
+<!-- CERTIFICATIONS -->
+<section><div class="wrap">
+  <span class="eyebrow">Worth holding</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Certifications, honestly assessed</h2>
+
+  <div class="grid cols-2">
+    <div class="card">
+      <span class="pill" style="background:#FF7900;color:#fff">Start here</span>
+      <h3 style="margin-top:12px">PL-900 · Power Platform Fundamentals</h3>
+      <p>The friendliest entry point. No prerequisites, no coding, and it covers Power Apps, Power Automate and Power BI at a conceptual level. <strong>Fundamentals certifications don't expire</strong>, so it's a permanent line on your CV. The exam runs to a tight 45-minute limit, so practise pacing.</p>
+      <p><a href="https://learn.microsoft.com/credentials/certifications/power-platform-fundamentals/" target="_blank" rel="noopener">Official page →</a></p>
+    </div>
+    <div class="card">
+      <span class="pill" style="background:#1a1a1a;color:#F2C811">For BI-heavy roles</span>
+      <h3 style="margin-top:12px">PL-300 · Power BI Data Analyst Associate</h3>
+      <p>The serious Power BI credential, covering preparing, modeling, visualizing and securing data. The exam costs $165 USD (varying slightly by region), with a passing score of 700 out of 1000. The credential is valid for one year and can be renewed free through an online assessment on Microsoft Learn. Expect scenario-based questions — hands-on practice matters more than memorising.</p>
+      <p><a href="https://learn.microsoft.com/credentials/certifications/data-analyst-associate/" target="_blank" rel="noopener">Official page →</a> · <a href="https://learn.microsoft.com/credentials/certifications/resources/study-guides/pl-300" target="_blank" rel="noopener">Study guide →</a></p>
+    </div>
+  </div>
+
+  <div class="note warn" style="margin-top:20px"><span class="ic">!</span><div><strong>Heads-up on the Power Automate cert (PL-500).</strong> The PL-500 exam and the Power Automate RPA Developer Associate certification retire on June 30, 2026, with no direct replacement announced. If you're learning Power Automate now, skip chasing this credential — get the skills via the free Learn paths instead, and let PL-900 cover the certification side. Microsoft is broadly shifting toward AI-focused certifications, so watch the Microsoft Learn site for what replaces it.</div></div>
+
+  <p class="hint" style="color:var(--muted);font-size:.88rem;margin-top:14px">Certification details change — always confirm current cost, format and validity on the official Microsoft Learn page before booking.</p>
+</div></section>
+
+<footer class="foot"><div class="wrap">
+  <p>Courses track · DPM Learning Hub. Start free, build something real, certify only if it serves your role. <a href="index.html">Back to home →</a></p>
+</div></footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
