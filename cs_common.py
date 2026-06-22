@@ -1,223 +1,421 @@
-#!/usr/bin/env python3
-# DPM Learning Hub — 12-Week Study Plan (printable PDF planner).
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.lib import colors
-from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
-                                Table, TableStyle, Spacer, KeepTogether, Flowable)
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_LEFT
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="sql">
+<div class="scrollbar"></div>
 
-OUT = "/mnt/user-data/outputs/DPM-12-Week-Study-Plan.pdf"
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html" aria-current="page">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+  </div>
+</div></nav>
 
-NAVY = colors.HexColor("#14233A"); ACCENT = colors.HexColor("#FF7900")
-INK = colors.HexColor("#26323F"); MUTED = colors.HexColor("#6B7280")
-LINE = colors.HexColor("#E2E6EB"); SOFT = colors.HexColor("#F4F6F8")
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">⌘</span> SQL</span>
+  <h1>Ask your data<br>questions directly.</h1>
+  <p class="lead">SQL is how you pull, filter and summarise data straight from the source — the language behind almost every database, dashboard and report. This page teaches the core clauses, then lets you <b>run real queries in your browser</b> against the same DPM delivery dataset used across the hub. No setup, nothing to install.</p>
+</div></header>
 
-PW, PH = letter
-M = 0.7 * inch; BAND_H = 96
-CW = PW - 2*M
+<!-- DOWNLOADS -->
+<section><div class="wrap">
+  <div class="card" style="border-left:4px solid var(--accent);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+    <div style="flex:1 1 340px">
+      <h3 style="margin:0 0 .3em">Take SQL with you</h3>
+      <p style="margin:0;color:var(--ink-soft)">A printable two-page cheat sheet for quick reference — clauses, joins, aggregates, window functions and common patterns, in the style of the classic R/RStudio cards. Plus a step-by-step guide to installing SQL Server on Windows when you're ready to leave the browser.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="assets/docs/SQL-Cheat-Sheet.pdf" download>⬇ Cheat sheet (PDF)</a>
+      <a class="btn ghost" href="assets/docs/Setting-up-SQL-Server-on-Windows.docx" download>Setup guide (Word)</a>
+    </div>
+  </div>
+</div></section>
 
-h2 = ParagraphStyle("h2", fontName="Helvetica-Bold", fontSize=11.5, leading=14, textColor=NAVY, spaceBefore=2, spaceAfter=1)
-body = ParagraphStyle("body", fontName="Helvetica", fontSize=9.5, leading=13.5, textColor=INK)
-small = ParagraphStyle("small", fontName="Helvetica", fontSize=8.6, leading=12, textColor=MUTED)
-task = ParagraphStyle("task", fontName="Helvetica", fontSize=9.3, leading=12.6, textColor=INK)
-chkp = ParagraphStyle("chkp", fontName="Helvetica-BoldOblique", fontSize=8.8, leading=12, textColor=colors.HexColor("#B45309"))
-wkhead = ParagraphStyle("wkhead", fontName="Helvetica-Bold", fontSize=10, leading=13, textColor=NAVY)
-wktime = ParagraphStyle("wktime", fontName="Helvetica", fontSize=8.3, leading=11, textColor=MUTED, alignment=2)
-lead = ParagraphStyle("lead", fontName="Helvetica", fontSize=10, leading=14.5, textColor=INK)
+<!-- THE DATA -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Your tables</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">Two tables to play with</h2>
+  <p class="lead" style="max-width:70ch">The runner below loads a table called <code>orders</code> (72 delivery orders) and a small <code>targets</code> table (revenue target per region) so you can practise joins.</p>
+  <div class="grid cols-2">
+    <div class="card"><h3 style="margin-top:0"><code>orders</code></h3>
+      <p style="font-size:.92rem;color:var(--ink-soft)">72 rows. Columns:</p>
+      <p class="pills">
+        <span class="term">order_id</span><span class="term">customer</span><span class="term">site_code</span><span class="term">city</span><span class="term">country</span><span class="term">region</span><span class="term">service_type</span><span class="term">status</span><span class="term">dpm</span><span class="term">field_engineer</span><span class="term">order_date</span><span class="term">target_go_live</span><span class="term">actual_go_live</span><span class="term">fte_days</span><span class="term">revenue</span><span class="term">aps_migrated</span><span class="term">priority</span>
+      </p>
+    </div>
+    <div class="card"><h3 style="margin-top:0"><code>targets</code></h3>
+      <p style="font-size:.92rem;color:var(--ink-soft)">3 rows. Columns:</p>
+      <p class="pills"><span class="term">region</span><span class="term">revenue_target</span></p>
+      <p style="font-size:.9rem;color:var(--muted)">Join it to <code>orders</code> on <code>region</code> to compare actuals against target.</p>
+    </div>
+  </div>
+</div></section>
 
+<!-- CLAUSES BY LEVEL -->
+<section><div class="wrap">
+  <span class="eyebrow">Clauses by level</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .2em">Build your SQL vocabulary</h2>
+  <p class="lead">SQL reads and summarises data in <b>relational tables</b> — the model from the <a href="data-foundations.html">Foundations</a> page. This track is split into <strong>three levels</strong> — tap any card to switch. Start at Level 1 and climb. Each clause has a worked example on the <code>orders</code> table and a task to try yourself — paste your answer into the <a href="#runner">runner below</a> to check it.</p>
 
-class Box(Flowable):
-    def __init__(self, s=9): super().__init__(); self.s=s
-    def wrap(self,*a): return (self.s+3, self.s)
-    def draw(self):
-        c=self.canv; c.setStrokeColor(ACCENT); c.setLineWidth(1); c.roundRect(0,0,self.s,self.s,1.5,stroke=1,fill=0)
+  <div class="tiers" data-tiers="s" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab">
+      <span class="lvl">1</span>
+      <span class="tier-txt"><b>Basic</b><small>SELECT, WHERE, ORDER BY, DISTINCT</small></span>
+    </button>
+    <button class="tier-btn" data-tier="inter" aria-selected="false" role="tab">
+      <span class="lvl">2</span>
+      <span class="tier-txt"><b>Intermediate</b><small>Aggregates, GROUP BY, HAVING, JOIN</small></span>
+    </button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab">
+      <span class="lvl">3</span>
+      <span class="tier-txt"><b>Advanced</b><small>CASE, subqueries, CTEs, window functions</small></span>
+    </button>
+  </div>
 
+  <!-- ===================== BASIC ===================== -->
+  <div data-tier-panel="s" data-tier="basic" class="tier-panel active">
 
-class MonthBar(Flowable):
-    def __init__(self, num, title, w): super().__init__(); self.num=num; self.title=title; self.w=w; self.h=22
-    def wrap(self,*a): return (self.w, self.h)
-    def draw(self):
-        c=self.canv; c.setFillColor(NAVY); c.roundRect(0,0,self.w,self.h,3,fill=1,stroke=0)
-        c.setFillColor(ACCENT); c.rect(0,0,5,self.h,fill=1,stroke=0)
-        c.setFillColor(colors.white); c.setFont("Helvetica-Bold",11.5)
-        c.drawString(14,6.5,("MONTH %d  ·  " % self.num)+self.title.upper())
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">SELECT / FROM</span> Choose columns <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Pick the columns you want from a table. <code>*</code> means "all columns"; otherwise list names separated by commas.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, region, revenue
+FROM orders;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Return just the <code>site_code</code> and <code>city</code> for every order.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT site_code, city
+FROM orders;</span></div>
+          <p>Column names go after <code>SELECT</code>; the table after <code>FROM</code>.</p>
+        </div></details>
+      </div>
+    </div></details>
 
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">WHERE</span> Filter rows <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Keep only the rows that match a condition. Text values go in <code>'single quotes'</code>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+WHERE region = 'EMEA' AND status = 'Delivered';</span></div>
+      <div class="note"><span class="ic">i</span><div>Operators: <span class="mono">=</span> equals, <span class="mono">&lt;&gt;</span> not equal, <span class="mono">&gt; &lt; &gt;= &lt;=</span>, and <span class="mono">AND</span> / <span class="mono">OR</span> to combine conditions.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>List the <code>customer</code> and <code>revenue</code> of every order in the <em>APAC</em> region.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+WHERE region = 'APAC';</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-def tasks_table(items):
-    data=[[Box(), Paragraph(t, task)] for t in items]
-    t=Table(data, colWidths=[16, CW-16])
-    t.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),
-        ("LEFTPADDING",(0,0),(-1,-1),0),("RIGHTPADDING",(0,0),(-1,-1),0),
-        ("TOPPADDING",(0,0),(-1,-1),2.5),("BOTTOMPADDING",(0,0),(-1,-1),2.5),
-        ("LEFTPADDING",(1,0),(1,-1),6)]))
-    return t
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">ORDER BY / LIMIT</span> Sort and cap <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Sort by a column (<code>DESC</code> for high-to-low, <code>ASC</code> for low-to-high) and keep just the top few with <code>LIMIT</code>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
+FROM orders
+ORDER BY revenue DESC
+LIMIT 5;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Show the <strong>3 smallest</strong> orders by revenue (customer and revenue).</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+ORDER BY revenue ASC
+LIMIT 3;</span></div>
+          <p><code>ASC</code> is the default sort, but spelling it out makes intent clear.</p>
+        </div></details>
+      </div>
+    </div></details>
 
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">DISTINCT</span> Unique values <span class="tag">Basic</span></summary>
+    <div class="body">
+      <p>Remove duplicates so each value appears once — handy for "what values exist in this column?".</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT DISTINCT country
+FROM orders
+ORDER BY country;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>List each <code>service_type</code> exactly once.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT DISTINCT service_type
+FROM orders;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-def week(num, focus, time, items, foot, milestone=False):
-    head=Table([[Paragraph("Week %d &nbsp;·&nbsp; %s" % (num, focus), wkhead),
-                 Paragraph(time, wktime)]], colWidths=[CW*0.72, CW*0.28])
-    head.setStyle(TableStyle([("LEFTPADDING",(0,0),(-1,-1),0),("RIGHTPADDING",(0,0),(-1,-1),0),
-        ("TOPPADDING",(0,0),(-1,-1),0),("BOTTOMPADDING",(0,0),(-1,-1),3),("VALIGN",(0,0),(-1,-1),"MIDDLE")]))
-    foot_p=Paragraph(("&#9873; Milestone: " if milestone else "&#10003; Checkpoint: ")+foot, chkp)
-    inner=[head, tasks_table(items), Spacer(1,3), foot_p]
-    block=Table([[inner]], colWidths=[CW])
-    block.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),SOFT),("BOX",(0,0),(-1,-1),0.5,LINE),
-        ("LEFTPADDING",(0,0),(-1,-1),11),("RIGHTPADDING",(0,0),(-1,-1),11),
-        ("TOPPADDING",(0,0),(-1,-1),8),("BOTTOMPADDING",(0,0),(-1,-1),9),("ROUNDEDCORNERS",[4,4,4,4])]))
-    return KeepTogether([block, Spacer(1,9)])
+  </div>
 
+  <!-- ===================== INTERMEDIATE ===================== -->
+  <div data-tier-panel="s" data-tier="inter" class="tier-panel">
 
-story=[]
-story.append(Paragraph("This plan turns the hub into a guided, twelve-week course — about <b>4–6 hours a week</b>. "
-    "Each week lists what to study, what to practise in the in-browser runners, and a checkpoint to tick off. "
-    "The order matters: each tool builds on the one before, so resist jumping ahead.", lead))
-story.append(Spacer(1,7))
-legend=Table([[Box(), Paragraph("a task to complete", small), Paragraph("&#10003; checkpoint = prove you can do it", small),
-               Paragraph("&#9873; milestone = a graded exam &#8805; 80%", small)]],
-             colWidths=[16, CW*0.30, CW*0.36, CW*0.40-16])
-legend.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"MIDDLE"),("LEFTPADDING",(0,0),(-1,-1),0),
-    ("RIGHTPADDING",(0,0),(-1,-1),4),("TOPPADDING",(0,0),(-1,-1),0),("BOTTOMPADDING",(0,0),(-1,-1),0),
-    ("LEFTPADDING",(1,0),(1,0),6)]))
-story.append(legend)
-story.append(Spacer(1,11))
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Aggregates + GROUP BY</span> Summarise <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p><code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code> and <code>MAX</code> collapse many rows into one. <code>GROUP BY</code> does it per category, and <code>AS</code> renames the output column.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region,
+       COUNT(*)               AS orders,
+       ROUND(SUM(revenue))    AS total_rev,
+       ROUND(AVG(fte_days),1) AS avg_fte
+FROM orders
+GROUP BY region
+ORDER BY total_rev DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>For each <code>service_type</code>, show the number of orders and total revenue, busiest first.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT service_type,
+       COUNT(*)            AS orders,
+       ROUND(SUM(revenue)) AS total_rev
+FROM orders
+GROUP BY service_type
+ORDER BY orders DESC;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-# Path at a glance
-story.append(Paragraph("The path at a glance", h2))
-path=[("1","Foundations","Wk 1","how data is structured — the groundwork"),
-      ("2","Excel","Wk 2–4","everyday analysis, lookups & PivotTables"),
-      ("3","SQL","Wk 5–8","ask the same data bigger questions"),
-      ("4","Power BI","Wk 9–10","model the data and visualise it"),
-      ("5","Power Automate","Wk 11","automate the work around it"),
-      ("\u2605","Capstone","Wk 12","put all four together, end to end")]
-prow=[]
-for n,t,wk,_ in path:
-    prow.append(Paragraph("<b>%s</b> %s<br/><font size=7 color='#6B7280'>%s</font>"%(n,t,wk),
-                ParagraphStyle("p",fontName="Helvetica",fontSize=8.6,leading=10.5,textColor=INK,alignment=1)))
-pt=Table([prow], colWidths=[CW/6]*6)
-pt.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),NAVY),("TEXTCOLOR",(0,0),(-1,-1),colors.white),
-    ("BOX",(0,0),(-1,-1),0,NAVY),("INNERGRID",(0,0),(-1,-1),0.5,colors.HexColor("#2C3E55")),
-    ("VALIGN",(0,0),(-1,-1),"MIDDLE"),("TOPPADDING",(0,0),(-1,-1),7),("BOTTOMPADDING",(0,0),(-1,-1),7)]))
-# recolor text white via paragraph color override
-prow2=[]
-for n,t,wk,_ in path:
-    prow2.append(Paragraph("<b>%s &nbsp;%s</b><br/><font size=7>%s</font>"%(n,t,wk),
-                 ParagraphStyle("pw",fontName="Helvetica",fontSize=8.6,leading=11,textColor=colors.white,alignment=1)))
-pt=Table([prow2], colWidths=[CW/6]*6)
-pt.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,-1),NAVY),("INNERGRID",(0,0),(-1,-1),0.6,colors.HexColor("#2C3E55")),
-    ("VALIGN",(0,0),(-1,-1),"MIDDLE"),("TOPPADDING",(0,0),(-1,-1),8),("BOTTOMPADDING",(0,0),(-1,-1),8)]))
-story.append(pt)
-story.append(Spacer(1,5))
-story.append(Paragraph("<b>How they fit together:</b> the same idea recurs in every tool — summarise a measure by a dimension. "
-    "Excel's <font face='Courier'>SUMIFS</font> &#8776; SQL's <font face='Courier'>GROUP BY</font> &#8776; Power BI's "
-    "<font face='Courier'>CALCULATE</font>. A PivotTable is OLAP on your desktop, and the star schema you learn in Foundations "
-    "powers both your SQL joins and your Power BI model.", small))
-story.append(Spacer(1,12))
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">HAVING</span> Filter groups <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p><code>WHERE</code> filters rows <em>before</em> grouping; <code>HAVING</code> filters the groups <em>after</em>.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT dpm, COUNT(*) AS orders
+FROM orders
+GROUP BY dpm
+HAVING COUNT(*) >= 10
+ORDER BY orders DESC;</span></div>
+      <div class="note"><span class="ic">i</span><div><b>Order of execution:</b> <code>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code>. That's why a <code>SELECT</code> alias can't be used in <code>WHERE</code> — it doesn't exist yet.</div></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Which customers have <strong>more than 8</strong> orders? Show the customer and the count.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, COUNT(*) AS orders
+FROM orders
+GROUP BY customer
+HAVING COUNT(*) > 8
+ORDER BY orders DESC;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-# ---- MONTH 1 ----
-story.append(MonthBar(1, "Foundations & Excel", CW)); story.append(Spacer(1,8))
-story.append(week(1,"Data foundations","~4 hrs",
-    ["Read the <b>Foundations</b> page end to end: tables &amp; keys, how rows are stored, ER &amp; EER diagrams, star vs snowflake, and OLAP.",
-     "Do all the self-check quizzes. Be able to explain a star schema and the five OLAP operations (slice, dice, drill down, roll up, pivot).",
-     "Skim the Excel cheat sheet so you know what's coming."],
-    "you can explain primary vs foreign keys and what OLAP slice / dice / drill mean."))
-story.append(week(2,"Excel — Basics","~5 hrs",
-    ["Excel track, <b>Basic</b> tier: SUM / AVERAGE / COUNT, cell references and the <font face='Courier'>$</font> lock, IF and IFERROR.",
-     "Download the sample workbook and follow along; use the <b>formula runner</b> for every <i>Try it</i>.",
-     "Keep the Excel cheat sheet open as you work."],
-    "rebuild three Basic worked examples from scratch in your own sheet."))
-story.append(week(3,"Excel — Intermediate","~5 hrs",
-    ["<b>Intermediate</b> tier: SUMIFS &amp; COUNTIFS, XLOOKUP and INDEX/MATCH, the key text and date functions.",
-     "Practise writing criteria (\"&gt;100\", wildcards, cell references) until they're automatic."],
-    "answer five \"by region / by status\" questions using SUMIFS and COUNTIFS."))
-story.append(week(4,"Excel — Advanced + PivotTables","~6 hrs",
-    ["<b>Advanced</b> tier: dynamic arrays (FILTER / UNIQUE / SORT) and LET; plus Power Query basics for repeatable cleaning.",
-     "Work the <b>PivotTables</b> section and map each layout back to OLAP — rows/columns are dimensions, Values is the measure.",
-     "Sit the <b>Excel exam</b>. Retake it until you're comfortable."],
-    "Excel exam &#8805; 80%.", milestone=True))
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">JOIN</span> Combine tables <span class="tag">Intermediate</span></summary>
+    <div class="body">
+      <p>Match rows from two tables on a shared key. Here we compare each region's actual revenue to its target from the <code>targets</code> table.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT o.region,
+       ROUND(SUM(o.revenue)) AS actual,
+       t.revenue_target,
+       ROUND(100.0 * SUM(o.revenue) / t.revenue_target) AS pct_of_target
+FROM orders o
+JOIN targets t ON o.region = t.region
+GROUP BY o.region
+ORDER BY actual DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Show each region with its actual total revenue and its <code>revenue_target</code> side by side.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT o.region,
+       ROUND(SUM(o.revenue)) AS actual,
+       t.revenue_target
+FROM orders o
+JOIN targets t ON o.region = t.region
+GROUP BY o.region;</span></div>
+          <p>Table aliases (<code>o</code>, <code>t</code>) keep the column references short and unambiguous.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-# ---- MONTH 2 ----
-story.append(MonthBar(2, "SQL", CW)); story.append(Spacer(1,8))
-story.append(week(5,"SQL — Basics","~5 hrs",
-    ["SQL track, <b>Basic</b> tier: SELECT / FROM, WHERE, ORDER BY / LIMIT, DISTINCT.",
-     "Run every example in the <b>SQL runner</b> (a real database in your browser) and tweak it to see what changes."],
-    "write five queries that filter and sort the orders table."))
-story.append(week(6,"SQL — Intermediate","~5 hrs",
-    ["Aggregates + GROUP BY, HAVING, and JOINs across the orders and targets tables.",
-     "Notice the bridge from last month: Excel's SUMIFS is SQL's GROUP BY."],
-    "reproduce a PivotTable result (revenue by region) as a GROUP BY query."))
-story.append(week(7,"SQL — Advanced","~6 hrs",
-    ["CASE for if-then logic, subqueries, CTEs (WITH), and window functions (RANK, running totals).",
-     "Rewrite a nested subquery as a CTE to feel why CTEs read better."],
-    "return the top-N orders per region using a window function."))
-story.append(week(8,"Consolidate SQL","~4 hrs",
-    ["Redo the trickiest <i>Try it</i> tasks without looking. Optionally install SQL Server with the setup guide and load the CSV.",
-     "Sit the <b>SQL exam</b>."],
-    "SQL exam &#8805; 80%.", milestone=True))
+  </div>
 
-# ---- MONTH 3 ----
-story.append(MonthBar(3, "Power BI, Power Automate & integration", CW)); story.append(Spacer(1,8))
-story.append(week(9,"Power BI — model","~5 hrs",
-    ["Power BI track, <b>Basic</b> &amp; <b>Intermediate</b>: Power Query (get &amp; shape), then relationships and the star schema.",
-     "This is where Foundations pays off — build the model the way week 1 described."],
-    "load the sample data and build a clean star-schema model."))
-story.append(week(10,"Power BI — DAX & visuals","~6 hrs",
-    ["<b>Advanced</b> tier: measures vs columns, CALCULATE and filter context, time intelligence; then the chart chooser.",
-     "Use the <b>DAX checker</b> to validate each measure as you write it.",
-     "Sit the <b>Power BI exam</b>."],
-    "Power BI exam &#8805; 80%.", milestone=True))
-story.append(week(11,"Power Automate","~5 hrs",
-    ["Power Automate track: triggers and actions, conditions and loops, and expressions; plus the four flow types.",
-     "Sketch a flow that emails an alert when an order is overdue.",
-     "Sit the <b>Power Automate exam</b>."],
-    "Power Automate exam &#8805; 80%.", milestone=True))
-story.append(week(12,"Capstone — put it together","~6 hrs",
-    ["End to end: clean the <b>messy dataset</b> in Power Query &#8594; model it in Power BI &#8594; write three key measures &#8594; build a one-page report &#8594; design a Power Automate alert around it.",
-     "Revisit any track whose exam was below 80% and close the gap."],
-    "a one-page dashboard plus an automation design, built start to finish.", milestone=True))
+  <!-- ===================== ADVANCED ===================== -->
+  <div data-tier-panel="s" data-tier="adv" class="tier-panel">
 
-# Tips
-story.append(MonthBar(0, "Make it stick", CW)) if False else None
-tipbar=MonthBar(1,"",0)  # not used
-story.append(Spacer(1,2))
-story.append(Paragraph("Five tips to finish", h2))
-for t in ["<b>Consistency beats intensity.</b> Three or four short sessions a week beat one long cram.",
-          "<b>Always try before you reveal.</b> The struggle on each <i>Try it</i> is where the learning sticks.",
-          "<b>Keep the cheat sheet for the current tool open</b> while you practise.",
-          "<b>Type, don't read.</b> Re-run every example in the runner and change something.",
-          "<b>Retake the exams.</b> They're randomised — a score above 80% twice means it's real."]:
-    story.append(tasks_table([t])); 
-story.append(Spacer(1,6))
-story.append(Paragraph("Everything you need is in the hub at <b>ahmedwalid4499.github.io</b> — pages, runners, exams and the cheat sheets on the Downloads page.", small))
+    <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">CASE</span> If-then logic in a column <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Bucket rows into categories on the fly, then group by the result.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT CASE WHEN revenue >= 30000 THEN 'large'
+            WHEN revenue >= 15000 THEN 'mid'
+            ELSE 'small' END AS band,
+       COUNT(*) AS orders
+FROM orders
+GROUP BY band
+ORDER BY orders DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Label each order <em>'High'</em> when <code>priority</code> is 'High', otherwise <em>'Other'</em>, and count each label.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT CASE WHEN priority = 'High' THEN 'High' ELSE 'Other' END AS bucket,
+       COUNT(*) AS n
+FROM orders
+GROUP BY bucket;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Subquery</span> A query inside a query <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Use the result of one query inside another. Here: orders above the overall average revenue.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, site_code, revenue
+FROM orders
+WHERE revenue > (SELECT AVG(revenue) FROM orders)
+ORDER BY revenue DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>List orders whose revenue is above the average revenue <strong>of EMEA orders</strong>.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue
+FROM orders
+WHERE revenue > (SELECT AVG(revenue) FROM orders WHERE region = 'EMEA')
+ORDER BY revenue DESC;</span></div>
+        </div></details>
+      </div>
+    </div></details>
 
-def band(canvas, doc, first):
-    canvas.saveState()
-    if first:
-        canvas.setFillColor(NAVY); canvas.rect(0, PH-BAND_H, PW, BAND_H, fill=1, stroke=0)
-        canvas.setFillColor(ACCENT); canvas.rect(0, PH-BAND_H, PW, 5, fill=1, stroke=0)
-        canvas.setFillColor(ACCENT); canvas.setFont("Helvetica-Bold",10); canvas.drawString(M, PH-32, "DPM LEARNING HUB")
-        canvas.setFillColor(colors.white); canvas.setFont("Helvetica-Bold",26); canvas.drawString(M, PH-60, "12-Week Study Plan")
-        canvas.setFillColor(colors.HexColor("#C7D0DC")); canvas.setFont("Helvetica",11)
-        canvas.drawString(M, PH-80, "From spreadsheets to dashboards to automations  ·  about 4\u20136 hours a week")
-    canvas.setFillColor(MUTED); canvas.setFont("Helvetica",7.5)
-    canvas.drawString(M, M*0.5, "DPM Learning Hub — 12-Week Study Plan")
-    canvas.drawRightString(PW-M, M*0.5, "Page %d" % doc.page)
-    canvas.setStrokeColor(LINE); canvas.setLineWidth(0.5); canvas.line(M, M*0.5+11, PW-M, M*0.5+11)
-    canvas.restoreState()
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">CTE (WITH)</span> Name a step for readability <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>A common table expression is a named temporary result you can build on — cleaner than nesting subqueries.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">WITH region_rev AS (
+  SELECT region, SUM(revenue) AS total
+  FROM orders
+  GROUP BY region
+)
+SELECT region, total
+FROM region_rev
+ORDER BY total DESC;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Using a CTE of orders-per-DPM, return only the DPMs with <strong>10 or more</strong> orders.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">WITH c AS (
+  SELECT dpm, COUNT(*) AS n
+  FROM orders
+  GROUP BY dpm
+)
+SELECT * FROM c
+WHERE n >= 10
+ORDER BY n DESC;</span></div>
+          <p>Because the CTE already computed <code>n</code>, you can filter on it with a plain <code>WHERE</code>.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-def on_first(c,d): band(c,d,True)
-def on_later(c,d): band(c,d,False)
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Window functions</span> Rank without collapsing rows <span class="tag">Advanced</span></summary>
+    <div class="body">
+      <p>Aggregate <em>across</em> rows while keeping every row. <code>RANK() OVER (...)</code> ranks each order by revenue within its region.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT region, customer, revenue,
+       RANK() OVER (PARTITION BY region ORDER BY revenue DESC) AS rev_rank
+FROM orders
+ORDER BY region, rev_rank
+LIMIT 15;</span></div>
+      <div class="try"><p class="q">Try it</p>
+        <p>Rank <strong>all</strong> orders by revenue (highest = 1), showing customer, revenue and the rank.</p>
+        <details class="reveal"><summary>Show answer</summary><div class="ans">
+          <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT customer, revenue,
+       RANK() OVER (ORDER BY revenue DESC) AS rnk
+FROM orders
+ORDER BY rnk
+LIMIT 15;</span></div>
+          <p>Drop <code>PARTITION BY</code> to rank across the whole table instead of within each group.</p>
+        </div></details>
+      </div>
+    </div></details>
 
-doc=BaseDocTemplate(OUT, pagesize=letter, leftMargin=M, rightMargin=M, topMargin=M, bottomMargin=M,
-                    title="DPM Learning Hub — 12-Week Study Plan", author="DPM Learning Hub")
-fb=M*0.5+16
-first=Frame(M, fb, CW, PH-BAND_H-12-fb, leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0)
-later=Frame(M, fb, CW, PH-M-fb, leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0)
-doc.addPageTemplates([PageTemplate(id="first",frames=[first],onPage=on_first),
-                      PageTemplate(id="later",frames=[later],onPage=on_later)])
-from reportlab.platypus import NextPageTemplate
-story.insert(0, NextPageTemplate("later"))
-doc.build(story)
-print("built:", OUT)
+  </div>
+</div></section>
+
+<!-- GOOD HABITS -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Good habits</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">A few things that trip people up</h2>
+  <div class="deflist">
+    <div class="d"><b>Single vs double quotes</b> — text values use <code>'single quotes'</code>. Double quotes are for identifiers (column/table names), not strings.</div>
+    <div class="d"><b>= vs LIKE</b> — <code>=</code> is exact. For partial matches use <code>LIKE 'SD-WAN%'</code> (<code>%</code> = any characters, <code>_</code> = one character).</div>
+    <div class="d"><b>NULL is special</b> — use <code>IS NULL</code> / <code>IS NOT NULL</code>, never <code>= NULL</code>. Here, <code>actual_go_live</code> is NULL for orders not yet delivered.</div>
+    <div class="d"><b>Integer division</b> — <code>3/2</code> can return <code>1</code>. Multiply by <code>1.0</code> (e.g. <code>100.0 * a / b</code>) to force decimals.</div>
+    <div class="d"><b>COUNT(*) vs COUNT(col)</b> — <code>COUNT(*)</code> counts rows; <code>COUNT(col)</code> ignores NULLs in that column.</div>
+  </div>
+</div></section>
+
+<!-- PLAYGROUND -->
+<section id="runner"><div class="wrap">
+  <span class="eyebrow">Try it for real</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">SQL runner</h2>
+  <p class="lead" style="max-width:70ch">A full SQLite engine, running entirely in your browser. Write a query and hit Run — or load an example to start. Tip: <kbd>Ctrl/Cmd + Enter</kbd> runs.</p>
+
+  <div class="play" id="sql-play">
+    <textarea class="code-in" id="sql-in" spellcheck="false" rows="6">SELECT region,
+       COUNT(*) AS orders,
+       ROUND(SUM(revenue)) AS total_rev
+FROM orders
+GROUP BY region
+ORDER BY total_rev DESC;</textarea>
+    <div class="play-actions">
+      <button class="btn" id="sql-run">▶ Run query</button>
+      <span class="legend" id="sql-status"></span>
+    </div>
+    <div class="chips">
+      <button class="chip-btn" data-f="SELECT * FROM orders LIMIT 10;">all columns</button>
+      <button class="chip-btn" data-f="SELECT customer, site_code, revenue FROM orders WHERE status='Delivered' ORDER BY revenue DESC LIMIT 5;">top 5 delivered</button>
+      <button class="chip-btn" data-f="SELECT service_type, COUNT(*) AS n, ROUND(AVG(fte_days),1) AS avg_fte FROM orders GROUP BY service_type ORDER BY n DESC;">by service type</button>
+      <button class="chip-btn" data-f="SELECT dpm, COUNT(*) AS orders, ROUND(SUM(revenue)) AS rev FROM orders GROUP BY dpm HAVING COUNT(*)>=10 ORDER BY rev DESC;">busy DPMs (HAVING)</button>
+      <button class="chip-btn" data-f="SELECT o.region, ROUND(SUM(o.revenue)) AS actual, t.revenue_target FROM orders o JOIN targets t ON o.region=t.region GROUP BY o.region;">join targets</button>
+      <button class="chip-btn" data-f="SELECT DISTINCT country FROM orders ORDER BY country;">distinct countries</button>
+      <button class="chip-btn" data-f="SELECT CASE WHEN revenue>=30000 THEN 'large' WHEN revenue>=15000 THEN 'mid' ELSE 'small' END AS band, COUNT(*) AS n FROM orders GROUP BY band ORDER BY n DESC;">CASE bands</button>
+      <button class="chip-btn" data-f="WITH region_rev AS (SELECT region, SUM(revenue) total FROM orders GROUP BY region) SELECT * FROM region_rev ORDER BY total DESC;">CTE (WITH)</button>
+      <button class="chip-btn" data-f="SELECT region, customer, revenue, RANK() OVER (PARTITION BY region ORDER BY revenue DESC) rnk FROM orders ORDER BY region, rnk LIMIT 15;">window RANK()</button>
+    </div>
+    <div class="out" id="sql-out" style="margin-top:12px">Loading…</div>
+  </div>
+
+  <div class="note"><span class="ic">i</span><div>Everything runs locally on a copy of the data — you can't break anything. Try <code>UPDATE</code>, <code>INSERT</code> or <code>CREATE TABLE</code> too; refresh the page to reset. Keep the <a href="assets/docs/SQL-Cheat-Sheet.pdf" download>cheat sheet</a> handy while you practise, or <a href="assets/docs/Setting-up-SQL-Server-on-Windows.docx" download>install SQL Server on Windows</a>.</div></div>
+</div></section>
+
+<!-- EXAM -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Test yourself</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .35em">SQL final exam</h2>
+  <p class="lead" style="max-width:70ch">A fresh, randomised mix every time — including questions where you <b>write the query yourself</b> and we run it against the live tables and grade the result. Treat it as a checkpoint, then go run more queries above.</p>
+  <div class="exam" data-bank="sqlBank" data-count="9" data-typed="3"></div>
+</div></section>
+
+<script type="application/json" id="sqlBank">
+[
+ {"type":"sql","q":"Write a query that returns the <b>number of Delivered orders</b>.","expect":41,"answer":"SELECT COUNT(*) FROM orders WHERE status = 'Delivered';","hint":"COUNT(*) with a WHERE on status.","why":"COUNT(*) counts the rows that survive the WHERE filter on status."},
+ {"type":"sql","q":"Return the <b>total revenue</b> across all orders.","expect":1533987,"answer":"SELECT SUM(revenue) FROM orders;","hint":"SUM over the revenue column.","why":"SUM(revenue) adds the revenue of every row."},
+ {"type":"sql","q":"Return the <b>total revenue for the EMEA region</b> only.","expect":1322838,"answer":"SELECT SUM(revenue) FROM orders WHERE region = 'EMEA';","hint":"SUM with a WHERE on region (text in single quotes).","why":"Filter to EMEA rows first, then SUM their revenue."},
+ {"type":"sql","q":"How many orders are in the <b>EMEA region</b>?","expect":60,"answer":"SELECT COUNT(*) FROM orders WHERE region = 'EMEA';","hint":"COUNT(*) with WHERE region = 'EMEA'.","why":"COUNT(*) counts rows matching the region filter."},
+ {"type":"sql","q":"How many <b>distinct customers</b> appear in the table?","expect":8,"answer":"SELECT COUNT(DISTINCT customer) FROM orders;","hint":"COUNT(DISTINCT column).","why":"COUNT(DISTINCT customer) counts each unique customer once."},
+ {"type":"sql","q":"Return the <b>highest single order revenue</b>.","expect":40684,"answer":"SELECT MAX(revenue) FROM orders;","hint":"MAX over revenue.","why":"MAX(revenue) returns the largest value in the column."},
+ {"type":"sql","q":"How many orders are marked <b>High priority</b>?","expect":21,"answer":"SELECT COUNT(*) FROM orders WHERE priority = 'High';","hint":"COUNT(*) with WHERE on priority.","why":"Filter to High priority, then count the rows."},
+ {"type":"sql","q":"Count the orders that are <b>both EMEA and Delivered</b>.","expect":33,"answer":"SELECT COUNT(*) FROM orders WHERE region = 'EMEA' AND status = 'Delivered';","hint":"Two conditions joined with AND.","why":"AND requires both conditions to be true for a row to count."},
+ {"type":"sql","q":"Which <b>region has the most orders</b>? (return the region name)","expect":"EMEA","answer":"SELECT region FROM orders GROUP BY region ORDER BY COUNT(*) DESC LIMIT 1;","hint":"GROUP BY region, ORDER BY COUNT(*) DESC, LIMIT 1.","why":"Group by region, sort by the per-group count descending, and take the top one."},
+ {"type":"sql","q":"Which <b>customer has the highest total revenue</b>? (return the customer name)","expect":"Carlsberg Group","answer":"SELECT customer FROM orders GROUP BY customer ORDER BY SUM(revenue) DESC LIMIT 1;","hint":"GROUP BY customer, ORDER BY SUM(revenue) DESC, LIMIT 1.","why":"Aggregate revenue per customer, sort descending, and return the top name."},
+ {"q":"Which clause filters <em>rows</em> before any grouping happens?","opts":["WHERE","HAVING","GROUP BY","ORDER BY"],"correct":0,"why":"WHERE filters individual rows before aggregation; HAVING filters groups afterwards."},
+ {"q":"How do you keep only the 5 highest-revenue orders?","opts":["ORDER BY revenue DESC LIMIT 5","WHERE revenue = TOP 5","GROUP BY revenue LIMIT 5","HAVING revenue > 5"],"correct":0,"why":"Sort descending by revenue, then LIMIT 5 caps the output to the top rows."},
+ {"q":"What does <code>COUNT(*)</code> return?","opts":["The number of rows","The sum of a column","The number of distinct values","The number of columns"],"correct":0,"why":"COUNT(*) counts rows. COUNT(col) counts non-NULL values in that column."},
+ {"q":"To total revenue per region, you need…","opts":["GROUP BY region with SUM(revenue)","ORDER BY region","SUM(region)","DISTINCT region"],"correct":0,"why":"GROUP BY region creates one group per region; SUM(revenue) aggregates within each."},
+ {"q":"Which correctly filters groups to DPMs with 10+ orders?","opts":["HAVING COUNT(*) >= 10","WHERE COUNT(*) >= 10","LIMIT 10","ORDER BY COUNT(*)"],"correct":0,"why":"Aggregate conditions go in HAVING; WHERE can't use aggregates because it runs before grouping."},
+ {"q":"How should you test whether <code>actual_go_live</code> has no value?","opts":["WHERE actual_go_live IS NULL","WHERE actual_go_live = NULL","WHERE actual_go_live = ''","WHERE actual_go_live = 0"],"correct":0,"why":"NULL comparisons need IS NULL / IS NOT NULL; = NULL never matches anything."},
+ {"q":"Which quote style is correct for a text value?","opts":["WHERE region = 'EMEA'","WHERE region = \"EMEA\"","WHERE region = EMEA","WHERE region = `EMEA`"],"correct":0,"why":"String literals use single quotes. Double quotes denote identifiers in standard SQL."},
+ {"q":"What does <code>SELECT DISTINCT service_type FROM orders</code> return?","opts":["Each unique service type once","Every row's service type","The count of service types","Service types over a threshold"],"correct":0,"why":"DISTINCT removes duplicates, returning each unique value a single time."},
+ {"q":"A JOIN between <code>orders</code> and <code>targets</code> matches rows on…","opts":["a shared key such as region","row position","alphabetical order","the primary key only"],"correct":0,"why":"A JOIN combines rows where the ON condition matches — here orders.region = targets.region."},
+ {"q":"For a partial text match like everything starting with 'SD-WAN', use…","opts":["LIKE 'SD-WAN%'","= 'SD-WAN%'","IN 'SD-WAN'","CONTAINS('SD-WAN')"],"correct":0,"why":"LIKE with the % wildcard matches any characters after 'SD-WAN'."},
+ {"q":"What does <code>AS</code> do in <code>SUM(revenue) AS total</code>?","opts":["Renames the output column to 'total'","Filters by total","Casts to text","Sorts by total"],"correct":0,"why":"AS gives a column (or table) an alias, making results readable and easy to reference."},
+ {"q":"Why might <code>100 * a / b</code> lose its decimals in SQL?","opts":["Integer division truncates — use 100.0","SQL rounds by default","AVG is needed","b is always zero"],"correct":0,"why":"Dividing two integers can truncate; using 100.0 forces floating-point math."}
+]
+</script>
+
+<footer class="foot"><div class="wrap">
+  <p>SQL track · DPM Learning Hub. The data here is fictional and runs entirely in your browser. <a href="data-foundations.html">← Foundations</a> · <a href="powerbi.html">On to Power BI →</a></p>
+</div></footer>
+
+<script src="assets/js/sample-data.js"></script>
+<script src="assets/vendor/sql-wasm.js"></script>
+<script src="assets/js/playground.js"></script>
+<script src="assets/js/exam.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

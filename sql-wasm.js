@@ -1,230 +1,101 @@
 /* ============================================================
-   DPM Learning Hub — final-exam engine
-   <div class="exam" data-bank="excelBank" data-count="9" data-typed="3"></div>
-   <script type="application/json" id="excelBank">[ ...items ]</script>
-
-   Item types:
-     Multiple choice : {"q","opts":[...],"correct":0,"why"}            (default)
-     Excel formula   : {"type":"formula","q","expect","answer","why", ...}
-     SQL query       : {"type":"sql","q","expect","answer","why", ...}
-
-   "formula" answers are evaluated with window.ExcelEngine; "sql" answers
-   run against the shared SQLite DB (window.DPM_SQL_READY) — the same
-   tables as the SQL runner. Both compare the produced value to "expect"
-   (number within tol, or case-insensitive string). Randomised each attempt.
-   Count attribute aliases: data-typed = data-formulas = data-sql.
+   DPM Learning Hub — DAX validator (static analysis)
+   DAX cannot execute in a browser (it needs a tabular engine),
+   so this checks SYNTAX and common mistakes, and offers tips.
+   Exposes window.DaxValidator.validate(expr)
    ============================================================ */
-(function () {
+(function (root) {
   'use strict';
 
-  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-  function esc(s) { return String(s); }
-  function escAttr(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
-  function isTyped(it) { return it && (it.type === 'formula' || it.type === 'sql'); }
+  // Curated list of common DAX functions (not exhaustive, but covers the basics + intermediate).
+  var KNOWN = ('SUM SUMX AVERAGE AVERAGEX MIN MINX MAX MAXX COUNT COUNTA COUNTAX COUNTROWS COUNTBLANK ' +
+    'DISTINCTCOUNT DISTINCT VALUES CALCULATE CALCULATETABLE FILTER ALL ALLEXCEPT ALLSELECTED REMOVEFILTERS ' +
+    'KEEPFILTERS DIVIDE IF IFERROR SWITCH AND OR NOT TRUE FALSE BLANK ISBLANK ISERROR HASONEVALUE SELECTEDVALUE ' +
+    'RELATED RELATEDTABLE EARLIER RANKX TOPN SUMMARIZE SUMMARIZECOLUMNS ADDCOLUMNS SELECTCOLUMNS GROUPBY ' +
+    'TOTALYTD TOTALQTD TOTALMTD DATESYTD DATESMTD DATESQTD SAMEPERIODLASTYEAR PREVIOUSMONTH PREVIOUSYEAR ' +
+    'PREVIOUSQUARTER PREVIOUSDAY NEXTMONTH DATEADD DATESBETWEEN DATESINPERIOD PARALLELPERIOD ENDOFMONTH ' +
+    'STARTOFMONTH FIRSTDATE LASTDATE CALENDAR CALENDARAUTO DATE YEAR MONTH DAY HOUR MINUTE SECOND WEEKDAY ' +
+    'WEEKNUM EOMONTH EDATE TODAY NOW FORMAT CONCATENATE CONCATENATEX LEFT RIGHT MID LEN UPPER LOWER TRIM ' +
+    'SUBSTITUTE REPLACE SEARCH FIND VALUE ROUND ROUNDUP ROUNDDOWN INT ABS MOD CEILING FLOOR TRUNC POWER SQRT ' +
+    'DIVIDE COALESCE LOOKUPVALUE USERELATIONSHIP CROSSFILTER TREATAS UNION INTERSECT EXCEPT NATURALINNERJOIN ' +
+    'ROW GENERATESERIES VAR RETURN MAXA MINA MEDIAN PERCENTILE PERCENTILEX STDEV STDEVX RANK PRODUCT PRODUCTX ' +
+    'CONTAINS CONTAINSSTRING ISFILTERED ISCROSSFILTERED ISINSCOPE PATH PATHITEM').split(/\s+/);
+  var KNOWN_SET = {}; KNOWN.forEach(function (k) { KNOWN_SET[k] = true; });
 
-  function fmt(v) {
-    if (typeof v === 'number') return (Math.round(v * 100) / 100).toLocaleString('en-US');
-    return v;
+  function balance(expr) {
+    var issues = [];
+    var stack = [];
+    var inStr = false, strCh = '';
+    for (var i = 0; i < expr.length; i++) {
+      var c = expr[i];
+      if (inStr) {
+        if (c === strCh) {
+          // doubled quote = escape
+          if (expr[i + 1] === strCh) { i++; continue; }
+          inStr = false;
+        }
+        continue;
+      }
+      if (c === '"' || c === "'") { inStr = true; strCh = c; continue; }
+      if (c === '(' || c === '[') stack.push({ c: c, i: i });
+      else if (c === ')') { if (!stack.length || stack[stack.length - 1].c !== '(') issues.push('Unmatched ")" — check your parentheses.'); else stack.pop(); }
+      else if (c === ']') { if (!stack.length || stack[stack.length - 1].c !== '[') issues.push('Unmatched "]" — column/measure brackets look off.'); else stack.pop(); }
+    }
+    if (inStr) issues.push('A text string is missing its closing quote (' + strCh + ').');
+    stack.forEach(function (s) { issues.push('Unclosed "' + s.c + '" — you have more openings than closings.'); });
+    return issues;
   }
-  function compare(got, exp, tol) {
-    if (got === null || got === undefined) return false;
-    if (typeof exp === 'number') { var t = (tol != null) ? tol : 0.01; var n = Number(got); return isFinite(n) && Math.abs(n - exp) <= t; }
-    return String(got).trim().toLowerCase() === String(exp).trim().toLowerCase();
+
+  function stripStrings(expr) {
+    return expr.replace(/"(?:[^"]|"")*"/g, '""').replace(/'[^']*'/g, "''");
   }
 
-  // ----- Excel formula evaluation -----
-  function evalFormula(str) {
-    if (!window.ExcelEngine || !window.DPM_DATA) return { ok: false, error: 'engine unavailable' };
-    return window.ExcelEngine.evaluate(str, { headers: window.DPM_DATA.excelHeaders, rows: window.DPM_DATA.rows });
-  }
-  // ----- SQL evaluation against the shared DB -----
-  function runSql(db, str) {
-    try {
-      var res = db.exec(str);
-      if (!res.length || !res[res.length - 1].values.length) return { ok: true, value: null, rows: 0 };
-      var last = res[res.length - 1];
-      return { ok: true, value: last.values[0][0], rows: last.values.length };
-    } catch (e) { return { ok: false, error: e.message }; }
-  }
+  function validate(expr) {
+    var raw = String(expr || '').trim();
+    var issues = [], tips = [], notes = [];
+    if (!raw) return { ok: false, issues: ['Nothing to check — type a DAX expression first.'], tips: [], notes: [] };
 
-  function buildExam(host) {
-    var bank;
-    try { bank = JSON.parse(document.getElementById(host.dataset.bank).textContent); }
-    catch (e) { host.innerHTML = '<p>Exam bank not found.</p>'; return; }
+    // allow "Measure Name := expression"
+    var body = raw;
+    var nameMatch = /^\s*([A-Za-z0-9 _]+?)\s*:?=\s*([\s\S]+)$/.exec(raw);
+    if (nameMatch && /:=/.test(raw)) { body = nameMatch[2]; notes.push('Reads as a named measure: <b>' + nameMatch[1].trim() + '</b>.'); }
 
-    var excelReady = !!(window.ExcelEngine && window.DPM_DATA);
-    var bankHasSql = bank.some(function (i) { return i.type === 'sql'; });
-    var sqlReady = bankHasSql ? (window.DPM_SQL_READY ||
-      (window.initSqlJs && window.DPM_buildSqlDb
-        ? window.initSqlJs({ locateFile: function (f) { return 'assets/vendor/' + f; } }).then(function (SQL) { return window.DPM_buildSqlDb(SQL); })
-        : null)) : null;
+    issues = issues.concat(balance(body));
 
-    var typedItems = bank.filter(function (i) {
-      if (i.type === 'formula') return excelReady;
-      if (i.type === 'sql') return !!sqlReady;
-      return false;
+    var noStr = stripStrings(body);
+
+    // unknown function detection: WORD( where WORD not known
+    var fnRe = /([A-Za-z_][A-Za-z0-9_]*)\s*\(/g, m;
+    var unknown = {};
+    while ((m = fnRe.exec(noStr))) {
+      var fn = m[1].toUpperCase();
+      if (!KNOWN_SET[fn]) unknown[fn] = true;
+    }
+    Object.keys(unknown).forEach(function (fn) {
+      issues.push('"' + fn + '(...)" isn\'t a DAX function I recognise — check the spelling, or it may be an advanced function not in this checker\'s list.');
     });
-    var mcItems = bank.filter(function (i) { return !isTyped(i); });
 
-    var total = Math.min(parseInt(host.dataset.count || '8', 10), bank.length);
-    var wantTyped = [host.dataset.typed, host.dataset.formulas, host.dataset.sql].filter(function (x) { return x != null; })[0];
-    wantTyped = wantTyped != null ? parseInt(wantTyped, 10) : Math.min(3, typedItems.length);
-    var nT = Math.min(wantTyped, typedItems.length, total);
-    var nMC = Math.min(total - nT, mcItems.length);
+    // references
+    var hasColRef = /\[[^\]]+\]/.test(noStr);
+    if (!hasColRef && /\b(SUM|AVERAGE|MIN|MAX|COUNT|DISTINCTCOUNT)\s*\(/i.test(noStr))
+      tips.push('Aggregations like SUM() expect a column reference such as <code>Fact_Orders[revenue]</code> or <code>[revenue]</code>.');
 
-    function render() {
-      var picked = shuffle(typedItems).slice(0, nT).concat(shuffle(mcItems).slice(0, nMC));
-      picked = shuffle(picked).map(function (q) {
-        if (isTyped(q)) return { kind: q.type, q: q.q, why: q.why, expect: q.expect, tol: q.tol, answer: q.answer, hint: q.hint };
-        var opts = q.opts.map(function (text, i) { return { text: text, correct: i === q.correct }; });
-        return { kind: 'mc', q: q.q, why: q.why, opts: shuffle(opts) };
-      });
-
-      var typedLabel = nT ? (nT + ' you write &amp; we grade · ') : '';
-      var html = '<div class="exam-head"><h3 style="margin:0">Final exam</h3>' +
-        '<span class="meta">' + picked.length + ' questions · ' + typedLabel + 'randomised each attempt</span></div>' +
-        '<p style="color:var(--ink-soft);margin:.2em 0 8px;font-size:.95rem">Answer each question — pick an option, or for the <b>write-it-yourself</b> ones type a real ' +
-        (bankHasSql ? 'SQL query' : 'Excel formula') + ' against the sample data. Press <b>Test</b> to preview, then <b>Check answers</b> to grade. Hit <b>New set</b> for a fresh mix.</p>';
-
-      picked.forEach(function (item, qi) {
-        if (item.kind === 'mc') {
-          html += '<div class="eq" data-qi="' + qi + '">';
-          html += '<p class="qtext"><span class="num">Q' + (qi + 1) + '.</span> ' + esc(item.q) + '</p>';
-          item.opts.forEach(function (o, oi) {
-            html += '<button class="opt" data-qi="' + qi + '" data-oi="' + oi + '" data-correct="' + (o.correct ? 1 : 0) + '">' + esc(o.text) + '</button>';
-          });
-          html += '<p class="why">' + esc(item.why) + '</p></div>';
-        } else {
-          var sql = item.kind === 'sql';
-          var ph = sql ? 'SELECT ...' : '=...';
-          var tag = sql ? 'write SQL' : 'type a formula';
-          html += '<div class="eq fq" data-qi="' + qi + '">';
-          html += '<p class="qtext"><span class="num">Q' + (qi + 1) + '.</span> <span class="ftag">' + tag + '</span> ' + esc(item.q) + '</p>';
-          html += '<div class="fx-row">';
-          if (sql) html += '<textarea class="fx fx-sql" data-qi="' + qi + '" spellcheck="false" rows="2" placeholder="' + ph + '"></textarea>';
-          else html += '<input class="fx" data-qi="' + qi + '" spellcheck="false" autocomplete="off" placeholder="' + ph + '" ' + (item.hint ? 'title="' + escAttr(item.hint) + '"' : '') + '>';
-          html += '<button class="btn ghost fx-test" data-qi="' + qi + '" type="button">Test</button></div>';
-          html += '<div class="fx-live" data-qi="' + qi + '"></div>';
-          html += '<p class="why"></p></div>';
-        }
-      });
-
-      html += '<div class="exam-actions">' +
-        '<button class="btn" data-act="check" type="button">Check answers</button>' +
-        '<button class="btn ghost" data-act="new" type="button">New set</button>' +
-        '<span class="score" style="display:none"></span></div>';
-
-      host.innerHTML = html;
-      wire(picked);
+    // lint tips
+    if (/[^A-Za-z_]\/[^*]/.test(noStr) && !/DIVIDE\s*\(/i.test(noStr))
+      tips.push('You\'re dividing with "/". In DAX, prefer <code>DIVIDE(numerator, denominator, 0)</code> — it handles divide-by-zero safely.');
+    if (/\bCALCULATE\s*\(/i.test(noStr)) {
+      var inside = /CALCULATE\s*\(([\s\S]*)\)/i.exec(body);
+      if (inside && !/,/.test(inside[1])) tips.push('CALCULATE with no filter argument just returns the expression. Add a filter, e.g. <code>CALCULATE([Total Revenue], Fact_Orders[status]="Delivered")</code>.');
     }
+    if (/\bSUMX?\s*\(\s*FILTER\s*\(/i.test(noStr)) notes.push('Nice — iterating with SUMX over a FILTER is a solid pattern for row-by-row logic.');
+    if (/=\s*=/.test(noStr)) tips.push('DAX uses a single "=" for comparison inside filters, not "==".');
+    if (/\bIF\s*\(/i.test(noStr) && /\bIF\s*\([\s\S]*\bIF\s*\(/i.test(noStr)) tips.push('Nested IFs can often be replaced by <code>SWITCH(TRUE(), cond1, val1, cond2, val2, …)</code> for readability.');
+    if (/\bDISTINCTCOUNT\s*\(/i.test(noStr)) notes.push('DISTINCTCOUNT counts unique values — great for "how many customers / sites".');
 
-    function val(qi) { var el = host.querySelector('.fx[data-qi="' + qi + '"]'); return el ? el.value : ''; }
-
-    function wire(picked) {
-      var checked = false;
-      var selected = {};
-      var sqlDb = null;
-      if (sqlReady) sqlReady.then(function (db) { sqlDb = db; }).catch(function () { sqlDb = null; });
-
-      host.querySelectorAll('.opt').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          if (checked) return;
-          var qi = btn.dataset.qi;
-          host.querySelectorAll('.opt[data-qi="' + qi + '"]').forEach(function (b) { b.classList.remove('sel'); });
-          btn.classList.add('sel'); selected[qi] = btn.dataset.oi;
-        });
-      });
-
-      host.querySelectorAll('.fx-test').forEach(function (b) {
-        b.addEventListener('click', function () {
-          if (checked) return;
-          var qi = b.dataset.qi;
-          var item = picked[qi];
-          var live = host.querySelector('.fx-live[data-qi="' + qi + '"]');
-          var v = val(qi).trim();
-          if (!v) { live.className = 'fx-live'; live.textContent = 'Write something, then Test.'; return; }
-          if (item.kind === 'sql') {
-            if (!sqlDb) { live.className = 'fx-live'; live.textContent = 'Preparing the database…'; return; }
-            var r = runSql(sqlDb, v);
-            if (!r.ok) { live.className = 'fx-live err'; live.innerHTML = 'SQL error: <b>' + esc(r.error) + '</b>'; }
-            else if (r.value === null) { live.className = 'fx-live'; live.textContent = 'Query ran but returned no value.'; }
-            else { live.className = 'fx-live ok'; live.innerHTML = 'First result: <b>' + fmt(r.value) + '</b>' + (r.rows > 1 ? ' (' + r.rows + ' rows)' : ''); }
-          } else {
-            var e = evalFormula(v);
-            if (e.ok) { live.className = 'fx-live ok'; live.innerHTML = 'Result: <b>' + fmt(e.value) + '</b>'; }
-            else { live.className = 'fx-live err'; live.innerHTML = 'Error: <b>' + esc(e.error) + '</b>'; }
-          }
-        });
-      });
-      host.querySelectorAll('.fx').forEach(function (el) {
-        el.addEventListener('keydown', function (e) {
-          if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); host.querySelector('.fx-test[data-qi="' + el.dataset.qi + '"]').click(); }
-        });
-      });
-
-      host.querySelector('[data-act="new"]').addEventListener('click', render);
-
-      host.querySelector('[data-act="check"]').addEventListener('click', function () {
-        if (checked) return; checked = true;
-        var self = this;
-        var needsDb = picked.some(function (p) { return p.kind === 'sql'; });
-        (needsDb && sqlReady ? sqlReady : Promise.resolve(null)).then(function (db) {
-          gradeAll(db || sqlDb);
-        }, function () { gradeAll(null); });
-
-        function gradeAll(db) {
-          var correct = 0;
-          picked.forEach(function (item, qi) {
-            var why = host.querySelector('.eq[data-qi="' + qi + '"] .why');
-            if (item.kind === 'mc') {
-              var btns = host.querySelectorAll('.opt[data-qi="' + qi + '"]');
-              var sel = selected[qi];
-              btns.forEach(function (b) {
-                b.style.cursor = 'default';
-                var isC = b.dataset.correct === '1';
-                if (isC) { b.classList.add('correct'); b.innerHTML += '<span class="mk">&#10003;</span>'; }
-                if (sel !== undefined && b.dataset.oi === sel && !isC) { b.classList.add('wrong'); b.innerHTML += '<span class="mk">&#10007;</span>'; }
-              });
-              if (sel !== undefined && btns[sel] && btns[sel].dataset.correct === '1') correct++;
-              why.classList.add('show');
-            } else {
-              var el = host.querySelector('.fx[data-qi="' + qi + '"]');
-              el.setAttribute('readonly', 'readonly');
-              var live = host.querySelector('.fx-live[data-qi="' + qi + '"]');
-              var v = el.value, r, got = null, errTxt = null, answered = !!v.trim();
-              if (!answered) { errTxt = 'No answer given.'; }
-              else if (item.kind === 'sql') {
-                if (!db) errTxt = 'database unavailable';
-                else { r = runSql(db, v); if (!r.ok) errTxt = 'SQL error (' + r.error + ')'; else got = r.value; }
-              } else {
-                r = evalFormula(v); if (!r.ok) errTxt = r.error; else got = r.value;
-              }
-              var ok = errTxt === null && compare(got, item.expect, item.tol);
-              if (ok) {
-                correct++; el.classList.add('correct');
-                live.className = 'fx-live ok'; live.innerHTML = '&#10003; Correct — returns <b>' + fmt(got) + '</b>';
-              } else {
-                el.classList.add('wrong');
-                var detail = errTxt ? esc(errTxt) : ('returns <b>' + fmt(got) + '</b>, expected <b>' + fmt(item.expect) + '</b>');
-                live.className = 'fx-live err'; live.innerHTML = '&#10007; Your answer ' + detail + '.';
-              }
-              why.innerHTML = '<b>Model answer:</b> <code>' + escAttr(item.answer) + '</code><br>' + esc(item.why);
-              why.classList.add('show');
-            }
-          });
-          self.disabled = true;
-          var pct = Math.round(correct / picked.length * 100);
-          var msg = pct === 100 ? 'Perfect - you have got this.' : pct >= 75 ? 'Strong. Review the misses and retake.' : pct >= 50 ? 'Getting there - try a new set.' : 'Worth another pass through the lessons.';
-          var sc = host.querySelector('.score');
-          sc.style.display = 'inline';
-          sc.innerHTML = 'Score: <span class="pct">' + correct + '/' + picked.length + ' (' + pct + '%)</span> - ' + msg;
-          sc.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      });
-    }
-
-    render();
+    var ok = issues.length === 0;
+    return { ok: ok, issues: issues, tips: tips, notes: notes };
   }
 
-  document.querySelectorAll('.exam').forEach(buildExam);
-})();
+  root.DaxValidator = { validate: validate, functions: KNOWN.slice().sort() };
+  if (typeof module !== 'undefined' && module.exports) module.exports = root.DaxValidator;
+})(typeof window !== 'undefined' ? window : globalThis);

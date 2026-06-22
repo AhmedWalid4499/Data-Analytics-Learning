@@ -1,233 +1,384 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Courses &amp; Certifications — DPM Learning Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body data-theme="hub">
-<div class="scrollbar"></div>
+/* ============================================================
+   DPM Learning Hub — Excel formula engine (no dependencies)
+   Supports a curated, well-tested subset of Excel functions
+   evaluated against a sample grid (headers in row 1, data 2+).
+   Exposes window.ExcelEngine.evaluate(formula, grid)
+   ============================================================ */
+(function (root) {
+  'use strict';
 
-<nav class="nav"><div class="wrap">
-  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
-  <button class="menu-btn" aria-label="Menu">☰</button>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="data-foundations.html">Foundations</a>
-    <a href="excel.html">Excel</a>
-    <a href="sql.html">SQL</a>
-    <a href="powerbi.html">Power BI</a>
-    <a href="powerautomate.html">Power Automate</a>
-    <a href="courses.html" aria-current="page">Courses</a>
-    <a href="downloads.html">Downloads</a>
-  </div>
-</div></nav>
+  // ---------- helpers ----------
+  function colToNum(letters) { // "A"->1, "AA"->27
+    let n = 0;
+    for (let i = 0; i < letters.length; i++) n = n * 26 + (letters.charCodeAt(i) - 64);
+    return n;
+  }
+  function isBlank(v) { return v === null || v === undefined || v === ''; }
+  function toNum(v) {
+    if (typeof v === 'number') return v;
+    if (typeof v === 'boolean') return v ? 1 : 0;
+    if (isBlank(v)) return 0;
+    const n = Number(String(v).replace(/,/g, ''));
+    if (isNaN(n)) throw new CellError('#VALUE!');
+    return n;
+  }
+  function CellError(code) { this.isError = true; this.code = code; }
+  CellError.prototype.toString = function () { return this.code; };
 
-<header class="hero"><div class="wrap">
-  <span class="tool-badge"><span class="glyph">★</span> Keep going</span>
-  <h1>Where to go<br>when you're ready<br>for more.</h1>
-  <p class="lead">This hub gets you started. To go deep, here's a curated shelf of the best free courses, channels and playlists — organised by tool, hand-picked for people who actually want to learn data analytics. Everything below is free and in English. Start with the bootcamp, then dive into whichever tool you need.</p>
-</div></header>
+  // ---------- tokenizer ----------
+  function tokenize(src) {
+    const toks = [];
+    let i = 0;
+    const ops = ['<=', '>=', '<>', '+', '-', '*', '/', '^', '&', '=', '<', '>', '(', ')', ',', '%', ':'];
+    while (i < src.length) {
+      const c = src[i];
+      if (c === ' ' || c === '\t' || c === '\n' || c === '\r') { i++; continue; }
+      if (c === '"') { // string
+        let j = i + 1, s = '';
+        while (j < src.length) {
+          if (src[j] === '"' && src[j + 1] === '"') { s += '"'; j += 2; continue; }
+          if (src[j] === '"') break;
+          s += src[j++];
+        }
+        if (src[j] !== '"') throw new CellError('#PARSE!');
+        toks.push({ t: 'str', v: s }); i = j + 1; continue;
+      }
+      if (/[0-9.]/.test(c)) { // number
+        let j = i, s = '';
+        while (j < src.length && /[0-9.]/.test(src[j])) s += src[j++];
+        toks.push({ t: 'num', v: parseFloat(s) }); i = j; continue;
+      }
+      // two-char ops first
+      const two = src.substr(i, 2);
+      if (['<=', '>=', '<>'].includes(two)) { toks.push({ t: 'op', v: two }); i += 2; continue; }
+      if (ops.includes(c)) { toks.push({ t: 'op', v: c }); i++; continue; }
+      if (/[A-Za-z_$]/.test(c)) { // identifier / cell / function / bool
+        let j = i, s = '';
+        while (j < src.length && /[A-Za-z0-9_$.]/.test(src[j])) s += src[j++];
+        // function call if followed by (
+        let k = j; while (k < src.length && /\s/.test(src[k])) k++;
+        if (src[k] === '(') { toks.push({ t: 'func', v: s.toUpperCase() }); i = j; continue; }
+        const up = s.toUpperCase();
+        if (up === 'TRUE') { toks.push({ t: 'num', v: 1, bool: true }); i = j; continue; }
+        if (up === 'FALSE') { toks.push({ t: 'num', v: 0, bool: true }); i = j; continue; }
+        // cell or range token (e.g. A1, $A$1, A:A) — ref part captured, ranges handled by ':' op
+        toks.push({ t: 'ref', v: s.toUpperCase() }); i = j; continue;
+      }
+      throw new CellError('#PARSE!');
+    }
+    return toks;
+  }
 
-<!-- ROADMAP -->
-<section><div class="wrap">
-  <span class="eyebrow">A suggested path</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">If you only follow one route</h2>
-  <div class="flow" style="max-width:640px">
-    <div class="step"><b>WEEK 1–2</b> This hub's Excel track + Microsoft's free Excel training. Get comfortable with lookups, PivotTables and Power Query.</div><div class="conn"></div>
-    <div class="step"><b>WEEK 3–5</b> Power BI track here + the free PL-900 path. Build one real report from the sample data.</div><div class="conn"></div>
-    <div class="step"><b>WEEK 6+</b> Power Automate track + automate one repetitive task you actually do. That single win teaches more than any course.</div><div class="conn"></div>
-    <div class="step"><b>OPTIONAL</b> Certify: PL-900 first (broad, never expires), then PL-300 if Power BI is core to your work.</div>
-  </div>
-</div></section>
+  // ---------- parser (recursive descent) ----------
+  // precedence: compare < & < +- < */ < ^ < unary < postfix% < primary
+  function parse(toks) {
+    let p = 0;
+    const peek = () => toks[p];
+    const next = () => toks[p++];
+    function expect(v) { if (!peek() || peek().v !== v) throw new CellError('#PARSE!'); return next(); }
 
-<!-- START HERE: ALL-IN-ONE BOOTCAMP -->
-<section style="background:var(--surface-2)"><div class="wrap">
-  <span class="eyebrow">Start here · the all-rounder</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">One free bootcamp, the whole picture</h2>
-  <p class="lead">If you want to understand data analytics as a discipline — not just one tool — start with this. It's the most recommended free path on the internet, and it's genuinely good.</p>
-  <div class="card" style="border-left:4px solid var(--accent);margin-top:18px">
-    <div class="pills">
-      <span class="pill">Excel</span><span class="pill">SQL</span><span class="pill">Power BI</span><span class="pill">Tableau</span><span class="pill">Python</span><span class="pill">Portfolio projects</span>
-    </div>
-    <h3 style="margin-top:12px">Alex The Analyst — Data Analyst Bootcamp</h3>
-    <p>A complete, structured, beginner-friendly bootcamp delivered as one YouTube playlist by Alex Freberg. It takes you from "what is a data analyst" through Excel, SQL, Power BI, Tableau and Python, with real hands-on projects and a free honour-system certificate at the end. Work through it in order; do the projects, don't just watch. This single playlist will teach you more than most paid courses.</p>
-    <p style="margin-top:12px">
-      <a class="dl" href="https://www.youtube.com/playlist?list=PLUaB-1hjhk8FE_XZ87vPPSfHqb6OcM0cF" target="_blank" rel="noopener">▶ Open the Bootcamp playlist</a>
-      &nbsp;<a href="https://www.youtube.com/@AlexTheAnalyst" target="_blank" rel="noopener">Channel →</a>
-    </p>
-  </div>
-  <p class="hint" style="color:var(--muted);font-size:.88rem;margin-top:14px">Prefer to go tool-by-tool? The three blocks below are organised exactly that way.</p>
-</div></section>
+    function parseCompare() {
+      let left = parseConcat();
+      while (peek() && peek().t === 'op' && ['=', '<>', '<', '>', '<=', '>='].includes(peek().v)) {
+        const op = next().v; const right = parseConcat();
+        left = { type: 'binop', op, left, right };
+      }
+      return left;
+    }
+    function parseConcat() {
+      let left = parseAdd();
+      while (peek() && peek().t === 'op' && peek().v === '&') { next(); left = { type: 'binop', op: '&', left, right: parseAdd() }; }
+      return left;
+    }
+    function parseAdd() {
+      let left = parseMul();
+      while (peek() && peek().t === 'op' && (peek().v === '+' || peek().v === '-')) { const op = next().v; left = { type: 'binop', op, left, right: parseMul() }; }
+      return left;
+    }
+    function parseMul() {
+      let left = parsePow();
+      while (peek() && peek().t === 'op' && (peek().v === '*' || peek().v === '/')) { const op = next().v; left = { type: 'binop', op, left, right: parsePow() }; }
+      return left;
+    }
+    function parsePow() {
+      let left = parseUnary();
+      while (peek() && peek().t === 'op' && peek().v === '^') { next(); left = { type: 'binop', op: '^', left, right: parseUnary() }; }
+      return left;
+    }
+    function parseUnary() {
+      if (peek() && peek().t === 'op' && (peek().v === '-' || peek().v === '+')) { const op = next().v; return { type: 'unary', op, arg: parseUnary() }; }
+      return parsePostfix();
+    }
+    function parsePostfix() {
+      let node = parsePrimary();
+      while (peek() && peek().t === 'op' && peek().v === '%') { next(); node = { type: 'percent', arg: node }; }
+      return node;
+    }
+    function parsePrimary() {
+      const tk = peek();
+      if (!tk) throw new CellError('#PARSE!');
+      if (tk.t === 'num') { next(); return { type: 'num', v: tk.v }; }
+      if (tk.t === 'str') { next(); return { type: 'str', v: tk.v }; }
+      if (tk.t === 'op' && tk.v === '(') { next(); const e = parseCompare(); expect(')'); return e; }
+      if (tk.t === 'func') {
+        const name = next().v; expect('(');
+        const args = [];
+        if (peek() && !(peek().t === 'op' && peek().v === ')')) {
+          args.push(parseCompare());
+          while (peek() && peek().t === 'op' && peek().v === ',') { next(); args.push(parseCompare()); }
+        }
+        expect(')');
+        return { type: 'func', name, args };
+      }
+      if (tk.t === 'ref') {
+        next();
+        // range?  ref ':' ref
+        if (peek() && peek().t === 'op' && peek().v === ':') {
+          next(); const r2 = peek();
+          if (!r2 || r2.t !== 'ref') throw new CellError('#PARSE!');
+          next();
+          return { type: 'range', a: tk.v, b: r2.v };
+        }
+        return { type: 'ref', v: tk.v };
+      }
+      throw new CellError('#PARSE!');
+    }
+    const tree = parseCompare();
+    if (p !== toks.length) throw new CellError('#PARSE!');
+    return tree;
+  }
 
-<!-- EXCEL BLOCK -->
-<section class="topic" style="--accent:#217346;--accent-2:#33C481"><div class="wrap">
-  <span class="eyebrow">Microsoft Excel</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">Get genuinely good at Excel</h2>
-  <p class="lead">The foundation for everything else. Master formulas, PivotTables and Power Query here and Power BI becomes far easier.</p>
+  // ---------- grid access ----------
+  function makeGrid(headers, rows) {
+    // row 1 = headers; data rows 2..(rows.length+1)
+    const nCols = headers.length;
+    const nRows = rows.length + 1;
+    function cell(colLetters, rowNum) {
+      const c = colToNum(colLetters);
+      if (c < 1 || c > nCols || rowNum < 1 || rowNum > nRows) return null;
+      if (rowNum === 1) return headers[c - 1];
+      return rows[rowNum - 2][c - 1];
+    }
+    return { nCols, nRows, cell };
+  }
+  function parseRef(ref) { // "$A$2" -> {col:'A', row:2}
+    const m = /^\$?([A-Z]+)\$?([0-9]+)$/.exec(ref);
+    if (!m) return null;
+    return { col: m[1], row: parseInt(m[2], 10) };
+  }
+  function parseColOnly(ref) { const m = /^\$?([A-Z]+)$/.exec(ref); return m ? m[1] : null; }
 
-  <div class="subhead"><span class="tag">Courses &amp; guided series</span> Follow start to finish</div>
-  <div class="reslist">
-    <a class="res" href="https://www.youtube.com/@ExcelIsFun" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">ExcelIsFun — full Excel classes</span><span class="lvl beg">All levels</span></div>
-      <p class="why">Mike Girvin's free, exhaustive course playlists ("Excel Basics", "Data Analysis", "Highline College" classes) with downloadable workbooks. The most complete free Excel library anywhere — pick a class and work the exercises.</p>
-      <span class="src">YouTube · course playlists →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/@LeilaGharani" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Leila Gharani — Excel Essentials</span><span class="lvl beg">Beginner → Inter</span></div>
-      <p class="why">Polished, modern, beginner-friendly. Her free "Excel for Beginners" course and topic playlists (XLOOKUP, PivotTables, Power Query) are the cleanest explanations you'll find. Start here if ExcelIsFun feels like a lot.</p>
-      <span class="src">YouTube · free course →</span>
-    </a>
-    <a class="res" href="https://support.microsoft.com/excel" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Microsoft Excel training centre</span><span class="lvl beg">Beginner</span></div>
-      <p class="why">Microsoft's own how-to hub — short official videos and articles from the absolute basics through PivotTables and Power Query. Authoritative and always current.</p>
-      <span class="src">support.microsoft.com/excel →</span>
-    </a>
-  </div>
+  function resolveRange(node, grid) {
+    // returns flat array of values
+    const aCol = parseColOnly(node.a), bCol = parseColOnly(node.b);
+    if (aCol && bCol) { // whole-column range A:A
+      const c1 = colToNum(aCol), c2 = colToNum(bCol);
+      const out = [];
+      for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++)
+        for (let r = 1; r <= grid.nRows; r++) out.push(grid.cell(numToCol(c), r));
+      return { values: out, rectCols: Math.abs(c2 - c1) + 1, rectRows: grid.nRows };
+    }
+    const a = parseRef(node.a), b = parseRef(node.b);
+    if (!a || !b) throw new CellError('#REF!');
+    const c1 = colToNum(a.col), c2 = colToNum(b.col);
+    const r1 = a.row, r2 = b.row;
+    const out = [];
+    for (let r = Math.min(r1, r2); r <= Math.max(r1, r2); r++)
+      for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++)
+        out.push(grid.cell(numToCol(c), r));
+    return { values: out, rectCols: Math.abs(c2 - c1) + 1, rectRows: Math.abs(r2 - r1) + 1 };
+  }
+  function numToCol(n) { let s = ''; while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = (n - m - 1) / 26; } return s; }
 
-  <div class="subhead"><span class="tag">Channels to subscribe to</span> Dip in by topic</div>
-  <div class="reslist">
-    <a class="res" href="https://www.youtube.com/@KevinStratvert" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Kevin Stratvert</span><span class="lvl beg">Beginner</span></div>
-      <p class="why">The gentlest on-ramp. Calm, step-by-step Office and Excel walkthroughs — ideal when you're brand new and want zero jargon.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/@MyOnlineTrainingHub" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">MyOnlineTrainingHub (Mynda Treacy)</span><span class="lvl mid">Inter → Adv</span></div>
-      <p class="why">Practical, business-focused Excel. Excellent for real reporting problems, dashboards, and a strong Power Query/PivotTable angle.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/c/GoodlyChandeep" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Goodly (Chandeep)</span><span class="lvl adv">Advanced</span></div>
-      <p class="why">The place to go for Power Query and the M language. When you're ready to automate data cleaning properly, this channel goes deep.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-  </div>
-</div></section>
+  // ---------- criteria (for *IF / *IFS) ----------
+  function makeCriteria(crit) {
+    let op = '=', val = crit;
+    if (typeof crit === 'string') {
+      const m = /^(<=|>=|<>|=|<|>)(.*)$/.exec(crit);
+      if (m) { op = m[1]; val = m[2]; }
+    }
+    const numVal = (typeof val === 'number') ? val : (val !== '' && !isNaN(Number(val)) ? Number(val) : null);
+    // wildcard handling for = / <>
+    let regex = null;
+    if ((op === '=' || op === '<>') && typeof val === 'string' && /[*?]/.test(val)) {
+      regex = new RegExp('^' + val.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$', 'i');
+    }
+    return function (x) {
+      if (regex) { const t = regex.test(String(x == null ? '' : x)); return op === '=' ? t : !t; }
+      if (numVal !== null && typeof x === 'number') {
+        switch (op) { case '=': return x === numVal; case '<>': return x !== numVal; case '<': return x < numVal; case '>': return x > numVal; case '<=': return x <= numVal; case '>=': return x >= numVal; }
+      }
+      const xs = String(x == null ? '' : x).toLowerCase();
+      const vs = String(val).toLowerCase();
+      switch (op) { case '=': return xs === vs; case '<>': return xs !== vs; case '<': return xs < vs; case '>': return xs > vs; case '<=': return xs <= vs; case '>=': return xs >= vs; }
+      return false;
+    };
+  }
 
-<!-- POWER BI BLOCK -->
-<section class="topic" style="--accent:#C28800;--accent-2:#F2C811;background:var(--surface-2)"><div class="wrap">
-  <span class="eyebrow">Microsoft Power BI</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">From first report to real DAX</h2>
-  <p class="lead">Where your data becomes dashboards. Learn the build order first, then model your data well, then layer on DAX — in that order.</p>
+  // ---------- evaluator ----------
+  function evalNode(node, grid) {
+    switch (node.type) {
+      case 'num': return node.v;
+      case 'str': return node.v;
+      case 'ref': {
+        const r = parseRef(node.v);
+        if (!r) throw new CellError('#REF!');
+        return grid.cell(r.col, r.row);
+      }
+      case 'range': return resolveRange(node, grid); // returns {values,...}
+      case 'unary': { const a = toNum(evalNode(node.arg, grid)); return node.op === '-' ? -a : a; }
+      case 'percent': return toNum(evalNode(node.arg, grid)) / 100;
+      case 'binop': return evalBin(node, grid);
+      case 'func': return callFunc(node.name, node.args, grid);
+    }
+    throw new CellError('#PARSE!');
+  }
+  function scalar(v) { if (v && v.values) return v.values.length ? v.values[0] : null; return v; }
+  function evalBin(node, grid) {
+    const op = node.op;
+    if (op === '&') return strOf(scalar(evalNode(node.left, grid))) + strOf(scalar(evalNode(node.right, grid)));
+    const L = scalar(evalNode(node.left, grid)), R = scalar(evalNode(node.right, grid));
+    if (['=', '<>', '<', '>', '<=', '>='].includes(op)) {
+      let a = L, b = R;
+      if (typeof a === 'number' && typeof b === 'number') { }
+      else { a = String(a == null ? '' : a).toLowerCase(); b = String(b == null ? '' : b).toLowerCase(); }
+      switch (op) { case '=': return a === b; case '<>': return a !== b; case '<': return a < b; case '>': return a > b; case '<=': return a <= b; case '>=': return a >= b; }
+    }
+    const a = toNum(L), b = toNum(R);
+    switch (op) { case '+': return a + b; case '-': return a - b; case '*': return a * b; case '/': if (b === 0) throw new CellError('#DIV/0!'); return a / b; case '^': return Math.pow(a, b); }
+    throw new CellError('#VALUE!');
+  }
+  function strOf(v) { if (v === true) return 'TRUE'; if (v === false) return 'FALSE'; if (isBlank(v)) return ''; return String(v); }
+  function flat(args, grid) { // expand args into flat numeric-capable array of values
+    const out = [];
+    for (const a of args) { const v = evalNode(a, grid); if (v && v.values) out.push(...v.values); else out.push(v); }
+    return out;
+  }
+  function nums(vals) { return vals.filter(v => typeof v === 'number' || (typeof v === 'string' && v !== '' && !isNaN(Number(v)))).map(v => typeof v === 'number' ? v : Number(v)); }
 
-  <div class="subhead"><span class="tag">Courses &amp; guided series</span> Follow start to finish</div>
-  <div class="reslist">
-    <a class="res" href="https://www.youtube.com/@GuyInACube" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Guy in a Cube — Getting Started with Power BI</span><span class="lvl beg">Beginner</span></div>
-      <p class="why">Run by two Microsoft engineers (Adam &amp; Patrick). Open the channel's Playlists tab and work through "Getting Started with Power BI" — the most trusted beginner path, kept current with every release.</p>
-      <span class="src">YouTube · Playlists tab →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/@SQLBI" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">SQLBI — DAX 101 &amp; Mastering DAX</span><span class="lvl mid">Inter → Adv</span></div>
-      <p class="why">Marco Russo &amp; Alberto Ferrari are the definitive DAX authorities. Start with "DAX 101" for measures vs. calculated columns and filter context, then go deeper. This is where DAX finally clicks.</p>
-      <span class="src">YouTube · DAX series →</span>
-    </a>
-    <a class="res" href="https://learn.microsoft.com/training/powerplatform/power-bi" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Microsoft Learn — Power BI paths</span><span class="lvl beg">Beginner → Adv</span></div>
-      <p class="why">Free, hands-on, self-paced modules covering prep, modeling, DAX and publishing — the same content that maps to the PL-300 exam. Best if you prefer reading-and-doing to video.</p>
-      <span class="src">learn.microsoft.com · Power BI →</span>
-    </a>
-  </div>
+  const FN = {
+    SUM: (a, g) => nums(flat(a, g)).reduce((s, x) => s + x, 0),
+    SUMPRODUCT: (a, g) => {
+      const arrs = a.map(n => { const v = evalNode(n, g); return v && v.values ? v.values.map(x => typeof x === 'number' ? x : (x === '' || x == null ? 0 : Number(x) || 0)) : [toNum(v)]; });
+      const len = Math.max(...arrs.map(x => x.length));
+      let s = 0; for (let i = 0; i < len; i++) { let p = 1; for (const arr of arrs) p *= (arr[i] || 0); s += p; } return s;
+    },
+    AVERAGE: (a, g) => { const n = nums(flat(a, g)); if (!n.length) throw new CellError('#DIV/0!'); return n.reduce((s, x) => s + x, 0) / n.length; },
+    MEDIAN: (a, g) => { const n = nums(flat(a, g)).sort((x, y) => x - y); if (!n.length) throw new CellError('#NUM!'); const m = Math.floor(n.length / 2); return n.length % 2 ? n[m] : (n[m - 1] + n[m]) / 2; },
+    COUNT: (a, g) => nums(flat(a, g)).length,
+    COUNTA: (a, g) => flat(a, g).filter(v => !isBlank(v)).length,
+    MIN: (a, g) => { const n = nums(flat(a, g)); return n.length ? Math.min(...n) : 0; },
+    MAX: (a, g) => { const n = nums(flat(a, g)); return n.length ? Math.max(...n) : 0; },
+    ROUND: (a, g) => { const x = toNum(scalar(evalNode(a[0], g))), d = a[1] ? toNum(scalar(evalNode(a[1], g))) : 0; const f = Math.pow(10, d); return Math.round(x * f) / f; },
+    ROUNDUP: (a, g) => { const x = toNum(scalar(evalNode(a[0], g))), d = a[1] ? toNum(scalar(evalNode(a[1], g))) : 0; const f = Math.pow(10, d); return (x < 0 ? -1 : 1) * Math.ceil(Math.abs(x) * f) / f; },
+    ROUNDDOWN: (a, g) => { const x = toNum(scalar(evalNode(a[0], g))), d = a[1] ? toNum(scalar(evalNode(a[1], g))) : 0; const f = Math.pow(10, d); return (x < 0 ? -1 : 1) * Math.floor(Math.abs(x) * f) / f; },
+    INT: (a, g) => Math.floor(toNum(scalar(evalNode(a[0], g)))),
+    ABS: (a, g) => Math.abs(toNum(scalar(evalNode(a[0], g)))),
+    MOD: (a, g) => { const n = toNum(scalar(evalNode(a[0], g))), d = toNum(scalar(evalNode(a[1], g))); if (d === 0) throw new CellError('#DIV/0!'); return n - d * Math.floor(n / d); },
+    IF: (a, g) => { const c = evalNode(a[0], g); const truthy = (c === true) || (typeof c === 'number' && c !== 0); return truthy ? scalar(evalNode(a[1], g)) : (a[2] !== undefined ? scalar(evalNode(a[2], g)) : false); },
+    IFERROR: (a, g) => { try { return scalar(evalNode(a[0], g)); } catch (e) { if (e instanceof CellError) return scalar(evalNode(a[1], g)); throw e; } },
+    AND: (a, g) => flat(a, g).every(v => (v === true) || (typeof v === 'number' && v !== 0)),
+    OR: (a, g) => flat(a, g).some(v => (v === true) || (typeof v === 'number' && v !== 0)),
+    NOT: (a, g) => { const c = scalar(evalNode(a[0], g)); return !((c === true) || (typeof c === 'number' && c !== 0)); },
+    SUMIF: (a, g) => criteriaAgg(a, g, 'sum', 1),
+    AVERAGEIF: (a, g) => criteriaAgg(a, g, 'avg', 1),
+    COUNTIF: (a, g) => {
+      const rng = evalNode(a[0], g).values; const pred = makeCriteria(scalar(evalNode(a[1], g)));
+      return rng.filter(pred).length;
+    },
+    SUMIFS: (a, g) => criteriaAggS(a, g, 'sum'),
+    AVERAGEIFS: (a, g) => criteriaAggS(a, g, 'avg'),
+    COUNTIFS: (a, g) => {
+      const pairs = []; for (let i = 0; i < a.length; i += 2) pairs.push([evalNode(a[i], g).values, makeCriteria(scalar(evalNode(a[i + 1], g)))]);
+      const len = pairs[0][0].length; let c = 0;
+      for (let i = 0; i < len; i++) if (pairs.every(([rng, pred]) => pred(rng[i]))) c++;
+      return c;
+    },
+    VLOOKUP: (a, g) => {
+      const key = scalar(evalNode(a[0], g)); const tbl = evalNode(a[1], g);
+      const colIdx = toNum(scalar(evalNode(a[2], g)));
+      const cols = tbl.rectCols, rows = tbl.rectRows, vals = tbl.values;
+      for (let r = 0; r < rows; r++) {
+        const first = vals[r * cols];
+        if (String(first).toLowerCase() === String(key).toLowerCase()) return vals[r * cols + (colIdx - 1)];
+      }
+      throw new CellError('#N/A');
+    },
+    XLOOKUP: (a, g) => {
+      const key = scalar(evalNode(a[0], g)); const lookup = evalNode(a[1], g).values; const ret = evalNode(a[2], g).values;
+      for (let i = 0; i < lookup.length; i++) if (String(lookup[i]).toLowerCase() === String(key).toLowerCase()) return ret[i];
+      if (a[3] !== undefined) return scalar(evalNode(a[3], g));
+      throw new CellError('#N/A');
+    },
+    LEN: (a, g) => strOf(scalar(evalNode(a[0], g))).length,
+    LEFT: (a, g) => strOf(scalar(evalNode(a[0], g))).slice(0, a[1] ? toNum(scalar(evalNode(a[1], g))) : 1),
+    RIGHT: (a, g) => { const s = strOf(scalar(evalNode(a[0], g))); const n = a[1] ? toNum(scalar(evalNode(a[1], g))) : 1; return s.slice(s.length - n); },
+    MID: (a, g) => strOf(scalar(evalNode(a[0], g))).substr(toNum(scalar(evalNode(a[1], g))) - 1, toNum(scalar(evalNode(a[2], g)))),
+    UPPER: (a, g) => strOf(scalar(evalNode(a[0], g))).toUpperCase(),
+    LOWER: (a, g) => strOf(scalar(evalNode(a[0], g))).toLowerCase(),
+    PROPER: (a, g) => strOf(scalar(evalNode(a[0], g))).replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase()),
+    TRIM: (a, g) => strOf(scalar(evalNode(a[0], g))).replace(/\s+/g, ' ').trim(),
+    CONCAT: (a, g) => flat(a, g).map(strOf).join(''),
+    CONCATENATE: (a, g) => flat(a, g).map(strOf).join(''),
+    TEXTJOIN: (a, g) => {
+      const delim = strOf(scalar(evalNode(a[0], g))); const ignore = (() => { const c = scalar(evalNode(a[1], g)); return (c === true) || (typeof c === 'number' && c !== 0); })();
+      const rest = []; for (let i = 2; i < a.length; i++) { const v = evalNode(a[i], g); if (v && v.values) rest.push(...v.values); else rest.push(v); }
+      return rest.map(strOf).filter(s => ignore ? s !== '' : true).join(delim);
+    },
+    YEAR: (a, g) => dateParts(scalar(evalNode(a[0], g))).y,
+    MONTH: (a, g) => dateParts(scalar(evalNode(a[0], g))).m,
+    DAY: (a, g) => dateParts(scalar(evalNode(a[0], g))).d,
+    TODAY: () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  };
+  function dateParts(v) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(v)); if (!m) throw new CellError('#VALUE!'); return { y: +m[1], m: +m[2], d: +m[3] }; }
 
-  <div class="subhead"><span class="tag">Channels to subscribe to</span> Dip in by topic</div>
-  <div class="reslist">
-    <a class="res" href="https://www.youtube.com/@CurbalEN" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Curbal (Ruth Pozuelo Martinez)</span><span class="lvl mid">Intermediate</span></div>
-      <p class="why">Microsoft MVP, weekly uploads, and the brilliant "DAX Fridays" series. Clear, short, immediately useful — a 10-minute watch often saves an hour of work.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/@PragmaticWorks" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Pragmatic Works</span><span class="lvl beg">Beginner → Inter</span></div>
-      <p class="why">Structured beginner series and a popular multi-hour "Power BI Full Course". Great for following a guided arc rather than one-off tips.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/@EnterpriseDNA" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Enterprise DNA</span><span class="lvl adv">Inter → Adv</span></div>
-      <p class="why">Real-world modeling, report design and analytical patterns. Go here once you can build a basic report and want to make it genuinely good.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-  </div>
-</div></section>
+  function criteriaAgg(a, g, mode, critIdx) {
+    const rng = evalNode(a[0], g).values;
+    const pred = makeCriteria(scalar(evalNode(a[critIdx], g)));
+    const sumRange = a[2] ? evalNode(a[2], g).values : rng;
+    let total = 0, cnt = 0;
+    for (let i = 0; i < rng.length; i++) if (pred(rng[i])) { const x = sumRange[i]; if (typeof x === 'number') { total += x; cnt++; } else if (x !== '' && x != null && !isNaN(Number(x))) { total += Number(x); cnt++; } }
+    if (mode === 'avg') { if (!cnt) throw new CellError('#DIV/0!'); return total / cnt; }
+    return total;
+  }
+  function criteriaAggS(a, g, mode) {
+    const sumRange = evalNode(a[0], g).values;
+    const pairs = []; for (let i = 1; i < a.length; i += 2) pairs.push([evalNode(a[i], g).values, makeCriteria(scalar(evalNode(a[i + 1], g)))]);
+    let total = 0, cnt = 0;
+    for (let i = 0; i < sumRange.length; i++) {
+      if (pairs.every(([rng, pred]) => pred(rng[i]))) { const x = sumRange[i]; if (typeof x === 'number') { total += x; cnt++; } else if (x !== '' && x != null && !isNaN(Number(x))) { total += Number(x); cnt++; } }
+    }
+    if (mode === 'avg') { if (!cnt) throw new CellError('#DIV/0!'); return total / cnt; }
+    return total;
+  }
 
-<!-- POWER AUTOMATE BLOCK -->
-<section class="topic" style="--accent:#0066FF;--accent-2:#491A8B"><div class="wrap">
-  <span class="eyebrow">Microsoft Power Automate</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">Automate the boring stuff</h2>
-  <p class="lead">Triggers and actions, cloud flows and desktop RPA. The fastest way to learn is to automate one real task you do every week.</p>
+  function callFunc(name, args, grid) {
+    const fn = FN[name];
+    if (!fn) throw new CellError('#NAME?');
+    return fn(args, grid);
+  }
 
-  <div class="subhead"><span class="tag">Courses &amp; guided series</span> Follow start to finish</div>
-  <div class="reslist">
-    <a class="res" href="https://www.youtube.com/@RezaDorrani" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Reza Dorrani — Power Automate for Beginners</span><span class="lvl beg">Beginner → Adv</span></div>
-      <p class="why">The strongest Power Platform teacher on YouTube. His hands-on cloud-flow beginner series is clear, no-fluff and project-based. Open his channel's Playlists and start with the Power Automate beginner series.</p>
-      <span class="src">YouTube · Playlists tab →</span>
-    </a>
-    <a class="res" href="https://learn.microsoft.com/training/powerplatform/power-automate" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Microsoft Learn — Power Automate paths</span><span class="lvl beg">Beginner → Inter</span></div>
-      <p class="why">Build your first cloud flow, work with connectors and expressions, then step into desktop RPA. Free, official, hands-on modules.</p>
-      <span class="src">learn.microsoft.com · Power Automate →</span>
-    </a>
-    <a class="res" href="https://www.microsoft.com/en-us/power-platform/blog/power-automate/power-automate-learning-resources/" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Microsoft — Power Automate learning hub</span><span class="lvl beg">All levels</span></div>
-      <p class="why">Microsoft's own curated index of docs, learning paths and community creators in one place. A reliable launchpad when you're not sure where to look next.</p>
-      <span class="src">microsoft.com · resources →</span>
-    </a>
-  </div>
+  // ---------- public ----------
+  function evaluate(formula, gridData) {
+    let f = String(formula).trim();
+    if (f[0] === '=') f = f.slice(1);
+    if (!f) return { ok: false, error: 'Empty formula' };
+    const grid = makeGrid(gridData.headers, gridData.rows);
+    try {
+      const toks = tokenize(f);
+      const tree = parse(toks);
+      let val = evalNode(tree, grid);
+      val = scalar(val);
+      if (val === true) val = 'TRUE'; else if (val === false) val = 'FALSE';
+      if (typeof val === 'number' && !isFinite(val)) throw new CellError('#NUM!');
+      if (typeof val === 'number') val = Math.round(val * 1e10) / 1e10;
+      return { ok: true, value: isBlank(val) ? '(empty)' : val };
+    } catch (e) {
+      if (e instanceof CellError) return { ok: false, error: e.code };
+      return { ok: false, error: 'Could not parse formula' };
+    }
+  }
 
-  <div class="subhead"><span class="tag">Channels to subscribe to</span> Dip in by topic</div>
-  <div class="reslist">
-    <a class="res" href="https://www.youtube.com/@AprilDunnam" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">April Dunnam</span><span class="lvl beg">Beginner → Inter</span></div>
-      <p class="why">Practical, business-focused automations — Teams, SharePoint and Excel integrations explained step by step. Highly relevant to day-to-day DPM work.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-    <a class="res" href="https://www.youtube.com/@ShanesCows" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Shane Young (PowerApps911)</span><span class="lvl beg">Beginner</span></div>
-      <p class="why">Short, focused, no-rambling "how to do this one task" videos across Power Automate, Power Apps and SharePoint. Microsoft MVP — great when you just need a specific thing solved.</p>
-      <span class="src">YouTube channel →</span>
-    </a>
-    <a class="res" href="https://learn.microsoft.com/shows/" target="_blank" rel="noopener">
-      <div class="rt"><span class="name">Microsoft Learn Shows</span><span class="lvl beg">All levels</span></div>
-      <p class="why">Official walkthroughs and feature deep-dives straight from the source — useful for seeing the "right way" to build something.</p>
-      <span class="src">learn.microsoft.com/shows →</span>
-    </a>
-  </div>
-</div></section>
-
-<!-- CERTIFICATIONS -->
-<section><div class="wrap">
-  <span class="eyebrow">Worth holding</span>
-  <h2 style="font-size:2rem;margin:.2em 0 .3em">Certifications, honestly assessed</h2>
-
-  <div class="grid cols-2">
-    <div class="card">
-      <span class="pill" style="background:#FF7900;color:#fff">Start here</span>
-      <h3 style="margin-top:12px">PL-900 · Power Platform Fundamentals</h3>
-      <p>The friendliest entry point. No prerequisites, no coding, and it covers Power Apps, Power Automate and Power BI at a conceptual level. <strong>Fundamentals certifications don't expire</strong>, so it's a permanent line on your CV. The exam runs to a tight 45-minute limit, so practise pacing.</p>
-      <p><a href="https://learn.microsoft.com/credentials/certifications/power-platform-fundamentals/" target="_blank" rel="noopener">Official page →</a></p>
-    </div>
-    <div class="card">
-      <span class="pill" style="background:#1a1a1a;color:#F2C811">For BI-heavy roles</span>
-      <h3 style="margin-top:12px">PL-300 · Power BI Data Analyst Associate</h3>
-      <p>The serious Power BI credential, covering preparing, modeling, visualizing and securing data. The exam costs $165 USD (varying slightly by region), with a passing score of 700 out of 1000. The credential is valid for one year and can be renewed free through an online assessment on Microsoft Learn. Expect scenario-based questions — hands-on practice matters more than memorising.</p>
-      <p><a href="https://learn.microsoft.com/credentials/certifications/data-analyst-associate/" target="_blank" rel="noopener">Official page →</a> · <a href="https://learn.microsoft.com/credentials/certifications/resources/study-guides/pl-300" target="_blank" rel="noopener">Study guide →</a></p>
-    </div>
-  </div>
-
-  <div class="note warn" style="margin-top:20px"><span class="ic">!</span><div><strong>Heads-up on the Power Automate cert (PL-500).</strong> The PL-500 exam and the Power Automate RPA Developer Associate certification retire on June 30, 2026, with no direct replacement announced. If you're learning Power Automate now, skip chasing this credential — get the skills via the free Learn paths instead, and let PL-900 cover the certification side. Microsoft is broadly shifting toward AI-focused certifications, so watch the Microsoft Learn site for what replaces it.</div></div>
-
-  <p class="hint" style="color:var(--muted);font-size:.88rem;margin-top:14px">Certification details change — always confirm current cost, format and validity on the official Microsoft Learn page before booking.</p>
-</div></section>
-
-<footer class="foot"><div class="wrap">
-  <p>Courses track · DPM Learning Hub. Start free, build something real, certify only if it serves your role. <a href="index.html">Back to home →</a></p>
-</div></footer>
-
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+  root.ExcelEngine = { evaluate };
+  if (typeof module !== 'undefined' && module.exports) module.exports = root.ExcelEngine;
+})(typeof window !== 'undefined' ? window : globalThis);

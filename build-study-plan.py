@@ -1,305 +1,296 @@
-const fs = require('fs');
-const {
-  Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-  AlignmentType, LevelFormat, HeadingLevel, BorderStyle, WidthType, ShadingType,
-  Header, Footer, PageNumber, TableOfContents, ExternalHyperlink, PageBreak
-} = require('docx');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power BI — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="powerbi">
+<div class="scrollbar"></div>
 
-const ACCENT = "0E7490";   // teal to match the SQL track
-const INK = "14233A";
-const CODEBG = "F1F5F9";
-const TIPBG = "ECFEFF";
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html" aria-current="page">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+  </div>
+</div></nav>
 
-// ---------- helpers ----------
-function h1(text) { return new Paragraph({ heading: HeadingLevel.HEADING_1, children: [new TextRun(text)] }); }
-function h2(text) { return new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun(text)] }); }
-function h3(text) { return new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun(text)] }); }
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph" style="color:#1a1a1a">▮</span> Microsoft Power BI</span>
+  <h1>Turn the same data<br>into a dashboard<br>people act on.</h1>
+  <p class="lead">Power BI takes the workbook you've been using and makes it interactive: relationships between tables, calculations that respond to clicks, and visuals chosen on purpose. This track follows the real build order — get data, shape it, model it, write DAX, then visualize.</p>
+  <div class="pills" style="margin-top:22px">
+    <a class="dl" href="assets/data/dpm_projects.xlsx" download>⬇ Sample workbook (.xlsx)</a>
+    <a class="dl ghost" href="assets/data/dpm_projects.csv" download>⬇ CSV</a>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:14px">Get it free: install <strong>Power BI Desktop</strong> from the Microsoft Store, then <em>Get Data ▸ Excel</em> and pick the Projects sheet.</p>
+</div></header>
 
-function p(runs, opts) {
-  if (typeof runs === 'string') runs = [new TextRun(runs)];
-  return new Paragraph(Object.assign({ spacing: { after: 140, line: 276 }, children: runs }, opts || {}));
-}
-function b(t) { return new TextRun({ text: t, bold: true }); }
-function t(t2) { return new TextRun(t2); }
-function mono(t3) { return new TextRun({ text: t3, font: "Consolas", size: 21 }); }
+<!-- DOWNLOAD -->
+<section><div class="wrap">
+  <div class="card" style="border-left:4px solid var(--accent);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+    <div style="flex:1 1 340px">
+      <h3 style="margin:0 0 .3em">Grab the printable cheat sheet</h3>
+      <p style="margin:0;color:var(--ink-soft)">A dense, two-page Power BI &amp; DAX reference — modelling, CALCULATE and filter context, time intelligence, the chart chooser and performance tips — in the style of the classic R/RStudio cards.</p>
+    </div>
+    <a class="btn" href="assets/docs/DAX-PowerBI-Cheat-Sheet.pdf" download>⬇ Download cheat sheet (PDF)</a>
+  </div>
+</div></section>
 
-function step(ref, runs) {
-  if (typeof runs === 'string') runs = [new TextRun(runs)];
-  return new Paragraph({ numbering: { reference: ref, level: 0 }, spacing: { after: 90, line: 270 }, children: runs });
-}
-function bullet(runs) {
-  if (typeof runs === 'string') runs = [new TextRun(runs)];
-  return new Paragraph({ numbering: { reference: "bul", level: 0 }, spacing: { after: 80, line: 270 }, children: runs });
-}
-// code block: one shaded monospace paragraph per line
-function code(lines) {
-  return lines.map((ln, i) => new Paragraph({
-    shading: { type: ShadingType.CLEAR, fill: CODEBG },
-    spacing: { before: i === 0 ? 60 : 0, after: i === lines.length - 1 ? 140 : 0, line: 264 },
-    border: {
-      left: { style: BorderStyle.SINGLE, size: 18, color: ACCENT, space: 8 },
-      top: i === 0 ? { style: BorderStyle.SINGLE, size: 2, color: CODEBG, space: 4 } : undefined,
-    },
-    indent: { left: 120 },
-    children: [new TextRun({ text: ln || " ", font: "Consolas", size: 21, color: "0B3B45" })]
-  }));
-}
-function tip(label, runs) {
-  if (typeof runs === 'string') runs = [new TextRun(runs)];
-  return new Paragraph({
-    shading: { type: ShadingType.CLEAR, fill: TIPBG },
-    spacing: { before: 60, after: 160, line: 270 },
-    border: { left: { style: BorderStyle.SINGLE, size: 18, color: ACCENT, space: 8 } },
-    indent: { left: 120, right: 120 },
-    children: [new TextRun({ text: label + " ", bold: true, color: ACCENT })].concat(runs)
-  });
-}
-function link(text, url) {
-  return new ExternalHyperlink({ link: url, children: [new TextRun({ text: text, style: "Hyperlink" })] });
-}
+<!-- LESSONS BY LEVEL -->
+<section><div class="wrap">
+  <span class="eyebrow">Power BI by level</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .2em">Learn it in the build order</h2>
+  <p class="lead">Power BI follows a pipeline: get data, shape it, model it, write DAX, then visualize. This track is split into <strong>three levels</strong> — tap any card to switch. Each lesson has worked examples on the sample workbook and a task to try before you reveal the answer.</p>
+  <div class="tiers" data-tiers="p" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab"><span class="lvl">1</span><span class="tier-txt"><b>Basics</b><small>What it is &amp; getting data</small></span></button>
+    <button class="tier-btn" data-tier="inter" aria-selected="false" role="tab"><span class="lvl">2</span><span class="tier-txt"><b>Intermediate</b><small>Model &amp; visualize</small></span></button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab"><span class="lvl">3</span><span class="tier-txt"><b>Advanced</b><small>DAX — the calculation language</small></span></button>
+  </div>
 
-// table
-const cellBorder = { style: BorderStyle.SINGLE, size: 1, color: "CCD6DD" };
-const borders = { top: cellBorder, bottom: cellBorder, left: cellBorder, right: cellBorder };
-function tcell(text, width, opts) {
-  opts = opts || {};
-  const runs = Array.isArray(text) ? text : [new TextRun({ text: String(text), bold: !!opts.bold, color: opts.color })];
-  return new TableCell({
-    borders, width: { size: width, type: WidthType.DXA },
-    shading: opts.fill ? { type: ShadingType.CLEAR, fill: opts.fill } : undefined,
-    margins: { top: 70, bottom: 70, left: 120, right: 120 },
-    children: [new Paragraph({ children: runs })]
-  });
-}
-function tableOf(headers, rows, widths) {
-  const total = widths.reduce((a, c) => a + c, 0);
-  const headRow = new TableRow({ tableHeader: true, children: headers.map((hh, i) => tcell(hh, widths[i], { bold: true, fill: ACCENT, color: "FFFFFF" })) });
-  const bodyRows = rows.map(r => new TableRow({ children: r.map((c, i) => tcell(c, widths[i])) }));
-  return new Table({ width: { size: total, type: WidthType.DXA }, columnWidths: widths, rows: [headRow].concat(bodyRows) });
-}
+  <div data-tier-panel="p" data-tier="basic" class="tier-panel active">
+    <details class="lesson open"><summary><span class="caret">▸</span><span class="fn">Orientation</span> Desktop, Service &amp; the build order <span class="tag">Basics</span></summary>
+    <div class="body">
+<div class="grid cols-2">
+    <div class="card"><h3>Desktop vs Service</h3><p><strong>Power BI Desktop</strong> (free, on your PC) is where you build. <strong>Power BI Service</strong> (powerbi.com) is where you <em>publish</em> so others can view and where scheduled refresh lives.</p></div>
+    <div class="card"><h3>The three things you'll make</h3><p>A <strong>semantic model</strong> (the data + relationships + measures), <strong>reports</strong> (interactive multi-visual pages), and <strong>dashboards</strong> (pinned highlights, Service-only).</p></div>
+  </div>
+  <h3 style="margin-top:34px">The build order — every report follows this</h3>
+  <div class="flow">
+    <div class="step"><b>1 · GET DATA</b> Connect to the Excel/CSV/web/SQL source</div><div class="conn"></div>
+    <div class="step"><b>2 · TRANSFORM</b> Clean &amp; shape it in Power Query (same engine as Excel)</div><div class="conn"></div>
+    <div class="step"><b>3 · MODEL</b> Create relationships between tables, set data types</div><div class="conn"></div>
+    <div class="step"><b>4 · DAX</b> Write measures &amp; calculated columns</div><div class="conn"></div>
+    <div class="step"><b>5 · VISUALIZE</b> Choose visuals, add slicers, arrange the page</div><div class="conn"></div>
+    <div class="step"><b>6 · PUBLISH</b> Push to the Service, schedule refresh, share</div>
+  </div>
+    </div></details>
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Power Query</span> Get &amp; shape the data <span class="tag">Basics</span></summary>
+    <div class="body">
+<p class="lead">It's the <em>same</em> Power Query as Excel — Home ▸ Transform data. This is where you manipulate columns and rows before anything reaches a chart.</p>
+  <table class="tbl">
+    <thead><tr><th>You want to…</th><th>Do this</th></tr></thead>
+    <tbody>
+      <tr><td>Remove or reorder columns</td><td>Right-click the header ▸ Remove / drag to reorder</td></tr>
+      <tr><td>Rename a column</td><td>Double-click the header</td></tr>
+      <tr><td>Set a data type</td><td>Click the type icon on the header (text / whole number / date)</td></tr>
+      <tr><td>Filter rows out</td><td>Header dropdown ▸ uncheck values, or Remove Rows</td></tr>
+      <tr><td>Add a calculated column</td><td>Add Column ▸ Custom Column (a one-off, computed during load)</td></tr>
+      <tr><td>Split / merge columns</td><td>Transform ▸ Split Column / Merge Columns</td></tr>
+      <tr><td>Reshape wide ↔ tall</td><td>Transform ▸ Unpivot (wide→tall) / Pivot (tall→wide)</td></tr>
+      <tr><td>Combine tables</td><td>Merge (join on a key) or Append (stack)</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><span class="ic">i</span><div><strong>Rule of thumb:</strong> shape and clean in Power Query; <em>calculate</em> business logic in DAX. Adding a column in Power Query bakes it into the data; a DAX measure recalculates live as users filter.</div></div>
+    </div></details>
+  </div>
 
-const numRefs = ["nDownload", "nSsms", "nConnect", "nQuery", "nImport", "nTrouble", "nUninstall"];
-const numberingConfig = numRefs.map(ref => ({
-  reference: ref,
-  levels: [{ level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 600, hanging: 320 } } } }]
-})).concat([{
-  reference: "bul",
-  levels: [{ level: 0, format: LevelFormat.BULLET, text: "\u2022", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 540, hanging: 280 } } } }]
-}]);
+  <div data-tier-panel="p" data-tier="inter" class="tier-panel">
+    <details class="lesson open"><summary><span class="caret">▸</span><span class="fn">Data model</span> Relationships &amp; the star schema <span class="tag">Model</span></summary>
+    <div class="body">
+<p class="lead">In the Model view you connect tables so a filter on one flows to another. The clean pattern is a <strong>star schema</strong>: one central <em>fact</em> table of events surrounded by <em>dimension</em> tables that describe them.</p>
+  <div class="grid cols-2">
+    <div class="card"><h3>Fact table</h3><p>The events you measure — here, the <strong>Projects</strong> rows (each order, with revenue, FTE, dates). Lots of rows, mostly numbers and keys.</p></div>
+    <div class="card"><h3>Dimension tables</h3><p>The descriptors you slice by — a <strong>Date</strong> table, a <strong>Customer</strong> table, a <strong>Region</strong> table. Fewer rows, used for filtering and grouping.</p></div>
+  </div>
+  <div class="note"><span class="ic">★</span><div>Almost always add a dedicated <strong>Date table</strong> and relate it to your date column. Time-intelligence DAX (YTD, prior month) depends on it.</div></div>
+    </div></details>
+    <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Chart chooser</span> Pick the visual by the question <span class="tag">Visualize</span></summary>
+    <div class="body">
+<p class="lead">A chart's job is to make one comparison obvious. Pick by the <em>question</em> you're answering — not by what looks fanciest. Here's when each earns its place, and when it misleads.</p>
 
-const doc = new Document({
-  styles: {
-    default: { document: { run: { font: "Arial", size: 22, color: INK } } },
-    paragraphStyles: [
-      { id: "Heading1", name: "Heading 1", basedOn: "Normal", next: "Normal", quickFormat: true,
-        run: { size: 30, bold: true, font: "Arial", color: ACCENT },
-        paragraph: { spacing: { before: 320, after: 160 }, outlineLevel: 0, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: "D6E6EB", space: 6 } } } },
-      { id: "Heading2", name: "Heading 2", basedOn: "Normal", next: "Normal", quickFormat: true,
-        run: { size: 25, bold: true, font: "Arial", color: INK },
-        paragraph: { spacing: { before: 220, after: 120 }, outlineLevel: 1 } },
-      { id: "Heading3", name: "Heading 3", basedOn: "Normal", next: "Normal", quickFormat: true,
-        run: { size: 22, bold: true, font: "Arial", color: ACCENT },
-        paragraph: { spacing: { before: 160, after: 80 }, outlineLevel: 2 } },
-      { id: "Hyperlink", name: "Hyperlink", basedOn: "Normal", run: { color: ACCENT, underline: {} } }
-    ]
-  },
-  numbering: { config: numberingConfig },
-  sections: [{
-    properties: { page: { size: { width: 12240, height: 15840 }, margin: { top: 1300, right: 1440, bottom: 1300, left: 1440 } } },
-    headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { after: 0 }, children: [new TextRun({ text: "Setting up SQL Server on Windows", color: "94A3B8", size: 16 })] })] }) },
-    footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "DPM Learning Hub  ·  page ", color: "94A3B8", size: 16 }), new TextRun({ children: [PageNumber.CURRENT], color: "94A3B8", size: 16 })] })] }) },
-    children: [
-      // ---- Title block ----
-      new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: "DPM LEARNING HUB", bold: true, color: ACCENT, size: 18 })] }),
-      new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: "Setting up SQL Server on your Windows laptop", bold: true, size: 44, color: INK })] }),
-      new Paragraph({ spacing: { after: 200 }, children: [new TextRun({ text: "A plain-English, start-to-finish guide: install the database engine, install the tools, connect, and run your first query — then load the sample data and fix the things that commonly go wrong.", size: 22, color: "475569" })] }),
-      new Paragraph({ spacing: { after: 220 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: ACCENT, space: 6 } }, children: [new TextRun({ text: "Companion to the SQL track. Everything here is free. Last reviewed June 2026.", italics: true, size: 18, color: "94A3B8" })] }),
+  <div class="viz-grid" style="margin-top:24px">
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><g fill="var(--accent)"><rect x="6" y="40" width="16" height="26"/><rect x="30" y="22" width="16" height="44"/><rect x="54" y="30" width="16" height="36"/><rect x="78" y="14" width="16" height="52"/><rect x="102" y="48" width="14" height="18"/></g></svg>
+      <h4>Bar / Column</h4>
+      <p class="when"><strong>Use for:</strong> comparing a value across categories (revenue by customer, orders by region). The default, and usually the right answer. Bars (horizontal) suit long category names.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><polyline fill="none" stroke="var(--accent)" stroke-width="3" points="6,52 30,40 54,46 78,22 102,28 114,14"/><g fill="var(--accent)"><circle cx="6" cy="52" r="3"/><circle cx="30" cy="40" r="3"/><circle cx="54" cy="46" r="3"/><circle cx="78" cy="22" r="3"/><circle cx="102" cy="28" r="3"/><circle cx="114" cy="14" r="3"/></g></svg>
+      <h4>Line</h4>
+      <p class="when"><strong>Use for:</strong> a trend over time (orders per month, revenue by quarter). Continuous time on the X axis. Don't use a line for unordered categories.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><g><rect x="14" y="20" width="20" height="46" fill="var(--accent)"/><rect x="14" y="8" width="20" height="12" fill="var(--muted)"/><rect x="50" y="30" width="20" height="36" fill="var(--accent)"/><rect x="50" y="14" width="20" height="16" fill="var(--muted)"/><rect x="86" y="38" width="20" height="28" fill="var(--accent)"/><rect x="86" y="26" width="20" height="12" fill="var(--muted)"/></g></svg>
+      <h4>Stacked column</h4>
+      <p class="when"><strong>Use for:</strong> a total <em>and</em> its parts (revenue per region split by service). Great for the total; hard to compare the middle segments — use 100% stacked if proportion is the point.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><circle cx="60" cy="35" r="28" fill="none" stroke="var(--muted)" stroke-width="14"/><circle cx="60" cy="35" r="28" fill="none" stroke="var(--accent)" stroke-width="14" stroke-dasharray="110 176" transform="rotate(-90 60 35)"/></svg>
+      <h4>Pie / Donut</h4>
+      <p class="when"><strong>Use sparingly:</strong> one part-to-whole split with 2–4 slices (Delivered vs not). <strong>Avoid</strong> with many slices or for comparing similar sizes — a bar chart is clearer almost every time.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><g fill="var(--accent)"><circle cx="20" cy="50" r="4"/><circle cx="40" cy="40" r="4"/><circle cx="55" cy="44" r="4"/><circle cx="70" cy="28" r="4"/><circle cx="85" cy="33" r="4"/><circle cx="100" cy="18" r="4"/><circle cx="48" cy="55" r="4"/><circle cx="92" cy="40" r="4"/></g></svg>
+      <h4>Scatter</h4>
+      <p class="when"><strong>Use for:</strong> relationship between two numbers (FTE days vs revenue) and spotting outliers. Add a third measure as bubble size for "scatter+".</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><g><rect x="4" y="6" width="52" height="40" fill="var(--accent)"/><rect x="60" y="6" width="32" height="24" fill="var(--accent-2)"/><rect x="96" y="6" width="20" height="24" fill="var(--muted)"/><rect x="60" y="34" width="56" height="12" fill="var(--muted)"/><rect x="4" y="50" width="40" height="16" fill="var(--accent-2)"/><rect x="48" y="50" width="68" height="16" fill="var(--muted)"/></g></svg>
+      <h4>Treemap</h4>
+      <p class="when"><strong>Use for:</strong> part-to-whole when you have many categories and only care about the big ones (revenue share by customer). Hard to read precise values — pair with a tooltip.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><text x="6" y="30" font-family="JetBrains Mono" font-size="26" font-weight="700" fill="var(--accent)">€1.2M</text><text x="6" y="50" font-family="Inter" font-size="11" fill="var(--muted)">Total revenue</text><text x="6" y="64" font-family="Inter" font-size="10" fill="var(--accent-2)">▲ 8% vs LM</text></svg>
+      <h4>Card / KPI</h4>
+      <p class="when"><strong>Use for:</strong> a single headline number (total revenue, delivered %). The KPI variant adds a target and trend. Put these top-left — eyes land there first.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><g stroke="var(--line)" stroke-width="1"><line x1="4" y1="22" x2="116" y2="22"/><line x1="4" y1="40" x2="116" y2="40"/><line x1="40" y1="6" x2="40" y2="66"/><line x1="78" y1="6" x2="78" y2="66"/></g><g fill="var(--ink)" font-family="JetBrains Mono" font-size="9"><text x="8" y="18">Region</text><text x="46" y="18">Orders</text><text x="84" y="18">Rev</text><text x="8" y="36">EMEA</text><text x="46" y="36">48</text><text x="84" y="36">€0.9M</text><text x="8" y="54">APAC</text><text x="46" y="54">14</text><text x="84" y="54">€0.3M</text></g></svg>
+      <h4>Matrix / Table</h4>
+      <p class="when"><strong>Use for:</strong> precise numbers people will read or export, and drill-down by rows+columns (Region × Service). When the exact figure matters more than the shape, use a matrix.</p>
+    </div>
+    <div class="viz">
+      <svg viewBox="0 0 120 70"><path d="M30 60 a30 30 0 0 1 60 0" fill="none" stroke="var(--muted)" stroke-width="9"/><path d="M30 60 a30 30 0 0 1 44 -26" fill="none" stroke="var(--accent)" stroke-width="9"/><line x1="60" y1="60" x2="78" y2="40" stroke="var(--ink)" stroke-width="2.5"/><circle cx="60" cy="60" r="3" fill="var(--ink)"/></svg>
+      <h4>Gauge</h4>
+      <p class="when"><strong>Use rarely:</strong> one value against a target (delivered % vs goal). Eats space for one number — a KPI card usually does the job with less ink.</p>
+    </div>
+  </div>
 
-      // ---- Contents ----
-      new Paragraph({ children: [new TextRun({ text: "Contents", bold: true, size: 24, color: INK })], spacing: { after: 120 } }),
-      ...[
-        "What you're actually installing",
-        "Before you start",
-        "Install the SQL Server database engine",
-        "Install SQL Server Management Studio (SSMS)",
-        "Connect to your database",
-        "Create a database and run your first query",
-        "Load the hub's sample data (optional)",
-        "Connecting from other tools",
-        "Troubleshooting the common problems",
-        "Starting, stopping and removing it later",
-      ].map((title, i) => new Paragraph({
-        spacing: { after: 50, line: 264 }, indent: { left: 200 },
-        children: [new TextRun({ text: (i + 1) + ".  ", bold: true, color: ACCENT }), new TextRun({ text: title })]
-      })),
-      new Paragraph({ spacing: { after: 50, line: 264 }, indent: { left: 200 }, children: [new TextRun({ text: "+  ", bold: true, color: ACCENT }), new TextRun({ text: "Quick reference" })] }),
-      new Paragraph({ children: [new PageBreak()] }),
+  <div class="note" style="margin-top:22px"><span class="ic">✓</span><div><strong>Interaction is free:</strong> click a bar and every other visual on the page filters to it. Add <strong>Slicers</strong> (Region, Status, Date) so viewers explore without you. That responsiveness is the whole point of Power BI over a static chart.</div></div>
 
-      // ---- 1. What you're installing ----
-      h1("1. What you're actually installing"),
-      p([t("Two separate things are easy to confuse, and most first-time problems come from mixing them up:")]),
-      p([b("The SQL Server database engine"), t(" — the actual database that stores your data and runs queries. This runs quietly in the background as a Windows service.")]),
-      p([b("SQL Server Management Studio (SSMS)"), t(" — the app you actually open and click around in to write queries and manage the database. SSMS is just a client; it does "), b("not"), t(" contain a database itself.")]),
-      tip("In short —", [t("you install the "), b("engine"), t(" once, then install "), b("SSMS"), t(" to talk to it. You need both.")]),
+  <div class="try"><p class="q">Try it — pick the visual</p>
+    <p>For each question, which visual fits best?</p>
+    <p class="hint">a) "How is order volume trending month by month?" &nbsp; b) "Which customers drive the most revenue?" &nbsp; c) "What's our overall delivered rate right now?" &nbsp; d) "Is higher FTE effort actually linked to higher revenue?"</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <p><strong>a)</strong> Line chart (time trend). &nbsp; <strong>b)</strong> Bar chart, sorted descending. &nbsp; <strong>c)</strong> KPI/Card. &nbsp; <strong>d)</strong> Scatter plot (FTE Days on X, Revenue on Y).</p>
+    </div></details>
+  </div>
+    </div></details>
+  </div>
 
-      h2("Which edition should you pick?"),
-      p("All the editions below are free for learning. For a laptop you're studying on, Developer Edition is the best choice — it's the full product with no feature limits, just not licensed for production use."),
-      tableOf(
-        ["Edition", "Cost", "Good for", "Notes"],
-        [
-          ["Developer", "Free", "Learning & testing (recommended)", "Full features; non-production use only"],
-          ["Express", "Free", "Small apps, light learning", "Free for production; database size capped (50 GB)"],
-          ["Standard / Enterprise", "Paid", "Real production systems", "Not needed for learning"],
-        ],
-        [1700, 1100, 3060, 3500]
-      ),
-      p([t("This guide uses "), b("SQL Server 2025"), t(" (the current release) with "), b("SSMS 22"), t(". The steps are nearly identical for SQL Server 2019/2022 if you already have those.")], { spacing: { before: 140, after: 140 } }),
+  <div data-tier-panel="p" data-tier="adv" class="tier-panel">
+    <details class="lesson open"><summary><span class="caret">▸</span><span class="fn">DAX</span> Measures that react to filters <span class="tag">DAX</span></summary>
+    <div class="body">
+<p class="lead">DAX (Data Analysis Expressions) is the formula language. The single most important distinction:</p>
+  <div class="grid cols-2" style="margin:6px 0 8px">
+    <div class="card"><h3>Calculated column</h3><p>Computed <em>per row</em>, stored in the table, fixed at refresh. Use for row-level attributes you'll group or filter by.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">Days Late =
+IF( ISBLANK(Projects[Actual Go-Live]),
+    BLANK(),
+    Projects[Actual Go-Live] - Projects[Target Go-Live] )</span></div>
+    </div>
+    <div class="card"><h3>Measure</h3><p>Computed <em>on the fly</em> for whatever's on screen, reacting to every slicer and click. Use for all aggregations and KPIs.</p>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">Total Revenue = SUM( Projects[Revenue (EUR)] )</span></div>
+    </div>
+  </div>
+  <div class="note warn"><span class="ic">!</span><div>Beginner trap: don't build measures as calculated columns. If you find yourself wanting a <em>total</em> or <em>average</em> that should change with filters, it's a <strong>measure</strong>.</div></div>
 
-      // ---- 2. Before you start ----
-      h1("2. Before you start"),
-      bullet([t("A laptop running "), b("Windows 10 or Windows 11"), t(" (64-bit).")]),
-      bullet([t("About "), b("6–10 GB of free disk space"), t(" for the engine and tools.")]),
-      bullet([t("An account with "), b("administrator rights"), t(" (you'll be installing software and a Windows service).")]),
-      bullet([t("A stable internet connection — both installers download components as they run.")]),
-      tip("Heads up —", "the install takes 20–40 minutes end to end, mostly waiting on downloads. Set aside time and don't cancel midway."),
+  <h3 style="margin-top:30px">The measures you'll write first</h3>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">Order Count       = COUNTROWS( Projects )
 
-      // ---- 3. Install the engine ----
-      h1("3. Install the SQL Server database engine"),
-      h3("Download"),
-      step("nDownload", [t("Go to the official downloads page: "), link("microsoft.com/en-us/sql-server/sql-server-downloads", "https://www.microsoft.com/en-us/sql-server/sql-server-downloads"), t(".")]),
-      step("nDownload", [t("Under "), b("Developer"), t(" (or "), b("Express"), t(" if you prefer), click "), b("Download now"), t(". You'll get a small installer such as "), mono("SQL2025-SSEI-Dev.exe"), t(".")]),
-      step("nDownload", [t("Right-click the downloaded file and choose "), b("Run as administrator"), t(".")]),
-      tip("Faster option —", [t("if you like the command line, open "), b("PowerShell as administrator"), t(" and run a single winget command instead of the website download:")]),
-      ...code(["winget install Microsoft.SQLServer.2025.Developer"]),
+Delivered Orders  = CALCULATE( [Order Count], Projects[Status] = "Delivered" )
 
-      h3("Run the installer"),
-      step("nDownload", [t("When the installer opens, choose the "), b("Basic"), t(" installation type. This installs the engine with sensible defaults — perfect for learning.")]),
-      step("nDownload", [t("Accept the licence terms and confirm the install location (the default is fine). Click "), b("Install"), t(" and wait for it to finish.")]),
-      step("nDownload", [t("When it completes, the final screen shows your "), b("Connection String"), t(" and, importantly, the "), b("Instance name"), t(". Note it down — for Basic installs it's usually "), mono("MSSQLSERVER"), t(" (the default instance), so you'll connect to the server name "), mono("localhost"), t(".")]),
-      tip("Express note —", [t("the Express installer creates a "), b("named"), t(" instance instead. You'll connect to "), mono(".\\SQLEXPRESS"), t(" (a dot, a backslash, then "), mono("SQLEXPRESS"), t(") rather than "), mono("localhost"), t(".")]),
+Delivered %       = DIVIDE( [Delivered Orders], [Order Count] )
 
-      // ---- 4. Install SSMS ----
-      h1("4. Install SQL Server Management Studio (SSMS)"),
-      p("SSMS is the tool you'll spend your time in. It's a separate, free download from the engine."),
-      step("nSsms", [t("Open the official install page: "), link("learn.microsoft.com/ssms/install/install", "https://learn.microsoft.com/en-us/ssms/install/install"), t(", and click "), b("Download SSMS 22 installer"), t(".")]),
-      step("nSsms", [t("Run the downloaded installer as administrator. Modern SSMS installs through the "), b("Visual Studio Installer"), t(" — when it opens, select the "), b("SQL Server Management Studio"), t(" workload and click "), b("Install"), t(".")]),
-      step("nSsms", [t("Reboot if you're prompted to. Then open "), b("SQL Server Management Studio"), t(" from the Start menu.")]),
-      tip("Command line —", [t("SSMS is also available via winget: "), mono("winget install Microsoft.SQLServerManagementStudio"), t(".")]),
+Avg FTE Days      = AVERAGE( Projects[FTE Days] )
 
-      // ---- 5. Connect ----
-      h1("5. Connect to your database"),
-      p([t("When SSMS opens, a "), b("Connect to Server"), t(" dialog appears. Fill it in like this:")]),
-      tableOf(
-        ["Field", "What to enter"],
-        [
-          ["Server type", "Database Engine"],
-          ["Server name", "localhost   (or  .\\SQLEXPRESS  for Express)"],
-          ["Authentication", "Windows Authentication"],
-          ["Encryption / Trust certificate", "Tick \u201cTrust server certificate\u201d"],
-        ],
-        [2600, 6760]
-      ),
-      p([t("Click "), b("Connect"), t(". On the left, the "), b("Object Explorer"), t(" panel now shows your server. You're in.")], { spacing: { before: 140 } }),
-      tip("Can't connect? ", [t("Jump to "), b("section 9 (Troubleshooting)"), t(" — the two usual culprits are the service not running and a mistyped instance name.")]),
+Distinct Customers= DISTINCTCOUNT( Projects[Customer] )
 
-      // ---- 6. First query ----
-      h1("6. Create a database and run your first query"),
-      p([t("Open a new query window ("), b("New Query"), t(" on the toolbar) and run each block with the "), b("Execute"), t(" button (or press "), mono("F5"), t("). Try these in order — they build a tiny version of the delivery dataset used across the hub.")]),
-      h3("Create a database"),
-      ...code(["CREATE DATABASE DPM_Training;", "GO", "USE DPM_Training;", "GO"]),
-      h3("Create a table"),
-      ...code([
-        "CREATE TABLE orders (",
-        "    order_id     VARCHAR(20) PRIMARY KEY,",
-        "    customer     VARCHAR(100),",
-        "    region       VARCHAR(20),",
-        "    status       VARCHAR(30),",
-        "    revenue      INT",
-        ");"
-      ]),
-      h3("Add a few rows"),
-      ...code([
-        "INSERT INTO orders VALUES",
-        "  ('10-001','Volvo Group','EMEA','Delivered',40684),",
-        "  ('10-002','Harman International','Americas','In Progress',31411),",
-        "  ('10-003','Network International','EMEA','Delivered',31385);"
-      ]),
-      h3("Ask a question"),
-      ...code([
-        "SELECT region, COUNT(*) AS orders, SUM(revenue) AS total_rev",
-        "FROM orders",
-        "GROUP BY region",
-        "ORDER BY total_rev DESC;"
-      ]),
-      p([t("The results grid at the bottom shows revenue grouped by region. That's the same kind of query you practise in the "), b("SQL track's in-browser runner"), t(" — now running on a real SQL Server on your own machine.")], { spacing: { before: 120 } }),
+EMEA Revenue      = CALCULATE( [Total Revenue], Projects[Region] = "EMEA" )</span></div>
+  <p><strong>CALCULATE</strong> is the heart of DAX — it changes the filter context an expression runs in. <strong>DIVIDE</strong> is safe division (returns blank, not an error, on divide-by-zero).</p>
 
-      // ---- 7. Import sample data ----
-      h1("7. Load the hub's sample data (optional)"),
-      p([t("Want the full 72-row dataset rather than three rows? You can import the "), mono("dpm_projects.csv"), t(" file from the learning hub straight into SQL Server.")]),
-      step("nImport", [t("In Object Explorer, expand "), b("Databases"), t(", right-click "), b("DPM_Training"), t(" ▸ "), b("Tasks"), t(" ▸ "), b("Import Flat File\u2026")]),
-      step("nImport", [t("Browse to "), mono("dpm_projects.csv"), t(", give the new table a name (e.g. "), mono("projects"), t("), and click "), b("Next"), t(".")]),
-      step("nImport", [t("The wizard previews the data and guesses each column's type. Adjust any that look wrong (for example make "), mono("revenue"), t(" an integer), then click "), b("Finish"), t(".")]),
-      step("nImport", [t("Run "), mono("SELECT * FROM projects;"), t(" to confirm all 72 rows loaded.")]),
-      tip("Tip —", "if the import wizard misreads a numeric column as text, set its type explicitly on the preview screen rather than fixing it afterwards — it's much less work."),
+  <h3 style="margin-top:30px">Time intelligence (needs a Date table)</h3>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">Revenue YTD       = TOTALYTD( [Total Revenue], 'Date'[Date] )
+Revenue Last Month= CALCULATE( [Total Revenue], PREVIOUSMONTH( 'Date'[Date] ) )</span></div>
 
-      // ---- 8. Other tools ----
-      h1("8. Connecting from other tools"),
-      p([t("SSMS is the main tool on Windows, but you have options:")]),
-      bullet([b("Visual Studio Code"), t(" with the "), b("MSSQL extension"), t(" — a lightweight, cross-platform way to run queries. This is now Microsoft's recommended companion to SSMS.")]),
-      bullet([b("Azure Data Studio"), t(" — "), b("retired in February 2026"), t(" and no longer updated. If you have it installed, migrate to VS Code with the MSSQL extension.")]),
-      bullet([t("Excel and Power BI can both "), b("connect directly"), t(" to your SQL Server (Get Data ▸ SQL Server database) using the same server name, "), mono("localhost"), t(".")]),
+  <div class="try"><p class="q">Try it</p>
+    <p>Write two measures: the <em>number of On Hold orders</em>, and the <em>average revenue per delivered order</em>.</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">On Hold Orders     = CALCULATE( [Order Count], Projects[Status] = "On Hold" )
 
-      // ---- 9. Troubleshooting ----
-      h1("9. Troubleshooting the common problems"),
-      tableOf(
-        ["Symptom", "Likely cause & fix"],
-        [
-          ["\u201cA network-related or instance-specific error\u201d when connecting", "The engine service isn't running, or the server name is wrong. See the two checks below."],
-          ["Wrong server name", "Default install = localhost. Express = .\\SQLEXPRESS. Don't guess — confirm the instance name (see below)."],
-          ["\u201cLogin failed for user\u201d", "Use Windows Authentication for a fresh install. SQL logins only work if you enabled Mixed Mode."],
-          ["Certificate / encryption error", "Tick \u201cTrust server certificate\u201d in the connect dialog."],
-          ["A remote machine can't reach it", "Enable TCP/IP and open firewall port 1433 (not needed for localhost)."],
-        ],
-        [3400, 5960]
-      ),
-      h3("Check 1 — is the service running?"),
-      step("nTrouble", [t("Press "), mono("Win + R"), t(", type "), mono("services.msc"), t(", press Enter.")]),
-      step("nTrouble", [t("Find "), b("SQL Server (MSSQLSERVER)"), t(" — or "), b("SQL Server (SQLEXPRESS)"), t(". Its status should be "), b("Running"), t(". If not, right-click ▸ "), b("Start"), t(", and set "), b("Startup type"), t(" to "), b("Automatic"), t(" so it starts with Windows.")]),
-      h3("Check 2 — what's my exact instance name?"),
-      step("nTrouble", [t("Open "), b("SQL Server Configuration Manager"), t(" from the Start menu.")]),
-      step("nTrouble", [t("Under "), b("SQL Server Services"), t(", the running service name in brackets is your instance. Connect to "), mono("localhost\\<thatname>"), t(" (or just "), mono("localhost"), t(" if it says MSSQLSERVER).")]),
-      h3("Enabling SQL logins (only if you need them)"),
-      p([t("By default the server uses Windows Authentication only. To allow username/password (\u201cSQL\u201d) logins: in SSMS, right-click the server ▸ "), b("Properties"), t(" ▸ "), b("Security"), t(" ▸ select "), b("SQL Server and Windows Authentication mode"), t(", click OK, then restart the service from "), mono("services.msc"), t(".")]),
+Avg Delivered Rev  = DIVIDE(
+                       CALCULATE( [Total Revenue], Projects[Status]="Delivered" ),
+                       [Delivered Orders]
+                     )</span></div>
+    </div></details>
+  </div>
+    </div></details>
+  </div>
 
-      // ---- 10. Managing & removing ----
-      h1("10. Starting, stopping and removing it later"),
-      bullet([b("Start / stop"), t(" the engine any time from "), mono("services.msc"), t(" or SQL Server Configuration Manager. Stopping it frees memory when you're not using it.")]),
-      bullet([b("Uninstall"), t(" via "), b("Settings ▸ Apps ▸ Installed apps"), t(": remove "), b("Microsoft SQL Server 2025"), t(" (run its setup to remove specific features) and "), b("SQL Server Management Studio"), t(" separately.")]),
-      step("nUninstall", [t("To remove a database without uninstalling everything, right-click it in Object Explorer ▸ "), b("Delete"), t(" ▸ tick "), b("Close existing connections"), t(" ▸ OK.")]),
+</div></section>
 
-      // ---- Appendix ----
-      h1("Quick reference"),
-      tableOf(
-        ["Setting", "Default install", "Express install"],
-        [
-          ["Server name", "localhost", ".\\SQLEXPRESS"],
-          ["Authentication", "Windows Authentication", "Windows Authentication"],
-          ["Service name", "SQL Server (MSSQLSERVER)", "SQL Server (SQLEXPRESS)"],
-          ["Default port", "1433", "dynamic"],
-          ["Run a query", "New Query, then F5", "New Query, then F5"],
-        ],
-        [2600, 3380, 3380]
-      ),
-      p([b("Useful links")], { spacing: { before: 180, after: 60 } }),
-      bullet([link("SQL Server downloads", "https://www.microsoft.com/en-us/sql-server/sql-server-downloads")]),
-      bullet([link("Install SSMS", "https://learn.microsoft.com/en-us/ssms/install/install")]),
-      bullet([link("MSSQL extension for VS Code", "https://learn.microsoft.com/en-us/sql/tools/visual-studio-code/mssql-extensions")]),
-      p([t("Then come back to the hub's "), b("SQL track"), t(" and run the examples against your own server.")], { spacing: { before: 160 } }),
-    ]
-  }]
-});
+<!-- GOOD HABITS -->
+<section style="background:var(--surface)"><div class="wrap">
+  <span class="eyebrow">Good habits</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">What separates a clean report</h2>
+  <div class="deflist">
+    <div class="d"><b>Measures, not columns</b> — if a total or average should react to slicers, it's a measure. Reserve calculated columns for row-level attributes you group or filter by.</div>
+    <div class="d"><b>Star schema first</b> — one fact table surrounded by dimensions. The engine and DAX are built for it; a single flat table fights you later.</div>
+    <div class="d"><b>Always add a Date table</b> — and mark it as one. Every time-intelligence measure (YTD, prior month, YoY) depends on it.</div>
+    <div class="d"><b>DIVIDE, not /</b> — <code>DIVIDE(a, b, 0)</code> returns a blank or your fallback instead of a divide-by-zero error.</div>
+    <div class="d"><b>One visual, one question</b> — pick the chart by the comparison you're making, then add slicers and let interactions do the exploring.</div>
+    <div class="d"><b>Name &amp; format measures</b> — explicit, well-named, pre-formatted measures keep a model readable and reusable.</div>
+  </div>
+</div></section>
 
-Packer.toBuffer(doc).then(buf => {
-  fs.writeFileSync("/mnt/user-data/outputs/Setting-up-SQL-Server-on-Windows.docx", buf);
-  console.log("written:", buf.length, "bytes");
-});
+<!-- DAX VALIDATOR -->
+<section style="background:var(--surface)"><div class="wrap">
+  <span class="eyebrow">Try it for real</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">DAX checker</h2>
+  <p class="lead">Write a measure and have it checked for syntax and common mistakes. DAX needs a live Power BI model to actually calculate, so this is a <b>syntax &amp; style check</b> — it catches unbalanced brackets, unknown functions and habits worth fixing, against a model with tables <code>Fact_Orders</code> and <code>Dim_Region</code>.</p>
+
+  <div class="play" id="dax-play">
+    <textarea class="code-in" id="dax-in" spellcheck="false" rows="2">Total Revenue := SUM(Fact_Orders[revenue])</textarea>
+    <div class="play-actions">
+      <button class="btn" id="dax-run">▶ Check</button>
+    </div>
+    <div class="chips">
+      <button class="chip-btn" data-f="Total Revenue := SUM(Fact_Orders[revenue])">SUM</button>
+      <button class="chip-btn" data-f="Delivered Orders := CALCULATE(COUNTROWS(Fact_Orders), Fact_Orders[status]=&quot;Delivered&quot;)">CALCULATE</button>
+      <button class="chip-btn" data-f="On-Time % := DIVIDE([Delivered Orders], COUNTROWS(Fact_Orders), 0)">DIVIDE</button>
+      <button class="chip-btn" data-f="Customers := DISTINCTCOUNT(Fact_Orders[customer])">DISTINCTCOUNT</button>
+      <button class="chip-btn" data-f="Bad := SUM(Fact_Orders[revenue]) / COUNTROWS(Fact_Orders)">/ (tip)</button>
+      <button class="chip-btn" data-f="Oops := CALCULATE([Total Revenue]">unbalanced</button>
+    </div>
+    <div class="out" id="dax-out" style="margin-top:12px"></div>
+  </div>
+</div></section>
+
+<!-- EXAM -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Test yourself</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Power BI final exam</h2>
+  <p class="lead">A randomised mix across the whole track — modelling, DAX, visuals and the get/transform/publish flow. Retake it; the questions reshuffle each time.</p>
+  <div class="exam" data-bank="powerbiBank" data-count="8"></div>
+</div></section>
+
+<script type="application/json" id="powerbiBank">
+[
+ {"q":"You want a total that updates when users click a region slicer. Build a…","opts":["Measure","Calculated column","Power Query custom column","Calculated table"],"correct":0,"why":"Measures recalculate live in the current filter context. Columns and Power Query values are fixed at refresh."},
+ {"q":"Which function safely handles divide-by-zero in DAX?","opts":["DIVIDE","SUM","CALCULATE","ROUND"],"correct":0,"why":"DIVIDE(numerator, denominator, [alternate]) returns BLANK (or your alternate) instead of an error when the denominator is zero."},
+ {"q":"You have 8 customers and want to compare their revenue. Best default visual?","opts":["Bar chart sorted descending","Pie chart","Gauge","Card"],"correct":0,"why":"A pie with 8 similar slices is hard to read; a sorted bar chart makes the ranking instantly clear."},
+ {"q":"What's the single most important DAX function for changing filter context?","opts":["CALCULATE","SUM","FORMAT","RELATED"],"correct":0,"why":"CALCULATE evaluates an expression under modified filters — the backbone of most non-trivial measures."},
+ {"q":"For a clean, fast model in Power BI you should aim for a…","opts":["Star schema (fact + dimensions)","Single flat table","Snowflake with deep chains","One table per column"],"correct":0,"why":"Power BI's engine and DAX are optimised for a star schema: a central fact table surrounded by dimensions."},
+ {"q":"Power BI <b>Desktop</b> vs <b>Service</b> — which builds reports, which shares them?","opts":["Desktop builds; Service shares/refreshes in the browser","Service builds; Desktop shares","Both only build","Both only share"],"correct":0,"why":"You author in Desktop, then publish to the Service where others view, and scheduled refresh keeps data current."},
+ {"q":"Where should you clean and reshape data before modelling?","opts":["Power Query (Transform data)","DAX measures","The visual's format pane","Excel, every time"],"correct":0,"why":"Power Query is the transform layer — its steps replay on every refresh. DAX is for calculation, not cleaning."},
+ {"q":"A calculated column vs a measure: the column is…","opts":["Computed row-by-row at refresh and stored","Recomputed live per filter context","Only for slicers","Faster for every total"],"correct":0,"why":"A calculated column is evaluated per row and stored at refresh; a measure is evaluated on the fly in context."},
+ {"q":"To count unique customers, use…","opts":["DISTINCTCOUNT(Fact_Orders[customer])","COUNT(Fact_Orders[customer])","SUM(Fact_Orders[customer])","COUNTROWS(customer)"],"correct":0,"why":"DISTINCTCOUNT returns the number of unique values; COUNT just counts non-blank rows."},
+ {"q":"Relationships between fact and dimension tables are typically…","opts":["One-to-many (dimension → fact)","Many-to-many by default","One-to-one","Not needed"],"correct":0,"why":"A dimension's key is unique (one) and appears many times in the fact, giving a one-to-many relationship."},
+ {"q":"You need a KPI like 'this month vs last month'. The right tool is…","opts":["A time-intelligence measure (e.g. with DATEADD / SAMEPERIODLASTYEAR)","A calculated column of dates","A slicer only","Conditional formatting"],"correct":0,"why":"Time-intelligence DAX shifts the date filter to compare periods — best paired with a proper date table."},
+ {"q":"Which visual is the wrong default for showing a single headline number?","opts":["Line chart","Card","KPI visual","Multi-row card"],"correct":0,"why":"A single value is clearest as a Card/KPI; a line chart implies a trend over a dimension."}
+]
+</script>
+
+<footer class="foot"><div class="wrap">
+  <p>Power BI track · DPM Learning Hub. Build order: get → transform → model → DAX → visualize → publish. <a href="powerautomate.html">Next up: Power Automate →</a></p>
+</div></footer>
+
+<script src="assets/js/dax-validator.js"></script>
+<script src="assets/js/playground.js"></script>
+<script src="assets/js/exam.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,282 +1,247 @@
-#!/usr/bin/env python3
-# SQL Cheat Sheet — Posit/RStudio-style reference card (2-page, 3-column), teal theme.
-from reportlab.lib.pagesizes import letter, landscape
-from reportlab.lib.units import inch
-from reportlab.lib import colors
-from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph,
-                                Table, TableStyle, Spacer, KeepTogether, Flowable,
-                                NextPageTemplate)
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_LEFT
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Automate — DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="flow">
+<div class="scrollbar"></div>
 
-OUT = "/mnt/user-data/outputs/SQL-Cheat-Sheet.pdf"
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html" aria-current="page">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+  </div>
+</div></nav>
 
-TEAL = colors.HexColor("#0E7490"); DARK = colors.HexColor("#14233A")
-INK = colors.HexColor("#26323F"); MUTED = colors.HexColor("#6B7280")
-CODEBG = colors.HexColor("#ECF6F9"); CODEINK = colors.HexColor("#0B3B45")
-LINE = colors.HexColor("#D5E6EC")
+<header class="hero"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">⚡</span> Microsoft Power Automate</span>
+  <h1>Let the repetitive<br>work run itself.</h1>
+  <p class="lead">Power Automate builds flows: "when <em>this</em> happens, do <em>that</em>." Notify a channel when an order changes, email a weekly summary, file an attachment, or drive a legacy portal that has no API. This track explains every building block, then hands you flows to design — with the correct flow as the answer key.</p>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:14px">Open <strong>make.powerautomate.com</strong> with your work account to follow along. No data download needed — the exercises are design challenges.</p>
+</div></header>
 
-PW, PH = landscape(letter)
-M = 0.38 * inch; GUT = 13; HEADER_H = 62; NCOL = 3
-COLW = (PW - 2*M - (NCOL-1)*GUT) / NCOL
+<!-- DOWNLOAD -->
+<section><div class="wrap">
+  <div class="card" style="border-left:4px solid var(--accent);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+    <div style="flex:1 1 340px">
+      <h3 style="margin:0 0 .3em">Grab the printable cheat sheet</h3>
+      <p style="margin:0;color:var(--ink-soft)">A dense, two-page Power Automate reference — flow types, controls, and the expression functions you'll reach for most (triggerBody, items, formatDateTime, OData filters) — in the style of the classic R/RStudio cards.</p>
+    </div>
+    <a class="btn" href="assets/docs/Power-Automate-Cheat-Sheet.pdf" download>⬇ Download cheat sheet (PDF)</a>
+  </div>
+</div></section>
 
-desc = ParagraphStyle("desc", fontName="Helvetica", fontSize=7.2, leading=8.6, textColor=INK, alignment=TA_LEFT)
-codes = ParagraphStyle("code", fontName="Courier-Bold", fontSize=7.0, leading=8.4, textColor=CODEINK)
-sub = ParagraphStyle("sub", fontName="Helvetica-Bold", fontSize=7.4, leading=9, textColor=TEAL)
-intro = ParagraphStyle("intro", fontName="Helvetica", fontSize=7.4, leading=9.2, textColor=INK)
+<!-- WHAT IS IT -->
+<section><div class="wrap">
+  <span class="eyebrow">Orientation</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">The one idea behind every flow</h2>
+  <p class="lead">A flow is a <strong>trigger</strong> followed by one or more <strong>actions</strong>. The trigger is the "when"; the actions are the "then". Everything else — conditions, loops, variables — just makes the "then" smarter.</p>
+  <div class="flow" style="max-width:560px">
+    <div class="step"><b>TRIGGER</b> When a new email arrives with "GOLD order" in the subject</div><div class="conn"></div>
+    <div class="step"><b>ACTION</b> Post a message to the Delivery Teams channel</div><div class="conn"></div>
+    <div class="step"><b>ACTION</b> Add a row to the tracking spreadsheet</div>
+  </div>
+</div></section>
 
-class SectionHeader(Flowable):
-    def __init__(self, text, w): super().__init__(); self.text=text; self.w=w; self.h=13
-    def wrap(self,*a): return (self.w,self.h)
-    def draw(self):
-        c=self.canv; c.setFillColor(TEAL); c.roundRect(0,0,self.w,self.h,2.5,fill=1,stroke=0)
-        txt=self.text.replace("&amp;","&").replace("&gt;",">").replace("&lt;","<")
-        c.setFillColor(colors.white); c.setFont("Helvetica-Bold",8); c.drawString(5,3.3,txt.upper())
+<!-- FLOW TYPES -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">The four flow types</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Pick the right starting point</h2>
+  <div class="grid cols-2">
+    <div class="card"><h3>⚡ Automated cloud flow</h3><p>Starts on its own when an event happens — an email arrives, a list item changes, a file lands in SharePoint. <em>The most common type.</em></p><p class="hint" style="color:var(--muted);font-size:.88rem">Trigger example: <span class="mono">When a new email arrives (V3)</span></p></div>
+    <div class="card"><h3>👆 Instant cloud flow</h3><p>You start it on demand — a button in the app, or from a Teams/Power Apps action. Can ask you for inputs first.</p><p class="hint" style="color:var(--muted);font-size:.88rem">Trigger: <span class="mono">Manually trigger a flow</span></p></div>
+    <div class="card"><h3>⏰ Scheduled cloud flow</h3><p>Runs on a clock — every Monday 8am, every hour, the 1st of the month. Built on the <span class="mono">Recurrence</span> trigger.</p><p class="hint" style="color:var(--muted);font-size:.88rem">Trigger: <span class="mono">Recurrence</span></p></div>
+    <div class="card"><h3>🖥 Desktop flow (RPA)</h3><p>Automates the <em>screen</em> — clicking buttons, typing into fields, reading a legacy web portal that has no connector. Runs in Power Automate Desktop.</p><p class="hint" style="color:var(--muted);font-size:.88rem">For apps with no API — e.g. driving GOLD in a browser</p></div>
+  </div>
+  <div class="note"><span class="ic">i</span><div><strong>Cloud vs Desktop:</strong> if there's a connector or API, stay in the cloud — it's more reliable. Reach for a desktop flow only when you must mimic a human clicking through an interface.</div></div>
+</div></section>
 
-def kv_table(rows,w):
-    cw0=w*0.46; cw1=w-cw0
-    data=[[Paragraph(code,codes),Paragraph(d,desc)] for code,d in rows]
-    t=Table(data,colWidths=[cw0,cw1])
-    t.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),
-        ("LEFTPADDING",(0,0),(-1,-1),3),("RIGHTPADDING",(0,0),(-1,-1),3),
-        ("TOPPADDING",(0,0),(-1,-1),1.6),("BOTTOMPADDING",(0,0),(-1,-1),1.6),
-        ("BACKGROUND",(0,0),(0,-1),CODEBG),("LINEBELOW",(0,0),(-1,-2),0.3,LINE),
-        ("BOX",(0,0),(-1,-1),0.3,LINE)]))
-    return t
+<!-- ELEMENTS -->
+<section><div class="wrap">
+  <span class="eyebrow">The building blocks</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Every element, explained</h2>
+  <p class="lead">These are the pieces you drag together inside a flow, grouped into <strong>three levels</strong> — tap a card to switch. Learn what each is for and you can build almost anything. Remember the spine: a <strong>trigger</strong> (the "when") followed by <strong>actions</strong> (the "then").</p>
 
-def section(title,rows,w=COLW):
-    return KeepTogether([SectionHeader(title,w),Spacer(1,2.5),kv_table(rows,w),Spacer(1,7)])
+  <div class="tiers" data-tiers="f" role="tablist">
+    <button class="tier-btn" data-tier="basic" aria-selected="true" role="tab"><span class="lvl">1</span><span class="tier-txt"><b>Basics</b><small>Trigger, action, connector, data</small></span></button>
+    <button class="tier-btn" data-tier="logic" aria-selected="false" role="tab"><span class="lvl">2</span><span class="tier-txt"><b>Logic</b><small>Conditions, loops, variables</small></span></button>
+    <button class="tier-btn" data-tier="adv" aria-selected="false" role="tab"><span class="lvl">3</span><span class="tier-txt"><b>Advanced</b><small>Expressions &amp; approvals</small></span></button>
+  </div>
 
-story=[NextPageTemplate("later")]
-story.append(Paragraph("A printable quick reference for everyday SQL — reading, summarising and joining data. "
-    "Examples use standard / SQLite-style syntax; a few dialect differences are flagged at the end.", intro))
-story.append(Spacer(1,7))
+  <div data-tier-panel="f" data-tier="basic" class="tier-panel active">
 
-story.append(section("The basics",[
-    ("SELECT a, b","Choose the columns to return."),
-    ("SELECT *","Return every column."),
-    ("FROM t","The table to read from."),
-    ("AS name","Rename a column or table (alias)."),
-    (";","Ends a statement."),
-    ("-- text","Single-line comment ( /* … */ block)."),
-]))
-story.append(section("Clause order",[
-    ("Written:","SELECT &gt; FROM &gt; WHERE &gt; GROUP BY &gt; HAVING &gt; ORDER BY &gt; LIMIT"),
-    ("Runs as:","FROM &gt; WHERE &gt; GROUP BY &gt; HAVING &gt; SELECT &gt; ORDER BY &gt; LIMIT"),
-    ("Why it matters","SELECT runs late — so a column alias can't be used in WHERE."),
-]))
-story.append(section("Filter rows — WHERE",[
-    ("WHERE region = 'EMEA'","Keep matching rows. Text in single quotes."),
-    ("= &lt;&gt; &gt; &lt; &gt;= &lt;=","Comparison operators (&lt;&gt; = not equal)."),
-    ("AND / OR / NOT","Combine or negate conditions."),
-    ("( … )","Group conditions to control precedence."),
-]))
-story.append(section("Match &amp; ranges",[
-    ("LIKE 'SD-WAN%'","Pattern: % = any text, _ = one char."),
-    ("IN ('A','B','C')","Equals any value in a list."),
-    ("BETWEEN 10 AND 20","Inclusive range (numbers or dates)."),
-    ("IS NULL / IS NOT NULL","Test for missing values."),
-    ("NOT IN / NOT LIKE","Negate a match."),
-]))
-story.append(section("Sort, limit, dedupe",[
-    ("ORDER BY revenue DESC","Sort high-to-low (ASC = default)."),
-    ("ORDER BY 2","Sort by the 2nd selected column."),
-    ("LIMIT 10","Return only the first 10 rows."),
-    ("LIMIT 10 OFFSET 20","Skip 20, then take 10 (paging)."),
-    ("SELECT DISTINCT col","Return each value once."),
-]))
-story.append(section("Aggregate functions",[
-    ("COUNT(*)","Number of rows."),
-    ("COUNT(col)","Non-NULL values in a column."),
-    ("COUNT(DISTINCT col)","Number of distinct values."),
-    ("SUM / AVG(col)","Total / mean."),
-    ("MIN / MAX(col)","Smallest / largest."),
-    ("ROUND(x, 1)","Round to n decimals."),
-]))
-story.append(section("GROUP BY &amp; HAVING",[
-    ("GROUP BY region","One result row per group."),
-    ("SUM(rev) AS total","Aggregate within each group; alias it."),
-    ("HAVING COUNT(*) &gt;= 10","Filter groups after aggregating."),
-    ("WHERE vs HAVING","WHERE filters rows first; HAVING filters groups."),
-]))
-story.append(section("Joins",[
-    ("FROM a JOIN b ON a.id=b.id","INNER join — only matching rows."),
-    ("LEFT JOIN b ON …","All left rows + matches (NULLs if none)."),
-    ("RIGHT / FULL JOIN","All right / all rows from both sides."),
-    ("CROSS JOIN","Every combination (no ON)."),
-    ("FROM orders o JOIN …","Alias tables to keep refs short (o.col)."),
-    ("USING (region)","Shorthand when the key name matches."),
-]))
-story.append(section("Set operators",[
-    ("UNION","Stack two results, remove duplicates."),
-    ("UNION ALL","Stack, keep duplicates (faster)."),
-    ("INTERSECT","Rows present in both."),
-    ("EXCEPT","Rows in the first but not the second."),
-]))
-story.append(section("Subqueries",[
-    ("WHERE x &gt; (SELECT AVG(x) …)","Scalar — a single value."),
-    ("WHERE id IN (SELECT id …)","List — match against many values."),
-    ("WHERE EXISTS (SELECT 1 …)","True if the subquery returns any row."),
-    ("FROM (SELECT …) AS s","Derived table — query a query."),
-]))
-story.append(section("CTE — WITH",[
-    ("WITH t AS (","Name a temporary result set,"),
-    ("  SELECT … )","build it once,"),
-    ("SELECT * FROM t","then use it like a table — clearer than nesting."),
-    ("WITH a AS(…), b AS(…)","Chain several CTEs with commas."),
-]))
-story.append(section("Window functions",[
-    ("ROW_NUMBER() OVER (ORDER BY x)","Sequential number per row."),
-    ("RANK() / DENSE_RANK()","Ranking (with / without gaps)."),
-    ("SUM(x) OVER (PARTITION BY g)","Group total shown on every row."),
-    ("SUM(x) OVER (ORDER BY d)","Running total."),
-    ("LAG / LEAD(x) OVER (ORDER BY d)","Previous / next row's value."),
-]))
-story.append(section("CASE — if/then",[
-    ("CASE WHEN x&gt;=30000","Start a conditional expression."),
-    ("  THEN 'big'","Result when the test is true."),
-    ("  ELSE 'small' END","Fallback; END closes it."),
-    ("Use it in SELECT","…or inside SUM() to pivot, or in ORDER BY."),
-]))
-story.append(section("Text functions",[
-    ("UPPER(s) / LOWER(s)","Change case."),
-    ("LENGTH(s)","Number of characters."),
-    ("SUBSTR(s, start, len)","Slice out part of a string."),
-    ("TRIM(s)","Strip leading/trailing spaces."),
-    ("REPLACE(s, old, new)","Swap text by content."),
-    ("a || b","Concatenate (CONCAT() in some dialects)."),
-]))
-story.append(section("Numbers &amp; math",[
-    ("ROUND(x, n) / ABS(x)","Round / absolute value."),
-    ("CEIL(x) / FLOOR(x)","Round up / down to integer."),
-    ("a % b","Remainder (MOD(a,b) in some dialects)."),
-    ("100.0 * a / b","Force decimals — integer / integer truncates."),
-]))
-story.append(section("Dates (vary by dialect)",[
-    ("CURRENT_DATE / NOW()","Today / current timestamp."),
-    ("SQLite","DATE('now'), strftime('%Y', d)"),
-    ("PostgreSQL","DATE_PART('year', d), d - INTERVAL '7 day'"),
-    ("SQL Server","GETDATE(), DATEPART(year, d)"),
-    ("Tip","Store dates as DATE/ISO text, not free text."),
-]))
-story.append(section("NULL handling",[
-    ("IS NULL / IS NOT NULL","The only safe NULL test."),
-    ("x = NULL","Never matches — NULL is 'unknown'."),
-    ("COALESCE(a, b, 0)","First value that isn't NULL."),
-    ("NULLIF(a, b)","NULL when a equals b (avoid /0)."),
-]))
-story.append(section("Create &amp; constrain (DDL)",[
-    ("CREATE TABLE t (","Define a new table:"),
-    ("  id INTEGER PRIMARY KEY,","types: INTEGER, REAL, TEXT, DATE, BOOLEAN"),
-    ("  region TEXT NOT NULL,","NOT NULL · UNIQUE · DEFAULT v"),
-    ("  cust_id INT REFERENCES c(id))","FOREIGN KEY links tables."),
-    ("DROP / ALTER TABLE","Remove a table / add a column."),
-]))
-story.append(section("Modify data (DML)",[
-    ("INSERT INTO t (a,b) VALUES (1,'x')","Add a row."),
-    ("INSERT INTO t SELECT …","Insert query results."),
-    ("UPDATE t SET a=1 WHERE id=5","Change rows — always add WHERE!"),
-    ("DELETE FROM t WHERE id=5","Remove rows — WHERE or you clear all."),
-]))
-story.append(section("Common patterns",[
-    ("Top-N per group","ROW_NUMBER() OVER(PARTITION BY g ORDER BY x DESC), keep rn&lt;=3"),
-    ("% of total","100.0 * x / SUM(x) OVER ()"),
-    ("Running total","SUM(x) OVER (ORDER BY d)"),
-    ("Pivot a column","SUM(CASE WHEN region='EMEA' THEN rev END)"),
-    ("De-duplicate","GROUP BY key  —or—  SELECT DISTINCT"),
-]))
-story.append(section("Gotchas",[
-    ("'text' vs \"ident\"","Single quotes = text; double quotes = column/table names."),
-    ("= NULL","Use IS NULL — equality never matches NULL."),
-    ("Integer division","3/2 = 1; multiply by 1.0 for decimals."),
-    ("COUNT(col)","Skips NULLs; COUNT(*) counts all rows."),
-    ("Aggregates in WHERE","Not allowed — use HAVING."),
-]))
-story.append(section("Dialect quick notes",[
-    ("Limit rows","LIMIT n (SQLite/PG/MySQL) · TOP n (SQL Server) · FETCH FIRST n ROWS"),
-    ("Concatenate","a || b (standard/SQLite/PG) · CONCAT(a,b) (MySQL/SQL Server)"),
-    ("Quote a name","\"col\" standard · [col] SQL Server · `col` MySQL"),
-    ("Case sensitivity","LIKE is case-insensitive in some engines, not others."),
-]))
+  <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Trigger</span> The "when" <span class="tag">Core</span></summary>
+  <div class="body"><p>The event that starts the flow. Exactly one per flow. Choosing it well matters: <span class="mono">When an item is created</span> vs <span class="mono">created or modified</span> changes everything downstream. Many triggers have filters (e.g. only emails with a certain subject) — use them to avoid firing on everything.</p></div></details>
 
-story.append(section("Transactions",[
-    ("BEGIN; … COMMIT;","Group changes and save them together."),
-    ("ROLLBACK;","Undo everything since BEGIN."),
-    ("Use for multi-step writes","All-or-nothing — no half-finished updates."),
-]))
-story.append(section("Views &amp; indexes",[
-    ("CREATE VIEW v AS SELECT …","Save a query as a reusable virtual table."),
-    ("SELECT * FROM v","Query the view like any table."),
-    ("CREATE INDEX ix ON t(col)","Speed up filters and joins on a column."),
-    ("Trade-off","Faster reads, slightly slower writes."),
-]))
-story.append(section("Performance tips",[
-    ("Filter early","WHERE before joins/aggregates cuts the work."),
-    ("Avoid SELECT *","Pull only the columns you need."),
-    ("Index join &amp; filter keys","Big speed-up on large tables."),
-    ("EXPLAIN your query","See how the engine plans to run it."),
-    ("Keep functions off filters","WHERE YEAR(d)=2025 can skip an index."),
-]))
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Action</span> The "then" <span class="tag">Core</span></summary>
+  <div class="body"><p>A single step the flow performs: send an email, create a file, post to Teams, add a spreadsheet row, call an API. Actions run top to bottom; each can use outputs from the steps above it.</p></div></details>
 
-story.append(section("Window frames",[
-    ("… OVER (ORDER BY d","Add a frame to a window function:"),
-    ("  ROWS BETWEEN 2 PRECEDING","a 3-row moving window"),
-    ("  AND CURRENT ROW)","e.g. a 3-period moving average."),
-    ("UNBOUNDED PRECEDING","From the first row (running total)."),
-]))
-story.append(section("String aggregation",[
-    ("GROUP_CONCAT(col, ', ')","SQLite / MySQL: join a group into one string."),
-    ("STRING_AGG(col, ', ')","PostgreSQL / SQL Server equivalent."),
-    ("With GROUP BY","One combined value per group."),
-]))
-story.append(section("Conditional aggregation",[
-    ("SUM(CASE WHEN c THEN 1 END)","Count rows meeting a condition."),
-    ("AVG(CASE WHEN c THEN x END)","Aggregate just a subset, inline."),
-    ("One CASE per column","Turns rows into a pivot table."),
-]))
-story.append(section("Reading a query",[
-    ("Read inside-out","Start at FROM and the innermost subquery."),
-    ("Build up gradually","Add one clause, run, check, repeat."),
-    ("SELECT * first","See raw rows before you aggregate."),
-    ("Comment to isolate","-- out lines to find a problem."),
-]))
-story.append(section("Tables &amp; relationships",[
-    ("Primary key","Uniquely identifies each row."),
-    ("One-to-many","Foreign key lives on the 'many' side."),
-    ("Many-to-many","Add a junction table holding both keys."),
-    ("See Foundations","for ERDs &amp; schema design."),
-]))
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Connector</span> The app it talks to <span class="tag">Core</span></summary>
+  <div class="body"><p>A bundle of triggers and actions for one service — Outlook, Teams, SharePoint, Excel Online, Planner, Approvals, Dataverse. Hundreds exist. <em>Premium</em> connectors (e.g. HTTP, SQL, custom) need the right licence.</p></div></details>
 
-def draw_header(canvas,doc,first):
-    canvas.saveState()
-    if first:
-        canvas.setFillColor(TEAL); canvas.rect(0,PH-HEADER_H,PW,HEADER_H,fill=1,stroke=0)
-        canvas.setFillColor(colors.white); canvas.setFont("Helvetica-Bold",19)
-        canvas.drawString(M,PH-30,"SQL Cheat Sheet")
-        canvas.setFont("Helvetica",9.5)
-        canvas.drawString(M,PH-46,"A double-sided quick reference  ·  DPM Learning Hub")
-        canvas.setFont("Helvetica-Bold",9); canvas.drawRightString(PW-M,PH-38,"ahmedwalid4499.github.io")
-    canvas.setFillColor(MUTED); canvas.setFont("Helvetica",7)
-    canvas.drawString(M,M*0.55,"DPM Learning Hub — SQL track")
-    canvas.drawRightString(PW-M,M*0.55,"Page %d of 2"%doc.page)
-    canvas.setStrokeColor(LINE); canvas.setLineWidth(0.5); canvas.line(M,M*0.55+11,PW-M,M*0.55+11)
-    canvas.restoreState()
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Dynamic content</span> Passing data between steps <span class="tag">Core</span></summary>
+  <div class="body"><p>The output of one step, dropped into a later one — the email's subject, the new item's ID, the file name. This is the wiring that makes a flow more than a list of unrelated actions.</p>
+  <div class="note"><span class="ic">i</span><div>If the dynamic value you need isn't offered, it's usually because the step that produces it is <em>below</em> the one you're editing, or inside a different branch.</div></div></div></details>
 
-def on_first(c,d): draw_header(c,d,True)
-def on_later(c,d): draw_header(c,d,False)
+  </div>
 
-def make_frames(top_y):
-    frames=[]; bottom=M*0.55+14; height=top_y-bottom
-    for i in range(NCOL):
-        x=M+i*(COLW+GUT)
-        frames.append(Frame(x,bottom,COLW,height,leftPadding=0,rightPadding=0,topPadding=0,bottomPadding=0,id="c%d"%i))
-    return frames
+  <div data-tier-panel="f" data-tier="logic" class="tier-panel">
 
-doc=BaseDocTemplate(OUT,pagesize=landscape(letter),leftMargin=M,rightMargin=M,topMargin=M,bottomMargin=M,
-                    title="SQL Cheat Sheet",author="DPM Learning Hub")
-doc.addPageTemplates([
-    PageTemplate(id="first",frames=make_frames(PH-HEADER_H-6),onPage=on_first),
-    PageTemplate(id="later",frames=make_frames(PH-M),onPage=on_later),
-])
-doc.build(story)
-print("built:",OUT)
+  <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Condition</span> If / else <span class="tag">Logic</span></summary>
+  <div class="body"><p>Splits the flow into a <strong>Yes</strong> branch and a <strong>No</strong> branch based on a test (Priority is equal to "High"). Put the steps for each outcome in the matching branch.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">Condition:  Priority   is equal to   High
+   ├─ If yes →  send the manager an alert
+   └─ If no  →  just add a log row</span></div></div></details>
+
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Switch</span> Many branches at once <span class="tag">Logic</span></summary>
+  <div class="body"><p>Like a Condition but for several known values — branch on Status = Delivered / In Progress / On Hold, each with its own steps, plus a default. Cleaner than nesting many Conditions.</p></div></details>
+
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Apply to each</span> Loop over a list <span class="tag">Logic</span></summary>
+  <div class="body"><p>When a step returns <em>multiple</em> items (rows from Excel, emails, list items), <strong>Apply to each</strong> runs its inner actions once per item. Power Automate often adds it for you the moment you use an array output.</p>
+  <div class="note warn"><span class="ic">!</span><div>Loops can be slow over big lists. Filter the data <em>before</em> the loop, and turn on concurrency in the loop's settings when order doesn't matter.</div></div></div></details>
+
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Do until</span> Loop until true <span class="tag">Logic</span></summary>
+  <div class="body"><p>Repeats until a condition is met (e.g. keep polling a status until it reads "Complete"). Always set a sensible count/timeout limit so it can't run forever.</p></div></details>
+
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Variables</span> Remember a value <span class="tag">Logic</span></summary>
+  <div class="body"><p>Initialise a variable once (at the top), then Set / Increment / Append to it as the flow runs — a running total, a counter, or a built-up HTML string.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">Initialize variable   →  name: TotalRevenue,  type: Float,  value: 0
+   (inside Apply to each)
+Increment variable    →  TotalRevenue  by  items('Apply_to_each')?['Revenue']</span></div></div></details>
+
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Scope &amp; parallel branch</span> Group and split <span class="tag">Logic</span></summary>
+  <div class="body"><p><strong>Scope</strong> groups several actions into one block — useful for a single "try" you can wrap error handling around (set the next Scope to run only <em>if the previous failed</em>). A <strong>parallel branch</strong> runs two paths at the same time.</p></div></details>
+
+  </div>
+
+  <div data-tier-panel="f" data-tier="adv" class="tier-panel">
+
+  <details class="lesson" open><summary><span class="caret">▸</span><span class="fn">Expressions</span> Functions for the tricky bits <span class="tag">Advanced</span></summary>
+  <div class="body"><p>When dynamic content isn't enough, write an expression in the formula box. Common ones:</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">utcNow()                          // current timestamp
+formatDateTime(utcNow(),'dd/MM/yyyy')
+addDays(utcNow(), 7)              // a week from now
+concat('Order ', triggerBody()?['Subject'])
+if(equals(item()?['Priority'],'High'), 'Escalate', 'Log')
+length(body('List_rows')?['value'])   // how many rows came back</span></div></div></details>
+
+  <details class="lesson"><summary><span class="caret">▸</span><span class="fn">Approvals</span> Get a human yes/no <span class="tag">Action</span></summary>
+  <div class="body"><p>The <strong>Start and wait for an approval</strong> action pauses the flow, emails an approver, and continues based on their response — perfect for sign-off on an escalation or a change window.</p></div></details>
+
+  </div>
+</div></section>
+
+<!-- DESIGN CHALLENGES -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Design challenges</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Build the flow, then check the key</h2>
+  <p class="lead">For each scenario, sketch the flow on paper or in the designer — which flow type, which trigger, which actions, in what order. Then reveal the worked answer.</p>
+
+  <div class="try"><p class="q">Challenge 1 — Notify &amp; log new orders</p>
+    <p>Whenever an email arrives in the shared Delivery mailbox with <em>"GOLD order"</em> in the subject, post a heads-up in the Delivery Teams channel and add a row to the order-tracking spreadsheet.</p>
+    <p class="hint">Hint: which flow type starts "whenever an email arrives"?</p>
+    <details class="reveal"><summary>Show answer flow</summary><div class="ans">
+      <p><strong>Automated cloud flow.</strong></p>
+      <div class="flow">
+        <div class="step"><b>TRIGGER · Outlook</b> When a new email arrives (V3) — folder: Delivery; Subject Filter: <span class="mono">GOLD order</span></div><div class="conn"></div>
+        <div class="step"><b>ACTION · Teams</b> Post message in a chat or channel → channel "Delivery", message uses dynamic <em>From</em> and <em>Subject</em></div><div class="conn"></div>
+        <div class="step"><b>ACTION · Excel Online</b> Add a row into a table → map Subject, Received time, From</div>
+      </div>
+      <p>The subject filter on the trigger means the flow never fires on unrelated mail — cheaper and cleaner than a Condition after the fact.</p>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Challenge 2 — Weekly "due this week" digest</p>
+    <p>Every Monday at 08:00, email yourself a list of orders whose Target Go-Live falls in the next 7 days, pulled from an Excel table.</p>
+    <p class="hint">Hint: a clock-based start, and the data comes back as a list.</p>
+    <details class="reveal"><summary>Show answer flow</summary><div class="ans">
+      <p><strong>Scheduled cloud flow.</strong></p>
+      <div class="flow">
+        <div class="step"><b>TRIGGER · Schedule</b> Recurrence → Weekly, Monday, 08:00</div><div class="conn"></div>
+        <div class="step"><b>ACTION · Excel Online</b> List rows present in a table → with a Filter Query on Target Go-Live within the next 7 days</div><div class="conn"></div>
+        <div class="step"><b>ACTION · Data ops</b> Create HTML table from the returned rows</div><div class="conn"></div>
+        <div class="step"><b>ACTION · Outlook</b> Send an email (V2) → to yourself, body = the HTML table</div>
+      </div>
+      <p>Filtering in the <em>List rows</em> step (rather than looping and checking each) keeps it fast. <strong>Create HTML table</strong> turns the array into a tidy email without an Apply to each.</p>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Challenge 3 — Escalate only the High-priority holds</p>
+    <p>When an order in a SharePoint list is changed to status <em>On Hold</em>: if its Priority is High, request approval from the Team Manager to escalate; otherwise just add a comment/log entry. Nothing should happen for other status changes.</p>
+    <p class="hint">Hint: you'll need a trigger filter <em>and</em> a branch.</p>
+    <details class="reveal"><summary>Show answer flow</summary><div class="ans">
+      <p><strong>Automated cloud flow</strong> with a trigger condition + a Condition control.</p>
+      <div class="flow">
+        <div class="step"><b>TRIGGER · SharePoint</b> When an item is created or modified → add a <em>trigger condition</em> so it only continues when Status = "On Hold"</div><div class="conn"></div>
+        <div class="step"><b>CONDITION</b> Priority is equal to High</div>
+      </div>
+      <div class="code"><button class="copy">Copy</button><span class="code-text">If YES →  Start and wait for an approval  (approver: Team Manager)
+          then  Update item  /  Send an email with the decision
+If NO  →  Add a comment / append a row to the log table</span></div>
+      <p>The <em>trigger condition</em> stops the flow from running on every edit; the Condition then routes by priority. Tip: also compare to the item's previous Status if you only want the moment it <em>becomes</em> On Hold.</p>
+    </div></details>
+  </div>
+
+  <div class="try"><p class="q">Challenge 4 — A legacy portal with no connector</p>
+    <p>You need to open the GOLD order portal in a browser, search an order number, copy its status, and paste it into an Excel sheet. There is no GOLD connector or API. How do you automate it?</p>
+    <p class="hint">Hint: this one isn't a cloud flow.</p>
+    <details class="reveal"><summary>Show answer flow</summary><div class="ans">
+      <p><strong>Desktop flow (RPA)</strong> in Power Automate Desktop — it automates the screen itself.</p>
+      <div class="flow">
+        <div class="step"><b>UI</b> Launch / attach to the browser → navigate to the GOLD URL</div><div class="conn"></div>
+        <div class="step"><b>UI</b> Populate text field with the order number → Press button (Search)</div><div class="conn"></div>
+        <div class="step"><b>UI</b> Extract data / Get details of element → read the status text into a variable</div><div class="conn"></div>
+        <div class="step"><b>Excel</b> Launch Excel → Write to cell → Save &amp; close</div>
+      </div>
+      <p>RPA is the right tool only because there's no API. It's more brittle than a cloud flow (a page redesign can break it), so add waits for elements to load and handle the "not found" case.</p>
+    </div></details>
+  </div>
+</div></section>
+
+<!-- EXAM -->
+<section><div class="wrap">
+  <span class="eyebrow">Test yourself</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .3em">Power Automate final exam</h2>
+  <p class="lead">Triggers, actions, conditions, loops, expressions and connectors — a fresh randomised set each time. Retake until it's second nature.</p>
+  <div class="exam" data-bank="flowBank" data-count="8"></div>
+</div></section>
+
+<script type="application/json" id="flowBank">
+[
+ {"q":"You want a flow that runs the first of every month. Which trigger?","opts":["Recurrence (scheduled)","When a new email arrives","Manually trigger a flow","When a file is created"],"correct":0,"why":"A clock-based schedule uses the Recurrence trigger — that's a scheduled cloud flow."},
+ {"q":"A step returns 20 rows and you want to act on each one. Power Automate will use…","opts":["Apply to each","A Condition","A Switch","A Do until"],"correct":0,"why":"Feeding an array into an action wraps it in an Apply to each loop to process every item."},
+ {"q":"The system you need to automate has no connector and no API. Best approach?","opts":["A desktop flow (RPA) that drives the UI","Force it with an automated cloud flow","It can't be automated","Email it manually"],"correct":0,"why":"With no API, Power Automate Desktop mimics a human clicking and typing — that's what RPA is for."},
+ {"q":"You want a flow to run only when an email subject contains 'GOLD order'. Cleanest way?","opts":["Use the trigger's subject filter / trigger condition","Fire on every email, then a Condition decides","Use a Do until loop","Run it on a schedule"],"correct":0,"why":"Filtering at the trigger means the flow never runs on irrelevant emails — fewer runs, simpler flow."},
+ {"q":"What's the difference between a <b>trigger</b> and an <b>action</b>?","opts":["A trigger starts the flow; actions are the steps it then runs","They're the same","Actions start the flow","Triggers only send email"],"correct":0,"why":"Every flow begins with exactly one trigger (the 'when'), followed by one or more actions (the 'do')."},
+ {"q":"You need different handling for High / Medium / Low priority. The tidiest control is…","opts":["A Switch on the priority value","Three nested Conditions","A Do until","An Apply to each"],"correct":0,"why":"Switch branches cleanly on one value's cases — clearer than deeply nested Conditions."},
+ {"q":"To pull a value from a previous step into a later one, you use…","opts":["Dynamic content / an expression","A manual copy-paste","A new trigger","A separate flow"],"correct":0,"why":"Dynamic content tokens (and expressions) reference outputs from earlier steps at run time."},
+ {"q":"A flow should wait until an order's status becomes 'Closed', checking periodically. Use…","opts":["Do until","Apply to each","Condition","Switch"],"correct":0,"why":"Do until repeats until a condition is met — ideal for polling a status with a delay inside."},
+ {"q":"You want a manager to approve a request inside the flow. The right action family is…","opts":["Approvals","Send an email only","Compose","Terminate"],"correct":0,"why":"The Approvals actions create an approve/reject task and pause the flow until a decision is returned."},
+ {"q":"What does a <b>Condition</b> action do?","opts":["Branches the flow into Yes / No paths based on a test","Loops over an array","Starts the flow","Formats text"],"correct":0,"why":"A Condition evaluates a true/false expression and runs the matching branch."},
+ {"q":"A <b>connector</b> in Power Automate is…","opts":["A pre-built bridge to a service (Outlook, SharePoint, SQL…)","A type of loop","A trigger condition","A desktop app"],"correct":0,"why":"Connectors package a service's triggers and actions so your flow can talk to it without code."},
+ {"q":"Best practice to stop a flow part-way when something's wrong?","opts":["Use a Terminate action with a status","Delete the flow","Let it error out","Add more delays"],"correct":0,"why":"Terminate ends the run with an explicit Succeeded/Failed status, making outcomes clear in run history."}
+]
+</script>
+
+<footer class="foot"><div class="wrap">
+  <p>Power Automate track · DPM Learning Hub. Remember: trigger = when, actions = then, everything else makes the then smarter. <a href="courses.html">Next up: Courses →</a></p>
+</div></footer>
+
+<script src="assets/js/exam.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
