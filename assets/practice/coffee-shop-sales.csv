@@ -1,0 +1,221 @@
+Transaction ID,Date,Store,Product,Category,Quantity,Unit Price,Total,Payment
+T1001,2025-03-01,Mall,Americano,Coffee,1,3.5,3.5,Card
+T1002,2025-03-07,Mall,Chai Latte,Tea,1,4.0,4.0,Cash
+T1003,2025-02-08,Airport,Bagel,Food,1,3.2,3.2,Card
+T1004,2025-01-06,Mall,Sandwich,Food,1,6.5,6.5,Mobile
+T1005,2025-01-21,Downtown,Croissant,Food,1,3.5,3.5,Mobile
+T1006,2025-01-31,Downtown,Latte,Coffee,1,4.5,4.5,Cash
+T1007,2025-01-26,Airport,Mocha,Coffee,1,4.8,4.8,Cash
+T1008,2025-02-28,University,Green Tea,Tea,1,3.2,3.2,Card
+T1009,2025-01-11,University,Chai Latte,Tea,3,4.0,12.0,Card
+T1010,2025-01-09,Downtown,Cappuccino,Coffee,1,4.2,4.2,Card
+T1011,2025-01-03,Downtown,Iced Coffee,Cold,1,4.5,4.5,Card
+T1012,2025-02-18,Mall,Iced Coffee,Cold,1,4.5,4.5,Card
+T1013,2025-03-28,University,Chai Latte,Tea,1,4.0,4.0,Card
+T1014,2025-02-22,Downtown,Mocha,Coffee,1,4.8,4.8,Card
+T1015,2025-03-01,Mall,Muffin,Food,1,2.8,2.8,Card
+T1016,2025-01-25,Airport,Chai Latte,Tea,1,4.0,4.0,Card
+T1017,2025-01-28,Downtown,Mocha,Coffee,1,4.8,4.8,Card
+T1018,2025-02-08,Downtown,Smoothie,Cold,2,5.5,11.0,Card
+T1019,2025-03-24,Downtown,Americano,Coffee,2,3.5,7.0,Card
+T1020,2025-01-02,University,Cappuccino,Coffee,1,4.2,4.2,Mobile
+T1021,2025-01-27,Airport,Americano,Coffee,1,3.5,3.5,Card
+T1022,2025-01-17,Mall,Mocha,Coffee,1,4.8,4.8,Mobile
+T1023,2025-03-22,Airport,Cappuccino,Coffee,1,4.2,4.2,Card
+T1024,2025-01-25,Airport,Cappuccino,Coffee,1,4.2,4.2,Cash
+T1025,2025-02-19,Mall,Iced Coffee,Cold,1,4.5,4.5,Cash
+T1026,2025-01-05,University,Americano,Coffee,1,3.5,3.5,Card
+T1027,2025-03-18,Mall,Muffin,Food,1,2.8,2.8,Card
+T1028,2025-01-09,Airport,Cappuccino,Coffee,2,4.2,8.4,Card
+T1029,2025-03-20,Downtown,Chai Latte,Tea,2,4.0,8.0,Card
+T1030,2025-01-03,Downtown,Iced Coffee,Cold,1,4.5,4.5,Card
+T1031,2025-01-23,University,Americano,Coffee,1,3.5,3.5,Card
+T1032,2025-02-16,Airport,Chai Latte,Tea,1,4.0,4.0,Mobile
+T1033,2025-03-30,Airport,Smoothie,Cold,1,5.5,5.5,Cash
+T1034,2025-02-15,University,Iced Coffee,Cold,1,4.5,4.5,Mobile
+T1035,2025-03-03,Downtown,Latte,Coffee,1,4.5,4.5,Cash
+T1036,2025-01-10,Mall,Mocha,Coffee,3,4.8,14.4,Card
+T1037,2025-01-17,University,Muffin,Food,3,2.8,8.4,Card
+T1038,2025-02-23,Downtown,Muffin,Food,3,2.8,8.4,Mobile
+T1039,2025-02-18,Mall,Chai Latte,Tea,1,4.0,4.0,Cash
+T1040,2025-03-23,Downtown,Croissant,Food,1,3.5,3.5,Mobile
+T1041,2025-02-19,Mall,Iced Coffee,Cold,2,4.5,9.0,Card
+T1042,2025-03-07,Downtown,Sandwich,Food,1,6.5,6.5,Card
+T1043,2025-03-31,Downtown,Latte,Coffee,1,4.5,4.5,Card
+T1044,2025-02-02,Downtown,Croissant,Food,3,3.5,10.5,Card
+T1045,2025-03-08,Airport,Cappuccino,Coffee,1,4.2,4.2,Cash
+T1046,2025-03-05,Airport,Mocha,Coffee,3,4.8,14.4,Card
+T1047,2025-02-25,Airport,Croissant,Food,1,3.5,3.5,Mobile
+T1048,2025-02-10,Airport,Mocha,Coffee,1,4.8,4.8,Card
+T1049,2025-01-06,Downtown,Green Tea,Tea,2,3.2,6.4,Mobile
+T1050,2025-02-27,Mall,Espresso,Coffee,1,3.0,3.0,Card
+T1051,2025-03-22,Mall,Cappuccino,Coffee,1,4.2,4.2,Cash
+T1052,2025-03-21,Mall,Muffin,Food,2,2.8,5.6,Card
+T1053,2025-03-19,Downtown,Sandwich,Food,1,6.5,6.5,Cash
+T1054,2025-03-25,Downtown,Espresso,Coffee,1,3.0,3.0,Cash
+T1055,2025-02-04,Airport,Americano,Coffee,1,3.5,3.5,Cash
+T1056,2025-01-15,Mall,Sandwich,Food,3,6.5,19.5,Card
+T1057,2025-02-17,Downtown,Green Tea,Tea,1,3.2,3.2,Cash
+T1058,2025-01-23,Downtown,Cappuccino,Coffee,1,4.2,4.2,Cash
+T1059,2025-01-29,University,Green Tea,Tea,1,3.2,3.2,Cash
+T1060,2025-03-06,Airport,Chai Latte,Tea,3,4.0,12.0,Card
+T1061,2025-01-12,Mall,Bagel,Food,3,3.2,9.6,Mobile
+T1062,2025-02-28,Airport,Muffin,Food,1,2.8,2.8,Cash
+T1063,2025-03-14,University,Iced Coffee,Cold,1,4.5,4.5,Card
+T1064,2025-03-24,Downtown,Croissant,Food,1,3.5,3.5,Card
+T1065,2025-02-09,University,Iced Coffee,Cold,3,4.5,13.5,Card
+T1066,2025-03-06,Downtown,Muffin,Food,1,2.8,2.8,Card
+T1067,2025-02-05,Mall,Mocha,Coffee,1,4.8,4.8,Mobile
+T1068,2025-02-24,Downtown,Cappuccino,Coffee,2,4.2,8.4,Card
+T1069,2025-01-18,Mall,Mocha,Coffee,2,4.8,9.6,Card
+T1070,2025-03-28,Mall,Green Tea,Tea,2,3.2,6.4,Mobile
+T1071,2025-01-12,Airport,Green Tea,Tea,3,3.2,9.6,Card
+T1072,2025-03-13,Airport,Chai Latte,Tea,2,4.0,8.0,Card
+T1073,2025-02-09,Mall,Sandwich,Food,1,6.5,6.5,Mobile
+T1074,2025-02-08,Airport,Iced Coffee,Cold,1,4.5,4.5,Mobile
+T1075,2025-01-26,Mall,Green Tea,Tea,1,3.2,3.2,Card
+T1076,2025-01-04,Downtown,Green Tea,Tea,1,3.2,3.2,Card
+T1077,2025-03-14,Downtown,Americano,Coffee,2,3.5,7.0,Card
+T1078,2025-03-10,Mall,Muffin,Food,1,2.8,2.8,Card
+T1079,2025-02-04,Airport,Smoothie,Cold,3,5.5,16.5,Card
+T1080,2025-03-02,University,Latte,Coffee,1,4.5,4.5,Card
+T1081,2025-02-03,Airport,Americano,Coffee,1,3.5,3.5,Cash
+T1082,2025-01-20,Airport,Smoothie,Cold,1,5.5,5.5,Card
+T1083,2025-02-01,Mall,Espresso,Coffee,2,3.0,6.0,Card
+T1084,2025-03-07,University,Muffin,Food,1,2.8,2.8,Cash
+T1085,2025-01-03,Mall,Muffin,Food,2,2.8,5.6,Cash
+T1086,2025-03-10,Airport,Sandwich,Food,1,6.5,6.5,Mobile
+T1087,2025-01-28,Airport,Green Tea,Tea,1,3.2,3.2,Card
+T1088,2025-01-24,University,Muffin,Food,2,2.8,5.6,Cash
+T1089,2025-01-25,Downtown,Iced Coffee,Cold,1,4.5,4.5,Card
+T1090,2025-02-03,Mall,Espresso,Coffee,2,3.0,6.0,Card
+T1091,2025-01-17,Airport,Sandwich,Food,1,6.5,6.5,Card
+T1092,2025-01-26,University,Muffin,Food,1,2.8,2.8,Mobile
+T1093,2025-03-06,University,Smoothie,Cold,1,5.5,5.5,Card
+T1094,2025-01-10,Mall,Muffin,Food,1,2.8,2.8,Card
+T1095,2025-03-07,Mall,Latte,Coffee,1,4.5,4.5,Card
+T1096,2025-01-21,University,Cappuccino,Coffee,1,4.2,4.2,Mobile
+T1097,2025-03-29,Mall,Latte,Coffee,1,4.5,4.5,Card
+T1098,2025-02-24,University,Latte,Coffee,1,4.5,4.5,Card
+T1099,2025-03-31,Downtown,Croissant,Food,1,3.5,3.5,Mobile
+T1100,2025-02-17,Mall,Cappuccino,Coffee,1,4.2,4.2,Mobile
+T1101,2025-01-02,University,Croissant,Food,1,3.5,3.5,Mobile
+T1102,2025-03-22,Mall,Sandwich,Food,2,6.5,13.0,Cash
+T1103,2025-02-13,University,Cappuccino,Coffee,1,4.2,4.2,Card
+T1104,2025-01-21,Mall,Latte,Coffee,2,4.5,9.0,Card
+T1105,2025-02-17,Mall,Mocha,Coffee,1,4.8,4.8,Cash
+T1106,2025-01-10,University,Americano,Coffee,2,3.5,7.0,Card
+T1107,2025-03-23,Downtown,Latte,Coffee,2,4.5,9.0,Card
+T1108,2025-02-13,Airport,Iced Coffee,Cold,1,4.5,4.5,Cash
+T1109,2025-02-19,Mall,Chai Latte,Tea,1,4.0,4.0,Cash
+T1110,2025-03-15,Downtown,Muffin,Food,2,2.8,5.6,Card
+T1111,2025-02-26,Mall,Latte,Coffee,1,4.5,4.5,Card
+T1112,2025-01-02,Downtown,Bagel,Food,1,3.2,3.2,Card
+T1113,2025-03-11,Mall,Espresso,Coffee,1,3.0,3.0,Mobile
+T1114,2025-03-23,Mall,Chai Latte,Tea,3,4.0,12.0,Mobile
+T1115,2025-01-06,Mall,Latte,Coffee,1,4.5,4.5,Mobile
+T1116,2025-01-22,Mall,Cappuccino,Coffee,1,4.2,4.2,Card
+T1117,2025-03-05,Mall,Croissant,Food,1,3.5,3.5,Card
+T1118,2025-03-09,University,Americano,Coffee,1,3.5,3.5,Card
+T1119,2025-03-26,University,Espresso,Coffee,3,3.0,9.0,Card
+T1120,2025-03-23,Airport,Bagel,Food,1,3.2,3.2,Card
+T1121,2025-02-10,Mall,Muffin,Food,1,2.8,2.8,Card
+T1122,2025-01-10,Airport,Smoothie,Cold,3,5.5,16.5,Card
+T1123,2025-02-01,Downtown,Americano,Coffee,3,3.5,10.5,Card
+T1124,2025-03-01,Airport,Iced Coffee,Cold,2,4.5,9.0,Mobile
+T1125,2025-01-15,Downtown,Sandwich,Food,1,6.5,6.5,Cash
+T1126,2025-01-07,University,Americano,Coffee,1,3.5,3.5,Card
+T1127,2025-03-27,Mall,Latte,Coffee,1,4.5,4.5,Card
+T1128,2025-02-23,University,Espresso,Coffee,1,3.0,3.0,Cash
+T1129,2025-02-07,Airport,Green Tea,Tea,3,3.2,9.6,Card
+T1130,2025-03-06,University,Latte,Coffee,2,4.5,9.0,Card
+T1131,2025-03-31,Airport,Croissant,Food,2,3.5,7.0,Cash
+T1132,2025-02-01,Airport,Bagel,Food,1,3.2,3.2,Mobile
+T1133,2025-02-04,University,Latte,Coffee,1,4.5,4.5,Card
+T1134,2025-03-11,University,Croissant,Food,1,3.5,3.5,Card
+T1135,2025-03-12,Airport,Latte,Coffee,1,4.5,4.5,Cash
+T1136,2025-01-27,University,Mocha,Coffee,1,4.8,4.8,Card
+T1137,2025-01-10,Downtown,Bagel,Food,2,3.2,6.4,Card
+T1138,2025-01-28,Mall,Sandwich,Food,2,6.5,13.0,Card
+T1139,2025-02-17,Airport,Espresso,Coffee,2,3.0,6.0,Cash
+T1140,2025-03-12,Airport,Smoothie,Cold,1,5.5,5.5,Card
+T1141,2025-02-11,Downtown,Mocha,Coffee,1,4.8,4.8,Card
+T1142,2025-03-29,Mall,Americano,Coffee,1,3.5,3.5,Card
+T1143,2025-01-28,Downtown,Bagel,Food,1,3.2,3.2,Cash
+T1144,2025-02-11,University,Green Tea,Tea,2,3.2,6.4,Mobile
+T1145,2025-02-11,University,Cappuccino,Coffee,1,4.2,4.2,Mobile
+T1146,2025-03-18,University,Mocha,Coffee,1,4.8,4.8,Card
+T1147,2025-02-10,Airport,Sandwich,Food,1,6.5,6.5,Card
+T1148,2025-02-01,Downtown,Iced Coffee,Cold,2,4.5,9.0,Card
+T1149,2025-02-20,Mall,Mocha,Coffee,1,4.8,4.8,Cash
+T1150,2025-02-19,Airport,Muffin,Food,1,2.8,2.8,Mobile
+T1151,2025-02-28,University,Chai Latte,Tea,1,4.0,4.0,Mobile
+T1152,2025-01-21,University,Cappuccino,Coffee,1,4.2,4.2,Mobile
+T1153,2025-01-09,University,Croissant,Food,2,3.5,7.0,Cash
+T1154,2025-01-14,University,Latte,Coffee,1,4.5,4.5,Card
+T1155,2025-03-25,Mall,Croissant,Food,1,3.5,3.5,Card
+T1156,2025-03-08,University,Cappuccino,Coffee,2,4.2,8.4,Cash
+T1157,2025-02-12,Airport,Americano,Coffee,1,3.5,3.5,Card
+T1158,2025-03-21,Downtown,Green Tea,Tea,2,3.2,6.4,Card
+T1159,2025-01-01,Mall,Sandwich,Food,1,6.5,6.5,Mobile
+T1160,2025-03-23,Downtown,Iced Coffee,Cold,3,4.5,13.5,Card
+T1161,2025-02-23,Mall,Muffin,Food,2,2.8,5.6,Mobile
+T1162,2025-03-23,Mall,Espresso,Coffee,1,3.0,3.0,Cash
+T1163,2025-03-09,University,Mocha,Coffee,1,4.8,4.8,Card
+T1164,2025-01-15,University,Iced Coffee,Cold,1,4.5,4.5,Cash
+T1165,2025-01-08,Mall,Bagel,Food,1,3.2,3.2,Card
+T1166,2025-02-10,Downtown,Americano,Coffee,2,3.5,7.0,Card
+T1167,2025-03-18,Mall,Mocha,Coffee,1,4.8,4.8,Cash
+T1168,2025-02-05,Mall,Cappuccino,Coffee,1,4.2,4.2,Card
+T1169,2025-03-12,Mall,Bagel,Food,1,3.2,3.2,Mobile
+T1170,2025-02-13,Downtown,Americano,Coffee,1,3.5,3.5,Card
+T1171,2025-01-18,Mall,Cappuccino,Coffee,1,4.2,4.2,Mobile
+T1172,2025-01-08,Airport,Bagel,Food,2,3.2,6.4,Mobile
+T1173,2025-02-27,Airport,Iced Coffee,Cold,3,4.5,13.5,Cash
+T1174,2025-01-21,University,Croissant,Food,1,3.5,3.5,Card
+T1175,2025-01-17,University,Iced Coffee,Cold,2,4.5,9.0,Card
+T1176,2025-01-23,Downtown,Latte,Coffee,1,4.5,4.5,Card
+T1177,2025-01-17,Downtown,Iced Coffee,Cold,1,4.5,4.5,Card
+T1178,2025-03-03,Mall,Croissant,Food,1,3.5,3.5,Card
+T1179,2025-03-06,University,Bagel,Food,1,3.2,3.2,Card
+T1180,2025-03-29,Downtown,Cappuccino,Coffee,1,4.2,4.2,Cash
+T1181,2025-02-22,Mall,Americano,Coffee,1,3.5,3.5,Card
+T1182,2025-02-09,Mall,Sandwich,Food,1,6.5,6.5,Card
+T1183,2025-01-09,University,Espresso,Coffee,1,3.0,3.0,Card
+T1184,2025-03-28,Mall,Cappuccino,Coffee,1,4.2,4.2,Cash
+T1185,2025-02-26,Downtown,Bagel,Food,1,3.2,3.2,Mobile
+T1186,2025-02-07,Downtown,Muffin,Food,1,2.8,2.8,Card
+T1187,2025-01-27,Airport,Latte,Coffee,3,4.5,13.5,Card
+T1188,2025-02-08,University,Mocha,Coffee,1,4.8,4.8,Cash
+T1189,2025-01-25,Airport,Chai Latte,Tea,1,4.0,4.0,Card
+T1190,2025-02-05,Mall,Latte,Coffee,1,4.5,4.5,Cash
+T1191,2025-01-12,Downtown,Mocha,Coffee,2,4.8,9.6,Card
+T1192,2025-01-23,Airport,Latte,Coffee,1,4.5,4.5,Card
+T1193,2025-01-12,Downtown,Latte,Coffee,1,4.5,4.5,Card
+T1194,2025-02-22,Downtown,Cappuccino,Coffee,1,4.2,4.2,Card
+T1195,2025-01-18,Airport,Sandwich,Food,3,6.5,19.5,Cash
+T1196,2025-02-12,Mall,Sandwich,Food,1,6.5,6.5,Cash
+T1197,2025-02-10,Airport,Muffin,Food,1,2.8,2.8,Cash
+T1198,2025-02-12,Airport,Croissant,Food,1,3.5,3.5,Card
+T1199,2025-02-18,Airport,Croissant,Food,1,3.5,3.5,Card
+T1200,2025-03-20,Airport,Bagel,Food,2,3.2,6.4,Card
+T1201,2025-01-30,University,Chai Latte,Tea,1,4.0,4.0,Cash
+T1202,2025-01-26,Airport,Green Tea,Tea,1,3.2,3.2,Cash
+T1203,2025-01-11,Airport,Latte,Coffee,1,4.5,4.5,Card
+T1204,2025-02-12,Downtown,Chai Latte,Tea,1,4.0,4.0,Mobile
+T1205,2025-01-16,Mall,Mocha,Coffee,1,4.8,4.8,Mobile
+T1206,2025-03-11,Downtown,Cappuccino,Coffee,3,4.2,12.6,Cash
+T1207,2025-02-12,Airport,Espresso,Coffee,3,3.0,9.0,Card
+T1208,2025-02-16,Airport,Sandwich,Food,1,6.5,6.5,Cash
+T1209,2025-03-18,Downtown,Mocha,Coffee,1,4.8,4.8,Card
+T1210,2025-03-26,Airport,Americano,Coffee,2,3.5,7.0,Card
+T1211,2025-02-18,Downtown,Muffin,Food,2,2.8,5.6,Card
+T1212,2025-03-09,Mall,Americano,Coffee,1,3.5,3.5,Card
+T1213,2025-01-17,University,Americano,Coffee,1,3.5,3.5,Card
+T1214,2025-01-05,Airport,Iced Coffee,Cold,1,4.5,4.5,Card
+T1215,2025-02-14,Mall,Green Tea,Tea,1,3.2,3.2,Mobile
+T1216,2025-02-22,University,Iced Coffee,Cold,1,4.5,4.5,Card
+T1217,2025-03-30,Mall,Smoothie,Cold,2,5.5,11.0,Mobile
+T1218,2025-03-09,University,Latte,Coffee,1,4.5,4.5,Card
+T1219,2025-02-11,Downtown,Americano,Coffee,3,3.5,10.5,Card
+T1220,2025-02-18,University,Croissant,Food,1,3.5,3.5,Cash

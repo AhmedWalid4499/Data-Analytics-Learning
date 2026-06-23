@@ -1,0 +1,151 @@
+Employee ID,Name,Department,Job Title,Location,Gender,Hire Date,Salary,Rating,Status
+E2001,Ravi Dubois,Sales,Sales Lead,London,M,2018-01-20,80500,2,Active
+E2002,Mia Haddad,Engineering,Lead Engineer,London,F,2020-10-06,99500,3,Active
+E2003,Jon Khan,Sales,Sales Lead,Madrid,M,2016-10-17,56500,4,Active
+E2004,Sara Dubois,Support,Senior Agent,London,M,2023-03-09,48500,2,Active
+E2005,Yara Wagner,Marketing,Brand Manager,Berlin,M,2023-05-17,69000,4,Active
+E2006,Mia Novak,Marketing,Content Lead,Remote,M,2024-10-18,51500,4,Active
+E2007,Priya Novak,Finance,Analyst,Paris,F,2021-01-27,59500,3,Active
+E2008,Luca Costa,HR,HR Manager,Berlin,M,2021-06-06,46500,4,Active
+E2009,John Khan,Support,Support Agent,Paris,F,2018-11-23,55500,4,Active
+E2010,Lena Petrov,Engineering,Senior Engineer,Paris,M,2022-12-17,106500,4,Active
+E2011,Alex Dubois,Engineering,Lead Engineer,Madrid,F,2024-05-04,87000,3,Active
+E2012,Omar Khan,HR,HR Officer,Berlin,M,2021-12-09,69000,3,Active
+E2013,Sara Müller,Finance,Controller,Paris,F,2016-03-01,73000,2,Active
+E2014,Max Marin,HR,HR Officer,Berlin,F,2017-01-08,71500,4,Active
+E2015,Tom Brown,Support,Support Agent,Madrid,F,2021-08-09,58500,4,Active
+E2016,Anna Dubois,Support,Support Lead,Madrid,F,2020-01-01,56000,4,Active
+E2017,Ravi Brown,Engineering,Senior Engineer,Remote,M,2018-11-26,77000,3,Active
+E2018,Zoe Müller,Support,Support Agent,Remote,M,2015-12-13,42000,5,Active
+E2019,Omar Costa,Sales,Sales Lead,Paris,M,2019-05-17,82000,4,Active
+E2020,Leo Patel,Finance,Controller,Berlin,F,2020-02-13,57500,4,Active
+E2021,Lena Patel,Engineering,Lead Engineer,Madrid,F,2023-09-28,96500,5,Active
+E2022,Maria Müller,Engineering,Lead Engineer,London,F,2023-11-02,83000,3,Left
+E2023,Mia Ivanov,Finance,Senior Analyst,London,F,2024-10-17,91000,4,Left
+E2024,Tom Khan,Support,Support Agent,Madrid,M,2019-01-08,57000,3,Active
+E2025,Anna Silva,Finance,Senior Analyst,Paris,M,2020-03-06,61500,4,Active
+E2026,Sam Reyes,HR,Recruiter,Remote,F,2018-10-12,48000,5,Active
+E2027,Sam Nowak,Marketing,Marketing Exec,Berlin,F,2023-03-15,68500,3,Active
+E2028,Luca Patel,HR,Recruiter,Berlin,M,2021-02-22,60000,4,Active
+E2029,Eva Patel,Support,Senior Agent,London,F,2022-11-15,38000,5,Active
+E2030,Sara Rossi,Engineering,Engineer,Berlin,M,2018-10-16,97000,4,Active
+E2031,Omar Wagner,Marketing,Brand Manager,Paris,M,2021-08-18,57500,5,Active
+E2032,Sara Silva,Sales,Sales Lead,London,F,2018-11-17,72500,3,Active
+E2033,Tom Costa,Marketing,Content Lead,Madrid,F,2016-10-24,83500,3,Active
+E2034,John Rossi,HR,HR Manager,Remote,F,2023-05-21,59000,2,Active
+E2035,Omar Reyes,Support,Senior Agent,Berlin,M,2019-01-01,58500,4,Active
+E2036,John Lee,Support,Support Agent,Berlin,F,2016-05-12,52500,4,Active
+E2037,Jon Ivanov,Finance,Analyst,Berlin,F,2023-08-11,82500,3,Active
+E2038,Luca Haddad,HR,HR Manager,London,F,2023-07-21,75000,4,Active
+E2039,Sara Rossi,HR,HR Manager,Madrid,M,2020-10-18,63000,2,Active
+E2040,Alex Reyes,HR,HR Manager,Paris,M,2016-03-15,47500,4,Active
+E2041,John Marin,Finance,Controller,Berlin,M,2021-04-10,100000,2,Active
+E2042,Omar Reyes,Sales,Sales Rep,Berlin,F,2020-07-27,46000,2,Active
+E2043,Nina Marin,Finance,Controller,Madrid,M,2022-11-09,71500,2,Active
+E2044,Max Rossi,Sales,Sales Rep,Madrid,M,2017-04-14,78000,2,Active
+E2045,Anna Patel,Finance,Analyst,Berlin,F,2023-10-17,88000,2,Left
+E2046,Tom Müller,Finance,Controller,Berlin,M,2016-09-12,98500,3,Active
+E2047,Yara Müller,Support,Senior Agent,Berlin,M,2018-10-16,38500,5,Active
+E2048,Sara Marin,Sales,Sales Rep,Madrid,M,2020-06-23,70000,3,Active
+E2049,Sara Rossi,Sales,Sales Rep,Berlin,F,2017-03-11,71500,5,Active
+E2050,Alex Smith,Engineering,Lead Engineer,Remote,M,2016-07-03,107500,4,Active
+E2051,Luca Nowak,Sales,Sales Rep,Madrid,F,2023-04-06,49000,5,Active
+E2052,Eva Brown,Sales,Sales Rep,Madrid,M,2023-09-17,75500,4,Active
+E2053,Alex Silva,Engineering,Lead Engineer,Paris,M,2024-11-01,75000,4,Active
+E2054,Anna Marin,HR,Recruiter,Paris,F,2016-06-04,53500,5,Active
+E2055,Max Ivanov,Marketing,Content Lead,Madrid,F,2015-10-24,83500,3,Active
+E2056,Eva Ivanov,Marketing,Content Lead,Paris,F,2019-02-09,76000,4,Active
+E2057,Yara Garcia,Sales,Account Manager,Paris,M,2018-03-08,65000,5,Active
+E2058,Nina Nowak,Marketing,Marketing Exec,Remote,M,2022-02-16,68000,4,Active
+E2059,Tom Lee,HR,Recruiter,Paris,F,2021-07-14,70500,3,Active
+E2060,Eva Khan,HR,Recruiter,Madrid,M,2016-06-01,45500,3,Active
+E2061,Omar Patel,Finance,Senior Analyst,Berlin,F,2018-01-13,78500,2,Active
+E2062,Zoe Novak,Engineering,Lead Engineer,Berlin,F,2016-12-14,95500,4,Active
+E2063,Max Ivanov,HR,HR Officer,London,F,2019-01-28,75500,4,Active
+E2064,Mia Novak,Sales,Sales Lead,Berlin,F,2023-09-06,71000,3,Active
+E2065,Sam Ali,Marketing,Content Lead,Madrid,M,2022-06-26,56500,3,Active
+E2066,Tom Khan,Support,Senior Agent,Madrid,F,2019-04-10,50500,4,Left
+E2067,Leo Silva,HR,HR Manager,Remote,F,2017-07-12,66000,3,Active
+E2068,Sam Dubois,HR,HR Manager,London,F,2022-04-10,65000,4,Active
+E2069,Alex Wagner,HR,Recruiter,Madrid,M,2018-05-03,49000,3,Active
+E2070,Mia Petrov,HR,HR Officer,Madrid,F,2019-08-10,72500,3,Active
+E2071,John Petrov,Finance,Controller,Paris,F,2019-07-02,88000,3,Active
+E2072,Omar Rossi,Support,Support Lead,Berlin,F,2019-12-17,58500,2,Active
+E2073,Zoe Haddad,Finance,Analyst,Madrid,F,2016-10-14,65000,4,Left
+E2074,Tom Silva,Finance,Controller,Remote,F,2019-09-15,98500,3,Active
+E2075,Anna Lee,Engineering,Lead Engineer,London,M,2021-07-08,90500,5,Active
+E2076,Tom Ivanov,Sales,Sales Lead,Paris,M,2016-11-23,51500,5,Active
+E2077,Sam Silva,HR,HR Manager,Remote,F,2018-06-15,76000,4,Active
+E2078,Omar Khan,Marketing,Marketing Exec,Paris,F,2015-03-21,67500,2,Active
+E2079,Anna Costa,Engineering,Lead Engineer,Paris,M,2021-06-24,72000,5,Active
+E2080,Leo Novak,Sales,Account Manager,Madrid,F,2017-09-09,75000,4,Left
+E2081,Max Nowak,Engineering,Senior Engineer,London,F,2016-08-23,115500,5,Active
+E2082,Lena Dubois,Finance,Controller,Remote,F,2023-04-02,100000,3,Left
+E2083,John Khan,Engineering,Engineer,Paris,F,2020-01-12,112000,4,Active
+E2084,John Silva,Engineering,Lead Engineer,London,F,2017-05-25,116500,5,Left
+E2085,Mia Garcia,Engineering,Lead Engineer,Berlin,F,2018-04-13,107500,3,Left
+E2086,Jon Smith,Engineering,Engineer,London,M,2023-02-18,85500,2,Active
+E2087,Zoe Nowak,Support,Senior Agent,Paris,M,2015-06-01,59500,4,Active
+E2088,Anna Marin,Engineering,Senior Engineer,Madrid,F,2018-01-14,115000,4,Active
+E2089,Eva Dubois,Sales,Account Manager,Paris,M,2017-05-03,68000,3,Active
+E2090,Sam Ivanov,Sales,Account Manager,Berlin,F,2017-07-01,47000,2,Active
+E2091,Sam Lee,Marketing,Marketing Exec,Paris,F,2024-01-27,76500,5,Active
+E2092,Ravi Costa,Marketing,Content Lead,Berlin,F,2015-12-09,76500,4,Active
+E2093,Sara Rossi,Marketing,Marketing Exec,Berlin,F,2021-11-26,74500,3,Active
+E2094,Luca Marin,HR,Recruiter,Berlin,F,2020-10-10,46500,2,Active
+E2095,Alex Garcia,HR,HR Manager,London,F,2017-12-23,47500,5,Active
+E2096,Sara Lee,Finance,Analyst,Remote,F,2017-09-10,92000,4,Active
+E2097,Maria Silva,Marketing,Marketing Exec,Madrid,F,2016-03-01,55500,4,Active
+E2098,Ravi Rossi,Finance,Senior Analyst,London,M,2020-03-27,70500,5,Active
+E2099,Ravi Costa,HR,HR Officer,London,M,2018-09-14,80000,4,Active
+E2100,Sam Smith,Sales,Sales Rep,Madrid,M,2021-11-15,51500,4,Active
+E2101,Yara Novak,Support,Senior Agent,Remote,M,2015-04-26,58000,3,Active
+E2102,Yara Khan,Sales,Sales Lead,London,M,2016-06-12,54500,4,Active
+E2103,Sam Rossi,HR,HR Manager,Remote,M,2021-02-04,52000,4,Left
+E2104,Luca Brown,Sales,Account Manager,Paris,M,2023-02-26,87500,4,Active
+E2105,Ravi Ivanov,HR,HR Officer,Paris,F,2022-07-22,60500,3,Active
+E2106,Yara Rossi,Engineering,Lead Engineer,Remote,F,2023-05-14,101500,3,Active
+E2107,Sara Lee,Finance,Analyst,Paris,F,2016-04-23,61500,5,Active
+E2108,Sara Dubois,Marketing,Content Lead,Madrid,F,2022-03-22,59000,4,Active
+E2109,Zoe Brown,Engineering,Lead Engineer,Remote,M,2015-05-01,108500,3,Left
+E2110,Omar Reyes,Sales,Sales Rep,Madrid,M,2015-11-06,82000,2,Left
+E2111,Sam Ali,HR,HR Officer,Madrid,M,2021-12-16,78500,4,Active
+E2112,John Rossi,Finance,Controller,Paris,M,2020-03-05,60500,4,Active
+E2113,Yara Wagner,HR,Recruiter,Madrid,M,2022-10-13,78000,2,Active
+E2114,Anna Dubois,Support,Support Lead,Remote,M,2020-09-15,56500,3,Left
+E2115,John Wagner,HR,HR Manager,Remote,M,2018-07-10,73000,3,Active
+E2116,Lena Ali,Finance,Controller,Paris,M,2019-12-09,59000,3,Active
+E2117,Sara Novak,Support,Support Agent,London,M,2017-12-02,58000,3,Active
+E2118,Yara Müller,Support,Support Lead,Remote,F,2018-08-23,45500,4,Active
+E2119,Nina Smith,Support,Support Agent,Madrid,F,2016-07-14,46000,4,Active
+E2120,Leo Haddad,Sales,Sales Lead,Remote,M,2018-11-16,76500,5,Active
+E2121,Omar Dubois,Sales,Sales Lead,Paris,M,2024-12-11,89000,2,Active
+E2122,Max Smith,Marketing,Brand Manager,Madrid,M,2020-06-28,65000,2,Active
+E2123,Sara Müller,Sales,Account Manager,Berlin,M,2024-04-24,46000,3,Active
+E2124,Alex Patel,Sales,Sales Rep,Madrid,M,2017-07-12,48500,4,Active
+E2125,Alex Smith,HR,HR Officer,Remote,M,2023-10-23,71500,4,Active
+E2126,John Lee,Finance,Analyst,Berlin,F,2016-01-21,75500,3,Active
+E2127,Alex Petrov,Support,Support Agent,Madrid,F,2018-02-28,40500,4,Left
+E2128,Maria Dubois,Engineering,Engineer,London,F,2022-01-15,86000,2,Active
+E2129,Luca Haddad,Marketing,Marketing Exec,London,F,2017-07-18,67000,4,Active
+E2130,Mia Rossi,Sales,Account Manager,Remote,M,2015-06-24,49000,4,Active
+E2131,Ravi Petrov,Sales,Sales Lead,Paris,F,2021-06-22,65000,4,Active
+E2132,Yara Rossi,Support,Support Lead,Remote,M,2023-05-09,53500,4,Active
+E2133,Anna Wagner,HR,Recruiter,Madrid,F,2016-11-01,72000,4,Active
+E2134,Luca Müller,Finance,Analyst,London,M,2021-12-05,66000,2,Left
+E2135,Sam Reyes,Engineering,Lead Engineer,Madrid,M,2017-02-14,88500,4,Active
+E2136,Maria Ali,Marketing,Brand Manager,Madrid,M,2020-11-09,48000,4,Active
+E2137,Priya Wagner,Support,Support Agent,Berlin,M,2022-12-22,39500,4,Active
+E2138,Ravi Khan,HR,HR Manager,Madrid,M,2021-05-11,79000,3,Active
+E2139,Sam Silva,Support,Senior Agent,Berlin,M,2019-04-10,45000,4,Active
+E2140,Lena Silva,Engineering,Lead Engineer,Madrid,M,2016-04-14,100000,3,Active
+E2141,Alex Nowak,Support,Senior Agent,Remote,M,2020-08-24,50000,5,Active
+E2142,Mia Khan,Support,Support Lead,London,F,2021-12-09,51000,4,Active
+E2143,Sara Khan,Support,Support Lead,Berlin,F,2015-11-06,56000,3,Active
+E2144,Eva Khan,Support,Support Lead,Remote,F,2018-07-02,56500,2,Active
+E2145,Omar Rossi,Finance,Controller,Paris,F,2022-06-22,66000,4,Active
+E2146,Sara Nowak,Marketing,Marketing Exec,Berlin,M,2020-02-25,52000,4,Left
+E2147,Jon Garcia,Finance,Controller,Madrid,M,2021-03-11,59500,4,Left
+E2148,Tom Lee,Finance,Controller,Madrid,M,2024-03-06,61500,5,Active
+E2149,Leo Rossi,Finance,Controller,Berlin,F,2020-07-22,92500,5,Active
+E2150,Jon Petrov,Support,Support Agent,Berlin,F,2024-07-17,47500,4,Left

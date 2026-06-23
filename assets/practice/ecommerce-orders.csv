@@ -1,0 +1,251 @@
+Order ID,Order Date,Customer,Segment,Country,Category,Sub-Category,Sales,Quantity,Discount,Profit
+O5001,2024-09-29,Vandelay,Consumer,Australia,Technology,Accessories,2266.69,4,0,202.83
+O5002,2024-06-03,Wayne LLC,Corporate,Canada,Technology,Machines,3016.64,8,0.3,144.23
+O5003,2024-10-11,Pied Piper,Consumer,USA,Office Supplies,Binders,528.05,7,0,165.8
+O5004,2024-03-04,Pied Piper,Corporate,UK,Furniture,Bookcases,2739.82,5,0,616.21
+O5005,2024-10-11,Wayne LLC,Corporate,UK,Technology,Machines,919.5,6,0.2,91.26
+O5006,2024-10-13,Globex,Consumer,UK,Technology,Phones,335.94,1,0.3,34.83
+O5007,2024-04-13,Umbrella,Home Office,Australia,Furniture,Chairs,757.75,6,0.1,-39.63
+O5008,2024-06-06,Hooli,Consumer,USA,Office Supplies,Art,589.6,8,0.2,23.29
+O5009,2024-05-04,Acme Co,Home Office,Australia,Office Supplies,Art,500.75,7,0,-47.32
+O5010,2024-01-18,Gekko Cap,Consumer,Canada,Office Supplies,Storage,245.61,3,0.3,8.87
+O5011,2024-08-29,Wonka,Corporate,France,Technology,Machines,2341.29,8,0.2,-62.76
+O5012,2024-04-04,Gekko Cap,Corporate,Canada,Furniture,Furnishings,2797.78,6,0,-185.14
+O5013,2024-08-10,Stark Ind,Home Office,Germany,Office Supplies,Labels,215.17,3,0,57.16
+O5014,2024-10-25,Globex,Home Office,USA,Technology,Phones,266.24,1,0,66.16
+O5015,2024-12-14,Acme Co,Home Office,France,Furniture,Tables,2115.17,4,0,-249.05
+O5016,2024-02-15,Initech,Corporate,USA,Technology,Machines,587.87,1,0,33.34
+O5017,2024-09-12,Soylent,Consumer,Australia,Furniture,Tables,1648.84,4,0,54.82
+O5018,2024-09-25,Initech,Home Office,Germany,Furniture,Chairs,3932.47,8,0.2,-257.67
+O5019,2024-02-12,Vandelay,Consumer,UK,Furniture,Bookcases,2349.77,7,0.1,-127.86
+O5020,2024-09-03,Vandelay,Corporate,France,Office Supplies,Binders,144.56,3,0,-11.76
+O5021,2024-04-05,Stark Ind,Home Office,Germany,Office Supplies,Paper,21.59,1,0,-1.63
+O5022,2024-05-24,Gekko Cap,Corporate,UK,Furniture,Bookcases,335.71,1,0.2,-12.93
+O5023,2024-02-29,Umbrella,Home Office,France,Furniture,Bookcases,877.09,3,0,20.07
+O5024,2024-03-07,Vandelay,Consumer,France,Office Supplies,Paper,159.69,7,0,29.75
+O5025,2024-08-08,Gekko Cap,Corporate,Germany,Technology,Phones,1969.39,8,0,564.49
+O5026,2024-12-27,Wayne LLC,Corporate,France,Technology,Copiers,2348.53,5,0,337.67
+O5027,2024-04-21,Acme Co,Consumer,UK,Technology,Copiers,676.3,2,0.1,-74.98
+O5028,2024-03-08,Umbrella,Consumer,UK,Furniture,Furnishings,1965.43,6,0,525.17
+O5029,2024-07-22,Globex,Home Office,Canada,Technology,Copiers,1854.07,3,0.2,37.69
+O5030,2024-09-16,Soylent,Consumer,Canada,Office Supplies,Art,59.91,1,0.1,3.4
+O5031,2024-05-09,Acme Co,Corporate,UK,Technology,Copiers,2270.43,5,0.3,-345.16
+O5032,2024-04-09,Soylent,Corporate,USA,Office Supplies,Storage,83.16,1,0,20.97
+O5033,2024-03-02,Umbrella,Consumer,France,Furniture,Bookcases,3466.18,7,0,87.74
+O5034,2024-10-29,Stark Ind,Home Office,Germany,Office Supplies,Paper,313.5,5,0.3,32.62
+O5035,2024-04-15,Acme Co,Home Office,Germany,Office Supplies,Binders,358.03,5,0,87.47
+O5036,2024-09-18,Pied Piper,Corporate,Germany,Furniture,Furnishings,1566.97,6,0,104.19
+O5037,2024-12-09,Globex,Corporate,France,Office Supplies,Paper,60.51,1,0.2,2.73
+O5038,2024-07-17,Initech,Home Office,Germany,Office Supplies,Binders,296.12,6,0,62.4
+O5039,2024-05-31,Soylent,Corporate,Australia,Furniture,Tables,3753.75,8,0,95.73
+O5040,2024-10-25,Stark Ind,Consumer,UK,Technology,Phones,1153.81,5,0,66.39
+O5041,2024-10-30,Initech,Corporate,Canada,Office Supplies,Paper,253.93,7,0.3,41.64
+O5042,2024-03-22,Stark Ind,Home Office,Australia,Furniture,Furnishings,259.96,2,0.3,9.07
+O5043,2024-05-20,Initech,Home Office,Australia,Office Supplies,Labels,314.42,6,0.3,-30.37
+O5044,2024-10-08,Pied Piper,Corporate,Canada,Furniture,Chairs,881.65,2,0,205.14
+O5045,2024-11-13,Wonka,Home Office,Australia,Technology,Phones,3693.65,8,0.3,-963.14
+O5046,2024-08-18,Globex,Consumer,UK,Office Supplies,Art,74.57,1,0,-10.42
+O5047,2024-07-02,Gekko Cap,Consumer,Canada,Technology,Accessories,4168.1,8,0.3,-457.62
+O5048,2024-10-09,Umbrella,Consumer,USA,Technology,Accessories,1760.13,4,0,-165.23
+O5049,2024-12-18,Wonka,Corporate,Germany,Furniture,Tables,1429.53,4,0.1,81.32
+O5050,2024-05-20,Umbrella,Consumer,USA,Office Supplies,Storage,24.32,1,0,-1.79
+O5051,2024-10-13,Pied Piper,Home Office,Australia,Furniture,Bookcases,1283.57,7,0.2,163.61
+O5052,2024-07-05,Wayne LLC,Corporate,UK,Furniture,Chairs,2505.88,7,0,-55.12
+O5053,2024-06-06,Vandelay,Corporate,USA,Technology,Phones,2062.87,6,0,-285.29
+O5054,2024-09-09,Gekko Cap,Consumer,UK,Technology,Accessories,2949.69,8,0.1,25.98
+O5055,2024-01-27,Gekko Cap,Consumer,Canada,Office Supplies,Labels,321.06,7,0.3,-27.14
+O5056,2024-06-06,Stark Ind,Corporate,UK,Office Supplies,Storage,293.59,7,0,-26.44
+O5057,2024-04-24,Vandelay,Home Office,Canada,Furniture,Bookcases,293.25,1,0.2,71.27
+O5058,2024-05-22,Pied Piper,Corporate,Canada,Furniture,Tables,1463.77,3,0.2,72.33
+O5059,2024-10-29,Stark Ind,Corporate,Canada,Furniture,Tables,473.68,1,0.3,-34.63
+O5060,2024-10-21,Initech,Corporate,USA,Furniture,Furnishings,765.75,6,0,258.97
+O5061,2024-11-13,Acme Co,Corporate,Germany,Office Supplies,Paper,149.85,3,0,-21.58
+O5062,2024-03-08,Hooli,Corporate,Australia,Technology,Machines,866.5,3,0.2,-46.03
+O5063,2024-03-08,Stark Ind,Consumer,France,Furniture,Chairs,3546.43,8,0,717.8
+O5064,2024-03-24,Globex,Consumer,France,Furniture,Chairs,1833.35,4,0.2,-313.43
+O5065,2024-03-20,Hooli,Home Office,Australia,Technology,Phones,1430.0,6,0,-181.06
+O5066,2024-09-27,Gekko Cap,Corporate,Australia,Furniture,Chairs,1163.09,3,0,297.61
+O5067,2024-08-26,Hooli,Home Office,France,Technology,Accessories,599.77,2,0.2,1.59
+O5068,2024-08-24,Initech,Home Office,Australia,Technology,Machines,4759.98,8,0.3,469.18
+O5069,2024-07-15,Umbrella,Home Office,UK,Technology,Accessories,2375.52,7,0.2,288.43
+O5070,2024-01-06,Acme Co,Consumer,Australia,Office Supplies,Labels,130.13,6,0.1,-1.34
+O5071,2024-09-07,Soylent,Corporate,UK,Office Supplies,Binders,152.04,5,0.1,-0.29
+O5072,2024-06-21,Wayne LLC,Consumer,France,Furniture,Bookcases,560.38,2,0,110.61
+O5073,2024-03-27,Acme Co,Corporate,Canada,Furniture,Bookcases,1031.75,6,0.3,-74.17
+O5074,2024-08-07,Wonka,Corporate,Canada,Technology,Phones,3086.05,5,0,-209.49
+O5075,2024-03-14,Stark Ind,Corporate,Australia,Furniture,Tables,3499.82,8,0,196.66
+O5076,2024-07-30,Acme Co,Home Office,Germany,Office Supplies,Paper,393.34,6,0,94.47
+O5077,2024-04-25,Wayne LLC,Home Office,Germany,Office Supplies,Storage,118.13,4,0.2,4.34
+O5078,2024-05-04,Acme Co,Home Office,UK,Office Supplies,Storage,223.8,5,0.1,-33.53
+O5079,2024-10-26,Hooli,Consumer,Canada,Furniture,Bookcases,645.5,2,0,-57.68
+O5080,2024-06-08,Stark Ind,Corporate,USA,Furniture,Tables,945.37,6,0,190.81
+O5081,2024-03-28,Acme Co,Home Office,UK,Technology,Copiers,3599.58,7,0,857.8
+O5082,2024-11-22,Globex,Corporate,France,Technology,Phones,2250.8,8,0.3,-471.44
+O5083,2024-01-09,Initech,Corporate,France,Furniture,Chairs,3428.18,7,0,214.15
+O5084,2024-01-30,Initech,Consumer,Canada,Office Supplies,Storage,227.7,8,0,-1.39
+O5085,2024-02-14,Acme Co,Corporate,Australia,Office Supplies,Paper,333.16,4,0.3,-50.39
+O5086,2024-03-19,Wayne LLC,Home Office,UK,Furniture,Tables,1542.13,7,0,-221.41
+O5087,2024-03-10,Gekko Cap,Corporate,Australia,Office Supplies,Storage,22.35,1,0.3,-1.65
+O5088,2024-05-16,Stark Ind,Corporate,Germany,Furniture,Tables,2236.4,5,0.2,-164.19
+O5089,2024-01-11,Globex,Home Office,Germany,Office Supplies,Binders,212.08,3,0.3,-34.27
+O5090,2024-02-23,Initech,Consumer,Germany,Technology,Copiers,1156.93,7,0.2,244.51
+O5091,2024-12-03,Soylent,Home Office,Canada,Technology,Accessories,213.83,1,0.2,36.27
+O5092,2024-02-25,Wayne LLC,Consumer,Australia,Furniture,Chairs,2676.54,7,0.1,553.44
+O5093,2024-07-18,Vandelay,Home Office,USA,Office Supplies,Storage,309.2,6,0.2,78.42
+O5094,2024-09-08,Globex,Consumer,Canada,Technology,Copiers,1181.82,5,0.1,172.25
+O5095,2024-09-12,Pied Piper,Home Office,Canada,Technology,Machines,549.57,1,0.2,52.63
+O5096,2024-07-09,Umbrella,Consumer,France,Technology,Phones,2027.58,5,0.3,-91.57
+O5097,2024-09-20,Soylent,Home Office,France,Office Supplies,Storage,648.19,8,0,-45.33
+O5098,2024-09-10,Initech,Consumer,Australia,Office Supplies,Storage,436.82,5,0,-38.25
+O5099,2024-11-03,Vandelay,Corporate,UK,Office Supplies,Labels,81.65,4,0.2,15.02
+O5100,2024-06-23,Acme Co,Corporate,France,Technology,Machines,763.22,5,0,-113.71
+O5101,2024-09-26,Wonka,Corporate,Canada,Technology,Copiers,1549.49,3,0,287.05
+O5102,2024-04-09,Wonka,Corporate,Canada,Office Supplies,Paper,190.45,5,0,22.33
+O5103,2024-05-23,Globex,Home Office,UK,Furniture,Bookcases,207.63,1,0.1,-3.78
+O5104,2024-07-10,Gekko Cap,Home Office,France,Furniture,Chairs,1470.6,3,0.2,-234.46
+O5105,2024-04-11,Wonka,Home Office,USA,Office Supplies,Storage,398.25,6,0,55.2
+O5106,2024-10-13,Stark Ind,Home Office,USA,Furniture,Furnishings,740.08,5,0.2,120.96
+O5107,2024-06-26,Hooli,Consumer,Canada,Technology,Machines,3260.93,7,0,336.91
+O5108,2024-11-11,Hooli,Home Office,UK,Technology,Phones,752.34,4,0,-55.36
+O5109,2024-03-19,Vandelay,Consumer,Germany,Technology,Machines,1694.28,6,0,359.74
+O5110,2024-11-17,Stark Ind,Home Office,France,Office Supplies,Storage,97.03,4,0,9.71
+O5111,2024-06-23,Soylent,Home Office,UK,Technology,Phones,1309.61,5,0.2,79.0
+O5112,2024-08-10,Wayne LLC,Consumer,Canada,Technology,Accessories,3040.0,6,0,332.16
+O5113,2024-09-21,Wonka,Home Office,USA,Technology,Accessories,1093.88,5,0,-19.2
+O5114,2024-10-04,Stark Ind,Consumer,USA,Technology,Accessories,783.05,5,0,74.63
+O5115,2024-08-13,Globex,Corporate,UK,Technology,Accessories,988.1,3,0.2,-176.91
+O5116,2024-07-06,Wonka,Corporate,USA,Furniture,Furnishings,1020.79,3,0,192.76
+O5117,2024-11-04,Gekko Cap,Corporate,Germany,Furniture,Furnishings,597.61,4,0.3,47.22
+O5118,2024-08-26,Vandelay,Home Office,USA,Furniture,Tables,2120.3,4,0.3,226.83
+O5119,2024-04-27,Stark Ind,Consumer,France,Technology,Phones,260.48,1,0,28.89
+O5120,2024-05-29,Initech,Home Office,France,Office Supplies,Labels,199.43,5,0.2,-41.44
+O5121,2024-05-03,Acme Co,Home Office,Canada,Furniture,Bookcases,3567.38,8,0,-483.05
+O5122,2024-08-17,Globex,Corporate,Australia,Technology,Accessories,1026.69,6,0,99.2
+O5123,2024-01-08,Stark Ind,Consumer,Australia,Technology,Phones,1116.25,3,0.1,-189.7
+O5124,2024-11-14,Stark Ind,Home Office,Germany,Furniture,Chairs,3146.37,8,0.2,528.02
+O5125,2024-11-06,Globex,Consumer,UK,Office Supplies,Art,127.33,3,0.2,-8.2
+O5126,2024-07-19,Acme Co,Consumer,USA,Furniture,Furnishings,205.28,1,0,2.96
+O5127,2024-09-22,Initech,Consumer,UK,Office Supplies,Labels,473.96,6,0.1,-60.22
+O5128,2024-12-04,Gekko Cap,Consumer,USA,Furniture,Bookcases,908.25,2,0.3,89.99
+O5129,2024-08-02,Initech,Home Office,UK,Furniture,Bookcases,497.91,2,0,73.96
+O5130,2024-10-16,Pied Piper,Corporate,USA,Office Supplies,Storage,347.1,7,0.1,-10.65
+O5131,2024-04-13,Stark Ind,Home Office,Australia,Office Supplies,Art,276.6,6,0.1,12.3
+O5132,2024-01-30,Pied Piper,Corporate,France,Furniture,Bookcases,1236.35,4,0.1,-69.66
+O5133,2024-01-18,Pied Piper,Home Office,UK,Furniture,Bookcases,1112.41,3,0.1,230.65
+O5134,2024-01-13,Acme Co,Corporate,Germany,Furniture,Furnishings,2375.77,5,0,120.26
+O5135,2024-10-16,Vandelay,Corporate,Germany,Technology,Copiers,4007.66,7,0,1144.51
+O5136,2024-06-14,Initech,Corporate,Germany,Technology,Copiers,3934.96,6,0.2,1009.69
+O5137,2024-12-26,Wonka,Consumer,UK,Technology,Copiers,319.02,1,0,83.75
+O5138,2024-11-22,Gekko Cap,Corporate,UK,Technology,Copiers,3095.54,7,0.1,-142.78
+O5139,2024-08-19,Umbrella,Home Office,Canada,Furniture,Furnishings,1641.19,5,0,-138.73
+O5140,2024-05-07,Hooli,Consumer,USA,Office Supplies,Storage,290.71,5,0.1,86.39
+O5141,2024-05-26,Stark Ind,Corporate,France,Office Supplies,Labels,475.58,8,0,26.4
+O5142,2024-03-07,Gekko Cap,Home Office,USA,Office Supplies,Paper,125.19,2,0,3.4
+O5143,2024-01-08,Hooli,Home Office,UK,Office Supplies,Art,385.92,6,0.3,29.36
+O5144,2024-04-09,Acme Co,Consumer,Germany,Furniture,Chairs,527.13,1,0,35.23
+O5145,2024-08-18,Wayne LLC,Consumer,UK,Office Supplies,Art,67.23,1,0,5.14
+O5146,2024-06-29,Hooli,Consumer,France,Furniture,Chairs,922.57,2,0.1,84.42
+O5147,2024-07-17,Hooli,Corporate,UK,Furniture,Furnishings,1822.05,6,0.3,-62.96
+O5148,2024-06-27,Globex,Consumer,Canada,Office Supplies,Labels,326.03,7,0,107.69
+O5149,2024-06-21,Initech,Consumer,France,Furniture,Tables,2087.94,8,0,443.88
+O5150,2024-01-18,Initech,Corporate,France,Furniture,Bookcases,483.94,1,0.3,76.0
+O5151,2024-08-12,Vandelay,Home Office,USA,Furniture,Chairs,534.09,2,0.1,161.58
+O5152,2024-07-28,Pied Piper,Corporate,Canada,Furniture,Furnishings,663.77,3,0.2,-143.99
+O5153,2024-02-03,Pied Piper,Corporate,USA,Office Supplies,Labels,90.83,2,0,4.04
+O5154,2024-10-01,Wonka,Home Office,France,Furniture,Tables,514.41,3,0,178.11
+O5155,2024-02-12,Stark Ind,Consumer,USA,Office Supplies,Binders,310.54,7,0,-37.55
+O5156,2024-01-17,Vandelay,Corporate,Australia,Furniture,Furnishings,3588.54,8,0,470.47
+O5157,2024-10-10,Globex,Consumer,Australia,Technology,Machines,2269.09,8,0.1,274.92
+O5158,2024-12-06,Vandelay,Home Office,UK,Office Supplies,Art,33.84,1,0,5.76
+O5159,2024-04-03,Soylent,Consumer,Australia,Technology,Phones,2498.54,4,0,-184.03
+O5160,2024-02-09,Stark Ind,Home Office,Germany,Technology,Accessories,4616.93,8,0.3,-268.6
+O5161,2024-11-20,Hooli,Consumer,Canada,Office Supplies,Labels,123.66,6,0,-10.82
+O5162,2024-06-14,Vandelay,Consumer,USA,Furniture,Bookcases,184.28,1,0,-27.16
+O5163,2024-07-04,Globex,Home Office,Canada,Furniture,Furnishings,1005.16,2,0,-118.23
+O5164,2024-08-19,Globex,Consumer,Australia,Furniture,Tables,2212.99,6,0,111.87
+O5165,2024-01-26,Gekko Cap,Home Office,Germany,Office Supplies,Binders,325.1,4,0.1,-50.58
+O5166,2024-11-03,Pied Piper,Corporate,USA,Furniture,Furnishings,434.69,1,0.2,-45.57
+O5167,2024-12-24,Globex,Consumer,UK,Furniture,Tables,711.89,3,0,59.44
+O5168,2024-07-15,Umbrella,Home Office,Australia,Furniture,Tables,1347.36,8,0,-143.62
+O5169,2024-04-25,Vandelay,Home Office,Germany,Furniture,Tables,1026.65,2,0,37.62
+O5170,2024-01-10,Hooli,Corporate,France,Technology,Copiers,3088.22,6,0,-233.34
+O5171,2024-03-15,Pied Piper,Consumer,Germany,Office Supplies,Art,190.82,4,0.2,30.83
+O5172,2024-01-05,Hooli,Home Office,Canada,Office Supplies,Paper,198.92,4,0.2,17.2
+O5173,2024-03-14,Initech,Home Office,Canada,Technology,Accessories,213.05,1,0.1,22.03
+O5174,2024-05-21,Wonka,Corporate,Germany,Technology,Accessories,1384.38,3,0,181.48
+O5175,2024-06-29,Initech,Corporate,USA,Furniture,Bookcases,767.8,6,0.2,-100.9
+O5176,2024-03-30,Wonka,Corporate,UK,Technology,Machines,2819.11,6,0.3,565.09
+O5177,2024-06-11,Initech,Corporate,Germany,Technology,Accessories,556.9,1,0,94.92
+O5178,2024-02-08,Wayne LLC,Corporate,Canada,Furniture,Tables,1635.89,6,0.1,-139.39
+O5179,2024-06-19,Vandelay,Consumer,USA,Technology,Accessories,1588.85,3,0.2,-67.25
+O5180,2024-07-01,Pied Piper,Corporate,USA,Furniture,Furnishings,2889.88,7,0,-126.02
+O5181,2024-05-27,Stark Ind,Corporate,Canada,Office Supplies,Storage,148.55,4,0,36.46
+O5182,2024-04-20,Gekko Cap,Home Office,USA,Furniture,Bookcases,2790.95,7,0.2,12.83
+O5183,2024-07-24,Pied Piper,Corporate,Canada,Furniture,Chairs,3162.67,7,0,-97.74
+O5184,2024-03-28,Pied Piper,Corporate,France,Technology,Copiers,1011.68,2,0,105.81
+O5185,2024-07-13,Wonka,Home Office,UK,Office Supplies,Paper,316.96,7,0.1,-8.13
+O5186,2024-09-17,Soylent,Corporate,France,Technology,Machines,2904.39,6,0,-158.66
+O5187,2024-04-16,Globex,Home Office,Australia,Office Supplies,Paper,233.71,6,0.1,60.85
+O5188,2024-08-13,Vandelay,Consumer,France,Office Supplies,Labels,346.17,4,0.1,-51.18
+O5189,2024-08-07,Gekko Cap,Consumer,France,Furniture,Tables,943.2,4,0.3,53.06
+O5190,2024-11-08,Globex,Corporate,Germany,Furniture,Furnishings,836.15,5,0.1,64.32
+O5191,2024-08-27,Hooli,Corporate,UK,Furniture,Furnishings,1405.02,4,0,483.82
+O5192,2024-09-01,Umbrella,Consumer,France,Furniture,Chairs,1312.58,5,0.3,19.89
+O5193,2024-02-20,Umbrella,Consumer,UK,Furniture,Chairs,1081.09,4,0.2,190.65
+O5194,2024-04-29,Stark Ind,Corporate,Australia,Office Supplies,Art,60.67,1,0.1,2.88
+O5195,2024-03-22,Initech,Home Office,UK,Furniture,Bookcases,608.06,3,0,111.42
+O5196,2024-05-10,Soylent,Home Office,France,Furniture,Bookcases,3397.88,7,0,-364.58
+O5197,2024-08-20,Pied Piper,Home Office,USA,Technology,Phones,4567.19,8,0,-283.29
+O5198,2024-01-15,Vandelay,Consumer,Germany,Technology,Machines,752.41,2,0.3,62.26
+O5199,2024-01-27,Umbrella,Corporate,UK,Technology,Machines,2664.78,7,0,449.83
+O5200,2024-11-05,Wonka,Corporate,France,Technology,Copiers,1458.61,3,0,450.08
+O5201,2024-11-10,Stark Ind,Corporate,Australia,Office Supplies,Storage,294.35,5,0.2,-18.35
+O5202,2024-02-10,Initech,Home Office,Germany,Furniture,Bookcases,1948.86,5,0.1,50.37
+O5203,2024-01-28,Stark Ind,Corporate,Australia,Technology,Phones,923.27,5,0,-37.57
+O5204,2024-08-16,Umbrella,Consumer,Germany,Office Supplies,Art,338.65,7,0.1,69.43
+O5205,2024-04-03,Stark Ind,Home Office,Germany,Technology,Phones,991.7,2,0.1,-47.98
+O5206,2024-02-28,Hooli,Corporate,Australia,Furniture,Bookcases,1194.36,4,0.1,203.53
+O5207,2024-06-23,Umbrella,Corporate,Germany,Technology,Machines,1263.97,5,0.2,-78.62
+O5208,2024-06-29,Wayne LLC,Home Office,Germany,Technology,Accessories,444.01,1,0.3,72.61
+O5209,2024-06-25,Globex,Consumer,USA,Furniture,Bookcases,1097.51,6,0.1,-59.25
+O5210,2024-06-10,Pied Piper,Consumer,Canada,Technology,Copiers,3323.91,6,0,312.26
+O5211,2024-05-09,Globex,Corporate,UK,Furniture,Furnishings,762.23,4,0,82.55
+O5212,2024-11-22,Stark Ind,Consumer,Germany,Furniture,Furnishings,1160.48,3,0,324.54
+O5213,2024-11-30,Acme Co,Corporate,Germany,Technology,Copiers,1831.99,5,0,-196.79
+O5214,2024-01-17,Pied Piper,Home Office,UK,Furniture,Chairs,4001.43,8,0,-143.58
+O5215,2024-12-25,Hooli,Consumer,Australia,Office Supplies,Binders,337.8,4,0,73.07
+O5216,2024-05-22,Gekko Cap,Consumer,USA,Office Supplies,Binders,670.88,8,0.3,24.09
+O5217,2024-05-08,Vandelay,Corporate,UK,Office Supplies,Paper,101.34,3,0.2,7.53
+O5218,2024-07-20,Soylent,Corporate,Canada,Technology,Machines,253.59,1,0.1,-19.0
+O5219,2024-04-30,Hooli,Corporate,USA,Technology,Machines,940.53,6,0.1,138.53
+O5220,2024-01-31,Acme Co,Home Office,Australia,Furniture,Furnishings,3401.35,7,0.3,-143.08
+O5221,2024-11-05,Umbrella,Corporate,France,Technology,Copiers,1584.47,6,0.3,264.31
+O5222,2024-03-24,Soylent,Corporate,Australia,Office Supplies,Storage,126.85,6,0.2,-7.29
+O5223,2024-07-23,Globex,Corporate,France,Office Supplies,Art,239.12,8,0.3,10.3
+O5224,2024-07-31,Hooli,Corporate,UK,Furniture,Furnishings,2603.97,8,0,-88.1
+O5225,2024-02-27,Hooli,Home Office,Australia,Furniture,Furnishings,1544.36,6,0.2,108.77
+O5226,2024-08-25,Soylent,Home Office,Australia,Furniture,Bookcases,981.91,4,0.1,-49.7
+O5227,2024-02-14,Initech,Consumer,UK,Office Supplies,Labels,204.45,5,0,1.49
+O5228,2024-08-27,Globex,Corporate,Germany,Furniture,Bookcases,2443.66,5,0,464.14
+O5229,2024-06-01,Wonka,Corporate,Germany,Technology,Accessories,723.92,3,0.1,153.5
+O5230,2024-09-23,Wayne LLC,Home Office,Canada,Office Supplies,Paper,134.61,6,0,9.03
+O5231,2024-08-22,Hooli,Corporate,USA,Office Supplies,Binders,67.34,3,0,-7.21
+O5232,2024-08-21,Soylent,Corporate,USA,Office Supplies,Art,254.86,4,0.3,18.53
+O5233,2024-07-30,Pied Piper,Home Office,Canada,Furniture,Furnishings,1427.98,4,0.1,54.59
+O5234,2024-08-21,Pied Piper,Corporate,Canada,Technology,Copiers,1979.35,3,0.2,-134.72
+O5235,2024-12-26,Acme Co,Corporate,France,Office Supplies,Art,597.12,8,0.1,142.65
+O5236,2024-09-03,Vandelay,Home Office,Germany,Technology,Copiers,554.45,1,0.2,147.25
+O5237,2024-09-26,Globex,Consumer,Germany,Technology,Machines,2625.97,4,0.1,-211.1
+O5238,2024-08-24,Umbrella,Home Office,UK,Office Supplies,Binders,140.02,4,0.2,14.62
+O5239,2024-05-08,Gekko Cap,Consumer,Germany,Furniture,Bookcases,805.34,3,0,66.31
+O5240,2024-01-12,Acme Co,Home Office,Germany,Technology,Copiers,2376.54,7,0.1,-226.64
+O5241,2024-05-27,Wonka,Corporate,France,Office Supplies,Art,418.28,5,0,48.49
+O5242,2024-10-23,Initech,Consumer,Germany,Technology,Phones,3539.7,6,0,658.56
+O5243,2024-03-03,Acme Co,Consumer,USA,Technology,Machines,988.12,2,0,296.64
+O5244,2024-02-09,Globex,Home Office,USA,Office Supplies,Art,309.65,4,0,83.91
+O5245,2024-09-13,Initech,Corporate,UK,Office Supplies,Art,137.41,2,0.2,15.9
+O5246,2024-01-16,Vandelay,Home Office,Canada,Furniture,Bookcases,1031.34,2,0,345.4
+O5247,2024-02-23,Acme Co,Home Office,Canada,Office Supplies,Labels,84.47,1,0,-4.94
+O5248,2024-06-16,Wonka,Home Office,France,Technology,Accessories,1698.75,8,0.1,-188.31
+O5249,2024-11-12,Gekko Cap,Home Office,UK,Technology,Machines,4287.85,8,0.2,311.07
+O5250,2024-03-08,Gekko Cap,Consumer,France,Furniture,Tables,2002.85,4,0,186.56

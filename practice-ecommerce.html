@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice — E-commerce Orders · DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="hub" style="--accent:#0E7490">
+<div class="scrollbar"></div>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="practice.html" aria-current="page">Practice</a>
+  </div>
+</div></nav>
+<header class="hero" style="padding-bottom:14px"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">🛒</span> Practice dataset</span>
+  <h1 style="font-size:2.3rem">E-commerce Orders</h1>
+  <p class="lead">Online retail orders with sales, discount and profit — ideal for margin analysis, profit by category and a Superstore-style dashboard.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+    <a class="btn" href="assets/practice/ecommerce-orders.xlsx" download>⬇ Download Excel (.xlsx)</a>
+    <a class="btn ghost" href="assets/practice/ecommerce-orders.csv" download>⬇ CSV</a>
+    <a class="btn ghost" href="practice.html">← All themes</a>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:12px">250 rows · 11 columns · fictional data for practice. Works in Excel, Google Sheets or Power BI.</p>
+</div></header>
+<section><div class="wrap">
+  <span class="eyebrow">What's in the file</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .5em">Columns</h2>
+  <table class="tbl"><thead><tr><th>Column</th><th>What it holds</th></tr></thead><tbody>
+    <tr><td><code>Order ID</code></td><td>Unique order id</td></tr>
+    <tr><td><code>Order Date</code></td><td>Date the order was placed</td></tr>
+    <tr><td><code>Customer</code></td><td>Buying company</td></tr>
+    <tr><td><code>Segment</code></td><td>Consumer, Corporate, Home Office</td></tr>
+    <tr><td><code>Country</code></td><td>Ship-to country</td></tr>
+    <tr><td><code>Category</code></td><td>Furniture, Office Supplies, Technology</td></tr>
+    <tr><td><code>Sub-Category</code></td><td>Finer product group</td></tr>
+    <tr><td><code>Sales</code></td><td>Order value ($)</td></tr>
+    <tr><td><code>Quantity</code></td><td>Units ordered</td></tr>
+    <tr><td><code>Discount</code></td><td>Discount as a fraction (0–0.3)</td></tr>
+    <tr><td><code>Profit</code></td><td>Profit ($, can be negative)</td></tr>
+  </tbody></table>
+  <h3 style="margin:26px 0 8px">First few rows</h3>
+  <div style="overflow:auto"><table class="tbl"><thead><tr><th>Order ID</th><th>Order Date</th><th>Customer</th><th>Segment</th><th>Country</th><th>Category</th><th>Sub-Category</th><th>Sales</th><th>Quantity</th><th>Discount</th><th>Profit</th></tr></thead><tbody>
+    <tr><td>O5001</td><td>2024-09-29</td><td>Vandelay</td><td>Consumer</td><td>Australia</td><td>Technology</td><td>Accessories</td><td>2266.69</td><td>4</td><td>0</td><td>202.83</td></tr>
+    <tr><td>O5002</td><td>2024-06-03</td><td>Wayne LLC</td><td>Corporate</td><td>Canada</td><td>Technology</td><td>Machines</td><td>3016.64</td><td>8</td><td>0.3</td><td>144.23</td></tr>
+    <tr><td>O5003</td><td>2024-10-11</td><td>Pied Piper</td><td>Consumer</td><td>USA</td><td>Office Supplies</td><td>Binders</td><td>528.05</td><td>7</td><td>0</td><td>165.8</td></tr>
+    <tr><td>O5004</td><td>2024-03-04</td><td>Pied Piper</td><td>Corporate</td><td>UK</td><td>Furniture</td><td>Bookcases</td><td>2739.82</td><td>5</td><td>0</td><td>616.21</td></tr>
+    <tr><td>O5005</td><td>2024-10-11</td><td>Wayne LLC</td><td>Corporate</td><td>UK</td><td>Technology</td><td>Machines</td><td>919.5</td><td>6</td><td>0.2</td><td>91.26</td></tr>
+    <tr><td>O5006</td><td>2024-10-13</td><td>Globex</td><td>Consumer</td><td>UK</td><td>Technology</td><td>Phones</td><td>335.94</td><td>1</td><td>0.3</td><td>34.83</td></tr>
+  </tbody></table></div>
+</div></section>
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Practice tasks</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .3em">9 tasks — try them, then reveal the answer</h2>
+  <p class="lead">Build each one yourself in Excel (or Power BI) first. The answer shows a working Excel formula, the result from this dataset, and how you'd do it in Power BI.</p>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 1.</b> What are <b>total sales</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(H2:H251)</span></div>
+      <p><b>Answer:</b> $316,302</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: SUM(Sales).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 2.</b> What is <b>total profit</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(K2:K251)</span></div>
+      <p><b>Answer:</b> $12,984</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: SUM(Profit).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 3.</b> What is the overall <b>profit margin</b> (profit ÷ sales)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(K2:K251)/SUM(H2:H251)</span></div>
+      <p><b>Answer:</b> 4.1%</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Measure: DIVIDE(SUM(Profit), SUM(Sales)), formatted as %.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 4.</b> What are total sales in the <b>Technology</b> category?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(F:F,"Technology",H:H)</span></div>
+      <p><b>Answer:</b> $150,461</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> SUM(Sales) filtered to Category = Technology.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 5.</b> How many orders are <b>loss-making</b> (Profit &lt; 0)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(K:K,"&lt;0")</span></div>
+      <p><b>Answer:</b> 98</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: COUNTROWS(FILTER(Orders, Orders[Profit]<0)).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 6.</b> Which <b>category</b> is the most profitable?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">PivotTable: Category → Rows, Sum of Profit → Values (or SUMIF per category)</span></div>
+      <p><b>Answer:</b> <b>Furniture</b> ($6,185)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Bar chart of SUM(Profit) by Category.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 7.</b> What is the <b>average discount</b> given?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGE(J2:J251)</span></div>
+      <p><b>Answer:</b> 9.9%</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: AVERAGE(Discount) as %.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 8.</b> What are total sales in <b>Germany</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(E:E,"Germany",H:H)</span></div>
+      <p><b>Answer:</b> $61,392</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> SUM(Sales) filtered to Country = Germany; or a Map visual.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 9.</b> What are total sales for the <b>Consumer</b> segment in <b>Technology</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIFS(H:H,D:D,"Consumer",F:F,"Technology")</span></div>
+      <p><b>Answer:</b> $45,738</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> SUM(Sales) with two filters: Segment = Consumer, Category = Technology.</p>
+    </div></details>
+  </div>
+</div></section>
+<footer class="foot"><div class="wrap"><p>Practice · E-commerce Orders · DPM Learning Hub. <a href="practice.html">← Back to all practice themes</a></p></div></footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

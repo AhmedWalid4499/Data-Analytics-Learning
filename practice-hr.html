@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice — HR — Employees · DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="hub" style="--accent:#6D28D9">
+<div class="scrollbar"></div>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="practice.html" aria-current="page">Practice</a>
+  </div>
+</div></nav>
+<header class="hero" style="padding-bottom:14px"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">👥</span> Practice dataset</span>
+  <h1 style="font-size:2.3rem">HR — Employees</h1>
+  <p class="lead">A company headcount file — great for lookups, averages by group, headcount and attrition, and an HR dashboard.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+    <a class="btn" href="assets/practice/hr-employees.xlsx" download>⬇ Download Excel (.xlsx)</a>
+    <a class="btn ghost" href="assets/practice/hr-employees.csv" download>⬇ CSV</a>
+    <a class="btn ghost" href="practice.html">← All themes</a>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:12px">150 rows · 10 columns · fictional data for practice. Works in Excel, Google Sheets or Power BI.</p>
+</div></header>
+<section><div class="wrap">
+  <span class="eyebrow">What's in the file</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .5em">Columns</h2>
+  <table class="tbl"><thead><tr><th>Column</th><th>What it holds</th></tr></thead><tbody>
+    <tr><td><code>Employee ID</code></td><td>Unique employee id</td></tr>
+    <tr><td><code>Name</code></td><td>Employee name</td></tr>
+    <tr><td><code>Department</code></td><td>Team they belong to</td></tr>
+    <tr><td><code>Job Title</code></td><td>Role</td></tr>
+    <tr><td><code>Location</code></td><td>Office or Remote</td></tr>
+    <tr><td><code>Gender</code></td><td>F or M</td></tr>
+    <tr><td><code>Hire Date</code></td><td>Date they joined</td></tr>
+    <tr><td><code>Salary</code></td><td>Annual salary ($)</td></tr>
+    <tr><td><code>Rating</code></td><td>Performance rating 1–5</td></tr>
+    <tr><td><code>Status</code></td><td>Active or Left</td></tr>
+  </tbody></table>
+  <h3 style="margin:26px 0 8px">First few rows</h3>
+  <div style="overflow:auto"><table class="tbl"><thead><tr><th>Employee ID</th><th>Name</th><th>Department</th><th>Job Title</th><th>Location</th><th>Gender</th><th>Hire Date</th><th>Salary</th><th>Rating</th><th>Status</th></tr></thead><tbody>
+    <tr><td>E2001</td><td>Ravi Dubois</td><td>Sales</td><td>Sales Lead</td><td>London</td><td>M</td><td>2018-01-20</td><td>80500</td><td>2</td><td>Active</td></tr>
+    <tr><td>E2002</td><td>Mia Haddad</td><td>Engineering</td><td>Lead Engineer</td><td>London</td><td>F</td><td>2020-10-06</td><td>99500</td><td>3</td><td>Active</td></tr>
+    <tr><td>E2003</td><td>Jon Khan</td><td>Sales</td><td>Sales Lead</td><td>Madrid</td><td>M</td><td>2016-10-17</td><td>56500</td><td>4</td><td>Active</td></tr>
+    <tr><td>E2004</td><td>Sara Dubois</td><td>Support</td><td>Senior Agent</td><td>London</td><td>M</td><td>2023-03-09</td><td>48500</td><td>2</td><td>Active</td></tr>
+    <tr><td>E2005</td><td>Yara Wagner</td><td>Marketing</td><td>Brand Manager</td><td>Berlin</td><td>M</td><td>2023-05-17</td><td>69000</td><td>4</td><td>Active</td></tr>
+    <tr><td>E2006</td><td>Mia Novak</td><td>Marketing</td><td>Content Lead</td><td>Remote</td><td>M</td><td>2024-10-18</td><td>51500</td><td>4</td><td>Active</td></tr>
+  </tbody></table></div>
+</div></section>
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Practice tasks</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .3em">9 tasks — try them, then reveal the answer</h2>
+  <p class="lead">Build each one yourself in Excel (or Power BI) first. The answer shows a working Excel formula, the result from this dataset, and how you'd do it in Power BI.</p>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 1.</b> What is the <b>total headcount</b> in the file?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTA(A2:A151)</span></div>
+      <p><b>Answer:</b> 150</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: COUNTROWS(Employees).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 2.</b> How many employees are currently <b>Active</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(J:J,"Active")</span></div>
+      <p><b>Answer:</b> 132</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card filtered to Status = Active.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 3.</b> What is the <b>average salary</b> across everyone?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGE(H2:H151)</span></div>
+      <p><b>Answer:</b> $69,290</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: AVERAGE(Salary).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 4.</b> What is the <b>total payroll</b> of the <b>Engineering</b> department?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(C:C,"Engineering",H:H)</span></div>
+      <p><b>Answer:</b> $2,223,500</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> SUM(Salary) filtered to Department = Engineering.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 5.</b> What is the <b>average salary in Sales</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGEIF(C:C,"Sales",H:H)</span></div>
+      <p><b>Answer:</b> $65,712</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> AVERAGE(Salary) with Department = Sales.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 6.</b> What is the <b>highest salary</b> in the company?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=MAX(H2:H151)</span></div>
+      <p><b>Answer:</b> $116,500</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: MAX(Salary).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 7.</b> Which <b>department</b> has the highest <b>average salary</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">PivotTable: Department → Rows, Average of Salary → Values (or AVERAGEIF per dept)</span></div>
+      <p><b>Answer:</b> <b>Engineering</b> ($96,674)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Bar chart of AVERAGE(Salary) by Department.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 8.</b> How many employees have <b>Left</b> (attrition count)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(J:J,"Left")</span></div>
+      <p><b>Answer:</b> 18  (12.0% of staff)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card filtered to Status = Left; show as % with DIVIDE.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 9.</b> What is the <b>average performance rating</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGE(I2:I151)</span></div>
+      <p><b>Answer:</b> 3.58</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: AVERAGE(Rating).</p>
+    </div></details>
+  </div>
+</div></section>
+<footer class="foot"><div class="wrap"><p>Practice · HR — Employees · DPM Learning Hub. <a href="practice.html">← Back to all practice themes</a></p></div></footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

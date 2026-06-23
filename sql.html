@@ -326,6 +326,163 @@ LIMIT 15;</span></div>
   </div>
 </div></section>
 
+<!-- BUILD / DDL -->
+<section><div class="wrap">
+  <span class="eyebrow">Create your own</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .2em">Databases, tables &amp; inserting data</h2>
+  <p class="lead">So far you've queried tables that already exist. This is the other half of SQL: <strong>building</strong> them — creating a database, defining tables with the right data types and rules, and loading rows in. The statements that define structure (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>) are called <strong>DDL</strong>; the ones that change data (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) are <strong>DML</strong>.</p>
+  <div class="note"><span class="ic">i</span><div>The <a href="#runner">runner below</a> is SQLite, which treats the whole session as a single database — so there's no <code>CREATE DATABASE</code> step there. Start at <code>CREATE TABLE</code> and the sample script at the end runs as-is. (Refresh the page to reset.)</div></div>
+
+  <h3 style="margin-top:30px">1 · Databases</h3>
+  <p>On a server engine you first create a database to hold your tables, then switch into it.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">-- On a server engine (MySQL / SQL Server)
+CREATE DATABASE bookshop;
+USE bookshop;             -- PostgreSQL uses:  \c bookshop
+
+-- ...create tables and load data here...
+
+DROP DATABASE bookshop;   -- deletes the whole database — careful!</span></div>
+  <div class="note"><span class="ic">i</span><div><b>Dialect note:</b> SQLite has no <code>CREATE DATABASE</code> — each <code>.db</code> file <em>is</em> a database, so you just open the file and start with <code>CREATE TABLE</code>. To use a second file from the same session: <code>ATTACH DATABASE 'archive.db' AS archive;</code></div></div>
+
+  <h3 style="margin-top:30px">2 · Column data types</h3>
+  <p>Every column has a type that says what it can hold. The exact names vary slightly by engine; these are the common ones.</p>
+  <table class="tbl">
+    <thead><tr><th>Type</th><th>Holds</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>INTEGER</code> / <code>INT</code></td><td>Whole numbers — ids, counts</td><td><code>42</code></td></tr>
+      <tr><td><code>REAL</code> / <code>FLOAT</code> / <code>DOUBLE</code></td><td>Approximate decimals</td><td><code>3.14</code></td></tr>
+      <tr><td><code>DECIMAL(p,s)</code> / <code>NUMERIC</code></td><td>Exact decimals — money</td><td><code>19.99</code></td></tr>
+      <tr><td><code>TEXT</code></td><td>Variable-length text (any length)</td><td><code>'hello'</code></td></tr>
+      <tr><td><code>VARCHAR(n)</code></td><td>Variable text up to <em>n</em> characters</td><td><code>'Acme Ltd'</code></td></tr>
+      <tr><td><code>CHAR(n)</code></td><td>Fixed-length text, padded to <em>n</em></td><td><code>'US'</code> (CHAR(2))</td></tr>
+      <tr><td><code>DATE</code> / <code>DATETIME</code> / <code>TIMESTAMP</code></td><td>Dates and times</td><td><code>'2025-01-31'</code></td></tr>
+      <tr><td><code>BOOLEAN</code></td><td>True / false (often stored as 1 / 0)</td><td><code>1</code></td></tr>
+      <tr><td><code>BLOB</code></td><td>Raw binary (images, files)</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><span class="ic">i</span><div><b>CHAR vs VARCHAR:</b> <code>CHAR(n)</code> always stores exactly <em>n</em> characters (short values are space-padded) — good for fixed codes like a 2-letter country. <code>VARCHAR(n)</code> stores only what you put in, up to <em>n</em>. SQLite is loose here — it uses simple <em>type affinity</em> (TEXT, INTEGER, REAL, NUMERIC, BLOB) and won't enforce the length, but writing <code>VARCHAR(200)</code> still documents intent and is portable.</div></div>
+
+  <h3 style="margin-top:30px">3 · Constraints — the rules on a table</h3>
+  <p>Constraints keep the data valid. They're declared right inside <code>CREATE TABLE</code>.</p>
+  <table class="tbl">
+    <thead><tr><th>Constraint</th><th>What it enforces</th></tr></thead>
+    <tbody>
+      <tr><td><code>PRIMARY KEY</code></td><td>Uniquely identifies each row (unique <em>and</em> not null). One per table.</td></tr>
+      <tr><td><code>AUTOINCREMENT</code></td><td>Auto-generates the next id. SQLite: <code>INTEGER PRIMARY KEY AUTOINCREMENT</code>; MySQL <code>AUTO_INCREMENT</code>; SQL Server <code>IDENTITY(1,1)</code>; PostgreSQL <code>SERIAL</code>.</td></tr>
+      <tr><td><code>NOT NULL</code></td><td>A value is required — the column can't be left empty.</td></tr>
+      <tr><td><code>UNIQUE</code></td><td>No two rows may share the same value.</td></tr>
+      <tr><td><code>DEFAULT v</code></td><td>Uses <em>v</em> when no value is supplied on insert.</td></tr>
+      <tr><td><code>CHECK (cond)</code></td><td>Rejects any row where the condition is false (e.g. <code>price &gt;= 0</code>).</td></tr>
+      <tr><td><code>FOREIGN KEY (c) REFERENCES t(c)</code></td><td>The value must match an existing key in another table (referential integrity).</td></tr>
+      <tr><td><code>PRIMARY KEY (a, b)</code></td><td>A <em>composite</em> key — uniqueness across several columns together.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:30px">4 · CREATE TABLE</h3>
+  <p>Put it together: each column is <code>name  TYPE  [constraints]</code>, separated by commas, with any table-level rules (like a foreign key) at the end.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">-- Parent table: one row per author
+CREATE TABLE authors (
+  author_id  INTEGER PRIMARY KEY,        -- unique id for each author
+  name       TEXT    NOT NULL,           -- required
+  country    CHAR(2)                     -- 2-letter code, e.g. 'US'
+);
+
+-- Child table: each book belongs to one author
+CREATE TABLE books (
+  book_id    INTEGER PRIMARY KEY AUTOINCREMENT,  -- id fills itself
+  title      VARCHAR(200) NOT NULL,
+  author_id  INTEGER,
+  genre      TEXT    DEFAULT 'General',          -- used when none given
+  price      REAL    CHECK (price &gt;= 0),         -- can't be negative
+  in_stock   INTEGER DEFAULT 0,
+  published  DATE,
+  FOREIGN KEY (author_id) REFERENCES authors(author_id)
+);</span></div>
+  <div class="note warn"><span class="ic">!</span><div>SQLite only enforces foreign keys after you run <code>PRAGMA foreign_keys = ON;</code> once per connection (it's off by default for backwards-compatibility). Most server engines enforce them always.</div></div>
+
+  <h3 style="margin-top:30px">5 · INSERT — several ways</h3>
+  <p><b>a. Name the columns</b> (the safest, clearest way — order doesn't matter):</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">INSERT INTO authors (author_id, name, country)
+VALUES (4, 'Toni Morrison', 'US');</span></div>
+  <p><b>b. All columns, in table order</b> (no column list — you must supply every column):</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">INSERT INTO authors
+VALUES (5, 'Gabriel Garcia Marquez', 'CO');</span></div>
+  <p><b>c. Several rows in one statement:</b></p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">INSERT INTO authors (author_id, name) VALUES
+  (6, 'Italo Calvino'),
+  (7, 'Octavia Butler');</span></div>
+  <p><b>d. Let defaults and AUTOINCREMENT do the work</b> — list only what you have; <code>book_id</code> auto-fills and <code>genre</code>/<code>in_stock</code> take their defaults:</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">INSERT INTO books (title, author_id, price)
+VALUES ('Beloved', 4, 11.99);</span></div>
+  <p><b>e. Insert the result of a query</b> (<code>INSERT … SELECT</code>) — copy rows from one table into another:</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">INSERT INTO cheap_books (title, price)
+SELECT title, price
+FROM books
+WHERE price &lt; 11;</span></div>
+  <div class="note"><span class="ic">i</span><div>Inserts add rows. To change existing rows use <code>UPDATE … SET … WHERE …</code>; to remove them use <code>DELETE FROM … WHERE …</code>. Always include a <code>WHERE</code>, or you'll change/clear <em>every</em> row.</div></div>
+
+  <h3 style="margin-top:30px">6 · A complete sample script</h3>
+  <p>This builds two related tables, loads them with the different insert styles, copies a filtered set into a third table, and finishes with a join to prove it worked. Paste the whole thing into the <a href="#runner">runner below</a> and run it.</p>
+  <div class="code"><button class="copy">Copy</button><span class="code-text">-- Enforce foreign keys (SQLite has them off by default)
+PRAGMA foreign_keys = ON;
+
+-- 1) Define the tables
+CREATE TABLE authors (
+  author_id  INTEGER PRIMARY KEY,
+  name       TEXT    NOT NULL,
+  country    CHAR(2)
+);
+
+CREATE TABLE books (
+  book_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  title      VARCHAR(200) NOT NULL,
+  author_id  INTEGER,
+  genre      TEXT    DEFAULT 'General',
+  price      REAL    CHECK (price &gt;= 0),
+  in_stock   INTEGER DEFAULT 0,
+  published  DATE,
+  FOREIGN KEY (author_id) REFERENCES authors(author_id)
+);
+
+-- 2) Insert parents first (their rows must exist before books reference them)
+INSERT INTO authors (author_id, name, country) VALUES
+  (1, 'Ursula K. Le Guin', 'US'),
+  (2, 'Haruki Murakami',   'JP'),
+  (3, 'Chinua Achebe',     'NG');
+
+-- 3) Insert children — defaults & AUTOINCREMENT fill the rest
+INSERT INTO books (title, author_id, price, published) VALUES
+  ('A Wizard of Earthsea', 1, 9.99, '1968-01-01');
+
+INSERT INTO books (title, author_id, genre, price, in_stock, published) VALUES
+  ('The Left Hand of Darkness', 1, 'Sci-Fi',  12.50,  8, '1969-03-01'),
+  ('Kafka on the Shore',        2, 'Fiction', 14.00,  5, '2002-09-12'),
+  ('Things Fall Apart',         3, 'Fiction', 10.25, 12, '1958-06-17');
+
+-- 4) Copy a filtered set into a new table
+CREATE TABLE cheap_books (title TEXT, price REAL);
+INSERT INTO cheap_books (title, price)
+SELECT title, price FROM books WHERE price &lt; 11;
+
+-- 5) Check it worked: each book with its author
+SELECT b.title, a.name AS author, a.country, b.price
+FROM books b
+JOIN authors a ON a.author_id = b.author_id
+ORDER BY b.price DESC;</span></div>
+
+  <div class="try"><p class="q">Try it</p>
+    <p>Run the script above in the runner, then write a query to list only the <strong>Fiction</strong> books along with their author's name, most expensive first.</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">SELECT b.title, a.name AS author, b.price
+FROM books b
+JOIN authors a ON a.author_id = b.author_id
+WHERE b.genre = 'Fiction'
+ORDER BY b.price DESC;</span></div>
+      <p>The final <code>SELECT</code> in the script returns four books; this one filters to the two Fiction titles (<em>Kafka on the Shore</em>, then <em>Things Fall Apart</em>).</p>
+    </div></details>
+  </div>
+</div></section>
+
 <!-- GOOD HABITS -->
 <section style="background:var(--surface-2)"><div class="wrap">
   <span class="eyebrow">Good habits</span>

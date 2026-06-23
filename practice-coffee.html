@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice — Coffee Shop Sales · DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="hub" style="--accent:#B45309">
+<div class="scrollbar"></div>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="practice.html" aria-current="page">Practice</a>
+  </div>
+</div></nav>
+<header class="hero" style="padding-bottom:14px"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">☕</span> Practice dataset</span>
+  <h1 style="font-size:2.3rem">Coffee Shop Sales</h1>
+  <p class="lead">Point-of-sale transactions from a small coffee-shop chain — perfect for totals, conditional sums, averages and a first sales dashboard.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+    <a class="btn" href="assets/practice/coffee-shop-sales.xlsx" download>⬇ Download Excel (.xlsx)</a>
+    <a class="btn ghost" href="assets/practice/coffee-shop-sales.csv" download>⬇ CSV</a>
+    <a class="btn ghost" href="practice.html">← All themes</a>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:12px">220 rows · 9 columns · fictional data for practice. Works in Excel, Google Sheets or Power BI.</p>
+</div></header>
+<section><div class="wrap">
+  <span class="eyebrow">What's in the file</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .5em">Columns</h2>
+  <table class="tbl"><thead><tr><th>Column</th><th>What it holds</th></tr></thead><tbody>
+    <tr><td><code>Transaction ID</code></td><td>Unique id for each sale</td></tr>
+    <tr><td><code>Date</code></td><td>Date of the transaction</td></tr>
+    <tr><td><code>Store</code></td><td>Which branch (Downtown, Airport, University, Mall)</td></tr>
+    <tr><td><code>Product</code></td><td>Item sold</td></tr>
+    <tr><td><code>Category</code></td><td>Coffee, Tea, Food or Cold</td></tr>
+    <tr><td><code>Quantity</code></td><td>Units sold</td></tr>
+    <tr><td><code>Unit Price</code></td><td>Price per unit ($)</td></tr>
+    <tr><td><code>Total</code></td><td>Quantity × Unit Price ($)</td></tr>
+    <tr><td><code>Payment</code></td><td>Card, Cash or Mobile</td></tr>
+  </tbody></table>
+  <h3 style="margin:26px 0 8px">First few rows</h3>
+  <div style="overflow:auto"><table class="tbl"><thead><tr><th>Transaction ID</th><th>Date</th><th>Store</th><th>Product</th><th>Category</th><th>Quantity</th><th>Unit Price</th><th>Total</th><th>Payment</th></tr></thead><tbody>
+    <tr><td>T1001</td><td>2025-03-01</td><td>Mall</td><td>Americano</td><td>Coffee</td><td>1</td><td>3.5</td><td>3.5</td><td>Card</td></tr>
+    <tr><td>T1002</td><td>2025-03-07</td><td>Mall</td><td>Chai Latte</td><td>Tea</td><td>1</td><td>4.0</td><td>4.0</td><td>Cash</td></tr>
+    <tr><td>T1003</td><td>2025-02-08</td><td>Airport</td><td>Bagel</td><td>Food</td><td>1</td><td>3.2</td><td>3.2</td><td>Card</td></tr>
+    <tr><td>T1004</td><td>2025-01-06</td><td>Mall</td><td>Sandwich</td><td>Food</td><td>1</td><td>6.5</td><td>6.5</td><td>Mobile</td></tr>
+    <tr><td>T1005</td><td>2025-01-21</td><td>Downtown</td><td>Croissant</td><td>Food</td><td>1</td><td>3.5</td><td>3.5</td><td>Mobile</td></tr>
+    <tr><td>T1006</td><td>2025-01-31</td><td>Downtown</td><td>Latte</td><td>Coffee</td><td>1</td><td>4.5</td><td>4.5</td><td>Cash</td></tr>
+  </tbody></table></div>
+</div></section>
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Practice tasks</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .3em">8 tasks — try them, then reveal the answer</h2>
+  <p class="lead">Build each one yourself in Excel (or Power BI) first. The answer shows a working Excel formula, the result from this dataset, and how you'd do it in Power BI.</p>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 1.</b> What is the <b>total revenue</b> across all transactions?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUM(H2:H221)</span></div>
+      <p><b>Answer:</b> $1,255.70</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> A Card visual showing SUM(Total).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 2.</b> What is the <b>average transaction value</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGE(H2:H221)</span></div>
+      <p><b>Answer:</b> $5.71</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> A Card with AVERAGE(Total).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 3.</b> How many <b>Lattes</b> were sold (total quantity)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(D:D,"Latte",F:F)</span></div>
+      <p><b>Answer:</b> 28</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: CALCULATE(SUM(Quantity), Product = "Latte").</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 4.</b> How many transactions were <b>over $20</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(H:H,"&gt;20")</span></div>
+      <p><b>Answer:</b> 0</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card with a measure: COUNTROWS(FILTER(Sales, Sales[Total]>20)).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 5.</b> What is the total revenue from the <b>Airport</b> store?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(C:C,"Airport",H:H)</span></div>
+      <p><b>Answer:</b> $344.90</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Filter a SUM(Total) measure to Store = Airport.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 6.</b> Which <b>store</b> has the highest total revenue?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIFS(H:H,C:C,"Downtown")  … compare per store (or use a PivotTable: Store → Rows, Sum of Total → Values)</span></div>
+      <p><b>Answer:</b> <b>Mall</b> ($350.10)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Bar chart of SUM(Total) by Store, sorted descending.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 7.</b> Which <b>product</b> generates the most revenue?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">PivotTable: Product → Rows, Sum of Total → Values, sort descending (or SUMIF per product)</span></div>
+      <p><b>Answer:</b> <b>Sandwich</b> ($143.00)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Bar chart of SUM(Total) by Product, Top N = 1.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 8.</b> What <b>percentage</b> of transactions were paid by <b>Card</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(I:I,"Card")/COUNTA(I2:I221)</span></div>
+      <p><b>Answer:</b> 58.6%</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card visual: DIVIDE(COUNTROWS(FILTER(Sales,Payment="Card")), COUNTROWS(Sales)).</p>
+    </div></details>
+  </div>
+</div></section>
+<footer class="foot"><div class="wrap"><p>Practice · Coffee Shop Sales · DPM Learning Hub. <a href="practice.html">← Back to all practice themes</a></p></div></footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
