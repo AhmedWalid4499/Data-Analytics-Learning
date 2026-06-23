@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice — Movies · DPM Learning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="hub" style="--accent:#BE123C">
+<div class="scrollbar"></div>
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><span class="dot"></span> DPM Learning Hub</a>
+  <button class="menu-btn" aria-label="Menu">☰</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="data-foundations.html">Foundations</a>
+    <a href="excel.html">Excel</a>
+    <a href="sql.html">SQL</a>
+    <a href="powerbi.html">Power BI</a>
+    <a href="powerautomate.html">Power Automate</a>
+    <a href="courses.html">Courses</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="practice.html" aria-current="page">Practice</a>
+  </div>
+</div></nav>
+<header class="hero" style="padding-bottom:14px"><div class="wrap">
+  <span class="tool-badge"><span class="glyph">🎬</span> Practice dataset</span>
+  <h1 style="font-size:2.3rem">Movies</h1>
+  <p class="lead">A film catalogue with budgets, box office and ratings — good for ranking, ratios (ROI), filtering and comparison charts.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+    <a class="btn" href="assets/practice/movies.xlsx" download>⬇ Download Excel (.xlsx)</a>
+    <a class="btn ghost" href="assets/practice/movies.csv" download>⬇ CSV</a>
+    <a class="btn ghost" href="practice.html">← All themes</a>
+  </div>
+  <p class="hint" style="color:var(--muted);font-size:.9rem;margin-top:12px">180 rows · 8 columns · fictional data for practice. Works in Excel, Google Sheets or Power BI.</p>
+</div></header>
+<section><div class="wrap">
+  <span class="eyebrow">What's in the file</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .5em">Columns</h2>
+  <table class="tbl"><thead><tr><th>Column</th><th>What it holds</th></tr></thead><tbody>
+    <tr><td><code>Title</code></td><td>Film title</td></tr>
+    <tr><td><code>Genre</code></td><td>Action, Drama, Comedy, Sci-Fi, Horror, Animation, Thriller</td></tr>
+    <tr><td><code>Year</code></td><td>Release year</td></tr>
+    <tr><td><code>Runtime</code></td><td>Length in minutes</td></tr>
+    <tr><td><code>Budget ($M)</code></td><td>Production budget, $ millions</td></tr>
+    <tr><td><code>Box Office ($M)</code></td><td>Worldwide gross, $ millions</td></tr>
+    <tr><td><code>IMDb Rating</code></td><td>Audience rating 0–10</td></tr>
+    <tr><td><code>Director</code></td><td>Director name</td></tr>
+  </tbody></table>
+  <h3 style="margin:26px 0 8px">First few rows</h3>
+  <div style="overflow:auto"><table class="tbl"><thead><tr><th>Title</th><th>Genre</th><th>Year</th><th>Runtime</th><th>Budget ($M)</th><th>Box Office ($M)</th><th>IMDb Rating</th><th>Director</th></tr></thead><tbody>
+    <tr><td>Crimson Meridian</td><td>Horror</td><td>2014</td><td>91</td><td>176.9</td><td>150.1</td><td>6.2</td><td>D. Park</td></tr>
+    <tr><td>Final Cascade</td><td>Action</td><td>2014</td><td>136</td><td>29.5</td><td>116.2</td><td>7.5</td><td>J. Mara</td></tr>
+    <tr><td>Endless Storm</td><td>Comedy</td><td>2008</td><td>153</td><td>23.0</td><td>97.9</td><td>7.2</td><td>B. Cole</td></tr>
+    <tr><td>Electric Legacy</td><td>Comedy</td><td>2014</td><td>92</td><td>239.9</td><td>193.4</td><td>7.3</td><td>F. Nair</td></tr>
+    <tr><td>Endless Legacy</td><td>Sci-Fi</td><td>2012</td><td>94</td><td>121.6</td><td>145.4</td><td>5.1</td><td>A. Reed</td></tr>
+    <tr><td>Crimson Empire</td><td>Animation</td><td>2015</td><td>135</td><td>179.8</td><td>676.8</td><td>7.4</td><td>H. Liu</td></tr>
+  </tbody></table></div>
+</div></section>
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Practice tasks</span>
+  <h2 style="font-size:1.7rem;margin:.2em 0 .3em">8 tasks — try them, then reveal the answer</h2>
+  <p class="lead">Build each one yourself in Excel (or Power BI) first. The answer shows a working Excel formula, the result from this dataset, and how you'd do it in Power BI.</p>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 1.</b> What is the <b>highest box office</b> figure ($M)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=MAX(F2:F181)</span></div>
+      <p><b>Answer:</b> $1,160.5M</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: MAX(Box Office).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 2.</b> What is the <b>average IMDb rating</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGE(G2:G181)</span></div>
+      <p><b>Answer:</b> 6.74</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: AVERAGE(IMDb Rating).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 3.</b> How many <b>Action</b> movies are there?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(B:B,"Action")</span></div>
+      <p><b>Answer:</b> 27</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card filtered to Genre = Action.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 4.</b> What is the <b>average budget</b> of <b>Sci-Fi</b> movies ($M)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=AVERAGEIF(B:B,"Sci-Fi",E:E)</span></div>
+      <p><b>Answer:</b> $131.3M</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> AVERAGE(Budget) filtered to Genre = Sci-Fi.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 5.</b> How many movies are rated <b>above 8.0</b>?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=COUNTIF(G:G,"&gt;8")</span></div>
+      <p><b>Answer:</b> 29</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Card: COUNTROWS(FILTER(Movies, Rating>8)).</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 6.</b> What is the <b>total box office for 2019</b> ($M)?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">=SUMIF(C:C,2019,F:F)</span></div>
+      <p><b>Answer:</b> $2,643.5M</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> SUM(Box Office) filtered to Year = 2019.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 7.</b> Which <b>genre</b> has the highest average rating?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">PivotTable: Genre → Rows, Average of IMDb Rating → Values</span></div>
+      <p><b>Answer:</b> <b>Action</b> (7.10)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Bar chart of AVERAGE(Rating) by Genre.</p>
+    </div></details>
+  </div>
+  <div class="card" style="margin:12px 0">
+    <p style="margin:.1em 0 .5em"><b>Task 8.</b> Which <b>director</b> has the highest total box office?</p>
+    <details class="reveal"><summary>Show answer</summary><div class="ans">
+      <div class="code"><button class="copy">Copy</button><span class="code-text">PivotTable: Director → Rows, Sum of Box Office → Values, sort descending</span></div>
+      <p><b>Answer:</b> <b>C. Vance</b> ($8,227.1M)</p>
+      <p style="color:var(--ink-soft)"><b>In Power BI:</b> Bar chart of SUM(Box Office) by Director, Top N = 1.</p>
+    </div></details>
+  </div>
+</div></section>
+<footer class="foot"><div class="wrap"><p>Practice · Movies · DPM Learning Hub. <a href="practice.html">← Back to all practice themes</a></p></div></footer>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
