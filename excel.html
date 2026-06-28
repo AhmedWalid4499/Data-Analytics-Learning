@@ -51,6 +51,97 @@
   </div>
 </div></section>
 
+<!-- ===================== CRISP-DM: UNDERSTAND & PREPARE ===================== -->
+<section style="background:var(--surface-2)"><div class="wrap">
+  <span class="eyebrow">Start here</span>
+  <h2 style="font-size:2rem;margin:.2em 0 .25em">Understand &amp; prepare the data — before any formula</h2>
+  <p class="lead">Most analysis goes wrong long before a function is typed. The industry standard for data work is <strong>CRISP-DM</strong> — six phases that always run in the same order. This page lives in the first three; the formulas, PivotTables and charts that follow are what you build <em>on top</em> of clean, understood data. Skip these and you'll get confident-looking answers that are simply wrong.</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px">
+    <div style="flex:1 1 130px;border:1px solid var(--accent);border-top:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:12px;padding:11px 12px"><b>1 · Business understanding</b><br><small style="color:var(--muted)">What question are we answering?</small></div>
+    <div style="flex:1 1 130px;border:1px solid var(--accent);border-top:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:12px;padding:11px 12px"><b>2 · Data understanding</b><br><small style="color:var(--muted)">What's actually in the file?</small></div>
+    <div style="flex:1 1 130px;border:1px solid var(--accent);border-top:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:12px;padding:11px 12px"><b>3 · Data preparation</b><br><small style="color:var(--muted)">Clean it so it can be trusted</small></div>
+    <div style="flex:1 1 130px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;opacity:.7"><b>4 · Modeling</b><br><small style="color:var(--muted)">Formulas, PivotTables ↓</small></div>
+    <div style="flex:1 1 130px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;opacity:.7"><b>5 · Evaluation</b><br><small style="color:var(--muted)">Does it answer the question?</small></div>
+    <div style="flex:1 1 130px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;opacity:.7"><b>6 · Deployment</b><br><small style="color:var(--muted)">Share / automate it</small></div>
+  </div>
+
+  <h3 style="margin-top:30px">1 · Business understanding</h3>
+  <p>Before you open the file, write the question in one sentence — and know what decision the answer feeds. "Make a report" isn't a question; "<em>Which region is slipping on go-live dates this quarter, so we can re-staff?</em>" is. Pin down three things:</p>
+  <div class="grid cols-3">
+    <div class="card"><h3>The metric</h3><p>What exactly are you measuring — a count, a sum, a rate, an average? Define it precisely (e.g. "on-time %" = delivered on/before target ÷ all delivered).</p></div>
+    <div class="card"><h3>The grain</h3><p>One row = what? An order, a site, a day? Totals only make sense once you know what a single row represents.</p></div>
+    <div class="card"><h3>The decision</h3><p>Who acts on this and how? That tells you which cut (by region, by month, by owner) actually matters — and stops you computing things nobody needs.</p></div>
+  </div>
+
+  <h3 style="margin-top:30px">2 · Data understanding</h3>
+  <p>Now meet the data — <em>look</em> before you calculate. A quick profiling pass, no formulas required:</p>
+  <ol style="max-width:75ch">
+    <li><b>How big is it?</b> <kbd>Ctrl</kbd>+<kbd>End</kbd> jumps to the last cell — now you know the rows and columns.</li>
+    <li><b>What does each column mean,</b> and what <b>type</b> is it? In Excel, text aligns left and numbers/dates align right by default — a "number" sitting on the left is a warning sign.</li>
+    <li><b>What values appear?</b> Click a column's filter dropdown to see every distinct value at a glance — typos and stray categories jump out (e.g. <code>EMEA</code> vs <code>emea</code> vs <code>EMA</code>).</li>
+    <li><b>Where are the gaps?</b> Compare <code>=COUNTA(range)</code> (non-empty) with the row count, or filter for <em>(Blanks)</em>.</li>
+    <li><b>What's the range?</b> Sort a column, or just select it and read <b>Count / Min / Max / Average</b> off the status bar at the bottom of the window.</li>
+    <li><b>Freeze the header row</b> (View ▸ Freeze Panes) so you keep your bearings while you scroll.</li>
+  </ol>
+
+  <p style="margin-top:18px">As you look, you're hunting for the usual suspects. These are problems you <strong>see</strong>, not compute:</p>
+  <table class="tbl">
+    <thead><tr><th>Problem</th><th>What it looks like</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td>Duplicate rows</td><td>The same record appears twice</td><td>Inflates every count and total</td></tr>
+      <tr><td>Missing values</td><td>Blank cells in a key column</td><td>Rows get skipped or averages skew</td></tr>
+      <tr><td>Missing columns</td><td>A field you expected isn't in the export</td><td>The question can't be answered as-is</td></tr>
+      <tr><td>Numbers stored as text</td><td>Left-aligned numbers, a green triangle in the corner</td><td><code>SUM</code> silently ignores them — totals come out too low</td></tr>
+      <tr><td>Dates stored as text</td><td>Left-aligned dates like <code>2025/04/02</code> or <code>02-Apr</code></td><td>Won't sort, filter or calculate as dates</td></tr>
+      <tr><td>Inconsistent text</td><td><code>EMEA</code>, <code>emea</code>, <code>&nbsp;EMEA&nbsp;</code> (trailing spaces)</td><td>Treated as different groups — splits your totals</td></tr>
+      <tr><td>Typos / wrong categories</td><td><code>Deliverd</code>, <code>In Progres</code></td><td>Filters and SUMIFS miss them</td></tr>
+      <tr><td>Impossible / out-of-range values</td><td>Negative quantity, a go-live in 1900 or 2099</td><td>Signals bad data entry; distorts results</td></tr>
+      <tr><td>Symbols inside numbers</td><td><code>$8,000</code> or <code>15%</code> typed as text</td><td>No longer a number you can do maths on</td></tr>
+      <tr><td>Merged cells / two header rows</td><td>Pretty layout, broken structure</td><td>Breaks sorting, filtering and PivotTables</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:20px"><b>Spot the problems</b> — five rows, several issues hiding in them:</p>
+  <div style="overflow:auto"><table class="tbl">
+    <thead><tr><th>Order ID</th><th>Customer</th><th>Region</th><th>Status</th><th>Qty</th><th>Revenue</th><th>Go-Live</th></tr></thead>
+    <tbody>
+      <tr><td>1001</td><td>Acme</td><td>EMEA</td><td>Delivered</td><td style="text-align:right">2</td><td style="text-align:right">12000</td><td style="text-align:right">2025-03-10</td></tr>
+      <tr><td>1001</td><td>Acme</td><td>EMEA</td><td>Delivered</td><td style="text-align:right">2</td><td style="text-align:right">12000</td><td style="text-align:right">2025-03-10</td></tr>
+      <tr><td>1002</td><td>globex&nbsp;</td><td>emea</td><td>Deliverd</td><td style="text-align:right">3</td><td style="text-align:right">9500</td><td style="text-align:left">2025/04/02</td></tr>
+      <tr><td>1003</td><td>Initech</td><td>APAC</td><td>In Progress</td><td style="text-align:right">-1</td><td style="text-align:left">8,000</td><td></td></tr>
+      <tr><td>1004</td><td>Umbrella</td><td></td><td>Delivered</td><td style="text-align:right">1</td><td style="text-align:right">15000</td><td style="text-align:right">2025-05-20</td></tr>
+    </tbody>
+  </table></div>
+  <ol style="max-width:78ch;margin-top:10px">
+    <li><b>Rows 1 &amp; 2 are exact duplicates</b> — that customer's revenue would be double-counted.</li>
+    <li><b>"globex "</b> has a trailing space and lowercase, and <b>"emea"</b> differs in case — Excel treats these as different from <code>Globex</code> and <code>EMEA</code>.</li>
+    <li><b>"Deliverd"</b> is a typo — a <code>COUNTIF(...,"Delivered")</code> will quietly miss it.</li>
+    <li><b>Row 3's date</b> (<code>2025/04/02</code>) and <b>Row 4's revenue</b> (<code>8,000</code>) are left-aligned — they're <em>text</em>, not a date and a number.</li>
+    <li><b>Row 3 has a quantity of −1</b> (impossible) and <b>no go-live date</b>; <b>Row 4 has no region.</b></li>
+  </ol>
+
+  <h3 style="margin-top:30px">3 · Data preparation (cleaning)</h3>
+  <p>Fix what you found — and notice most of this is <strong>buttons and menus, not formulas</strong>. Clean first; <em>then</em> the SUMIFS, XLOOKUP and PivotTables later on this page will actually be right. Garbage in, garbage out.</p>
+  <table class="tbl">
+    <thead><tr><th>Problem</th><th>How to fix it in Excel (no formula needed)</th></tr></thead>
+    <tbody>
+      <tr><td>Duplicate rows</td><td><b>Data ▸ Remove Duplicates</b> — tick the columns that define a unique record.</td></tr>
+      <tr><td>Blank cells</td><td><b>Filter ▸ (Blanks)</b>, or <b>Find &amp; Select ▸ Go To Special ▸ Blanks</b>; then decide: fill in, delete the row, or flag it.</td></tr>
+      <tr><td>Missing column</td><td>Go back to the source/export and add it — don't invent it. Note the gap if it can't be filled.</td></tr>
+      <tr><td>Numbers stored as text</td><td>Select the range ▸ click the yellow <b>⚠</b> ▸ <b>Convert to Number</b>. Or <b>Data ▸ Text to Columns ▸ Finish</b>. Or Paste-Special ▸ Multiply by 1.</td></tr>
+      <tr><td>Dates stored as text</td><td><b>Data ▸ Text to Columns</b> and pick the Date format, or use <code>=DATEVALUE()</code>, then format as a date.</td></tr>
+      <tr><td>Inconsistent text / spaces / case</td><td><b>Find &amp; Replace</b> (Ctrl+H) to standardise; <code>=TRIM()</code> and <code>=CLEAN()</code> to strip spaces and junk; <code>=UPPER/PROPER</code> for case; <b>Flash Fill</b> (Ctrl+E) to reshape.</td></tr>
+      <tr><td>Typos / stray categories</td><td>Open the column's filter to list every distinct value, fix with Find &amp; Replace, then add a <b>Data Validation</b> drop-down to stop new ones.</td></tr>
+      <tr><td>Impossible / out-of-range values</td><td>Sort, or use <b>Conditional Formatting</b> to highlight values that break a rule (qty ≥ 0, dates within the period), then correct at source.</td></tr>
+      <tr><td>Symbols inside numbers</td><td>Strip <code>$</code>, commas or <code>%</code> with Find &amp; Replace, then apply a <b>number format</b> instead of typing the symbol.</td></tr>
+      <tr><td>Structure</td><td><b>Unmerge</b> cells, keep a single header row, and <b>Format as Table (Ctrl+T)</b> for clean, filterable, auto-expanding data.</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><span class="ic">i</span><div>Doing this by hand every month is a chore — when the same messy export arrives repeatedly, record the cleanup once in <a href="#power-query">Power Query</a> (further down) and just hit <em>Refresh</em> next time.</div></div>
+  <div class="note"><span class="ic">★</span><div><b>Practise it:</b> grab the deliberately messy file from the <a href="downloads.html">Downloads</a> page (<em>Messy dataset</em>), or any set in the <a href="practice.html">Practice library</a>, and clean it before you analyse. Only once the data is understood and prepared should you move on to the functions below.</div></div>
+</div></section>
+
 <section><div class="wrap">
   <span class="eyebrow">Functions by level</span>
   <h2 style="font-size:2rem;margin:.2em 0 .2em">Build your formula vocabulary</h2>
@@ -388,7 +479,7 @@ R2 :  =O2/$O$74      // then format column R as Percentage, fill down</span></di
 </div></section>
 
 <!-- ===================== POWER QUERY ===================== -->
-<section style="background:var(--surface-2)"><div class="wrap">
+<section id="power-query" style="background:var(--surface-2)"><div class="wrap">
   <span class="eyebrow">Power Query</span>
   <h2 style="font-size:2rem;margin:.2em 0 .3em">Clean once, refresh forever</h2>
   <p class="lead">Power Query (Data ▸ Get &amp; Transform) records every cleaning step you take. Next month, point it at the new file and click Refresh — all your steps replay automatically. This is the antidote to repetitive manual cleanup.</p>
